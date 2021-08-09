@@ -1,4 +1,8 @@
 - Updated mod to 1.15
 - Increased toughness of Magic Armor to 20
-- Wearing a full set of Magic Armor now give resistance 2
+- Wearing a full set of Magic Armor now gives resistance 2
 - Updated nether shard texture to better reflect that it comes from a nether star
+- Added Magic Plate
+- Added Reinforced Magic armor and tools
+- Added custom advancements
+- Removed unused files
