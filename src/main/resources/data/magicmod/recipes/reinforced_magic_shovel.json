@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "PPP",
+        "PSP",
+        "PPP"
+    ],
+    
+    "key":
+    {
+        "P":
+        {
+            "item": "magicmod:magic_plate"
+        },
+		"S":
+        {
+            "item": "magicmod:magic_shovel"
+        }
+    },
+    
+    "result":
+    {
+        "item": "magicmod:reinforced_magic_shovel",
+        "count": 1
+    }
+}

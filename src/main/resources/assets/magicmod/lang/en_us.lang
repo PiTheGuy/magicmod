@@ -1,0 +1,51 @@
+//Creative Tabs
+itemGroup.tabMagicGeneral=Magic Mod: General
+itemGroup.tabMagicItems=Magic Mod: Magic Items
+itemGroup.tabMagicBlocks=Magic Mod: Magic Blocks
+
+
+//Items
+item.diamond_nugget.name=Diamond Nugget
+item.nether_shard.name=Nether Shard
+
+//Magic Items
+item.magicmod.magic_gem=Magic Gem
+item.magicmod.magic_dust_red=Magic Dust (Red)
+item.magicmod.magic_dust_orange=Magic Dust (Orange)
+item.magicmod.magic_dust_yellow=Magic Dust (Yellow)
+item.magicmod.magic_dust_green=Magic Dust (Green)
+item.magicmod.magic_dust_blue=Magic Dust (Blue)
+item.magicmod.magic_dust_purple=Magic Dust (Purple)
+item.magicmod.magic_dust_magenta=Magic Dust (Magenta)
+item.magicmod.magic_dust_black=Magic Dust (Black)
+item.magicmod.magic_dust_white=Magic Dust (White)
+item.magicmod.magic_orb_red=Magic Orb (Red)
+item.magicmod.magic_orb_orange=Magic Orb (Orange)
+item.magicmod.magic_orb_yellow=Magic Orb (Yellow)
+item.magicmod.magic_orb_green=Magic Orb (Green)
+item.magicmod.magic_orb_blue=Magic Orb (Blue)
+item.magicmod.magic_orb_purple=Magic Orb (Purple)
+item.magicmod.magic_orb_magenta=Magic Orb (Magenta)
+item.magicmod.magic_orb_black=Magic Orb (Black)
+item.magicmod.magic_orb_white=Magic Orb (White)
+item.magicmod.magic_core=Magic Core
+item.super_magic_gem.name=Super Magic Gem
+item.magic_nugget.name=Magic Nugget
+item.magic_axe.name=Magic Axe
+item.magic_pickaxe.name=Magic Pickaxe
+item.magic_shovel.name=Magic Shovel
+item.magic_sword.name=Magic Sword
+item.magic_hoe.name=Magic Hoe
+item.magic_helmet.name=Magic Helmet
+item.magic_chestplate.name=Magic Chestplate
+item.magic_leggings.name=Magic Leggings
+item.magic_boots.name=Magic Boots
+
+//Tools
+
+//Armor
+
+//Blocks
+tile.reinforced_obsidian.name=Reinforced Obsidian
+tile.magic_ore.name=Magic Ore
+tile.magic_block_rainbow.name=Magic Block (Rainbow)

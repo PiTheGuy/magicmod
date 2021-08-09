@@ -1,0 +1,106 @@
+{
+  "display": {
+    "icon": {
+      "item": "magicmod:magic_orb_white"
+    },
+    "title": "All the Orbs",
+    "description": "Smelt each color of Magic Dust into an orb",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "magicmod:smelt_dust",
+  "criteria": {
+    "red_orb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_orb_red"
+          }
+        ]
+      }
+    },
+    "orange_orb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_orb_orange"
+          }
+        ]
+      }
+    },
+    "yellow_orb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_orb_yellow"
+          }
+        ]
+      }
+    },
+    "green_orb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_orb_green"
+          }
+        ]
+      }
+    },
+    "blue_orb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_orb_blue"
+          }
+        ]
+      }
+    },
+    "purple_orb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_orb_purple"
+          }
+        ]
+      }
+    },
+    "magenta_orb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_orb_magenta"
+          }
+        ]
+      }
+    },
+    "black_orb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_orb_black"
+          }
+        ]
+      }
+    },
+    "white_orb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_orb_white"
+          }
+        ]
+      }
+    }
+  }
+}

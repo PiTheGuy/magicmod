@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+
+  "pattern":
+  [
+    "GGG"
+  ],
+
+  "key":
+  {
+    "G":
+    {
+      "item": "magicmod:magic_gem"
+    }
+  },
+
+  "result":
+  {
+    "item": "magicmod:magic_plate",
+    "count": 1
+  }
+}

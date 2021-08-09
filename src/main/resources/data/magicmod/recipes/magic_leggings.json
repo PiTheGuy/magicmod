@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "MMM",
+        "M M",
+        "M M"
+    ],
+    
+    "key":
+    {
+        "M":
+        {
+            "item": "magicmod:magic_gem"
+        }
+	},
+	
+    "result":
+    {
+        "item": "magicmod:magic_leggings",
+        "count": 1
+    }
+}

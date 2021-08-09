@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "magicmod:magic_dust_orange"
+  },
+  "result": "magicmod:magic_orb_orange",
+  "experience": 0.35,
+  "cookingtime": 200
+}

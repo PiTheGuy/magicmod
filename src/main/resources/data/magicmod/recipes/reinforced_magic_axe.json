@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "PPP",
+        "PAP",
+        "PPP"
+    ],
+    
+    "key":
+    {
+        "P":
+        {
+            "item": "magicmod:magic_plate"
+        },
+		"A":
+        {
+            "item": "magicmod:magic_axe"
+        }
+    },
+    
+    "result":
+    {
+        "item": "magicmod:reinforced_magic_axe",
+        "count": 1
+    }
+}

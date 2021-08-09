@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "magicmod:reinforced_magic_sword"
+    },
+    "title": "The Ultimate Weapon",
+    "description": "Reinforce a Magic Sword with Magic Plates",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "magicmod:craft_magic_sword",
+  "criteria": {
+    "gem": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:reinforced_magic_sword"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "PPP",
+        "PSP",
+        "PPP"
+    ],
+    
+    "key":
+    {
+        "P":
+        {
+            "item": "magicmod:magic_plate"
+        },
+		"S":
+        {
+            "item": "magicmod:magic_sword"
+        }
+    },
+    
+    "result":
+    {
+        "item": "magicmod:reinforced_magic_sword",
+        "count": 1
+    }
+}

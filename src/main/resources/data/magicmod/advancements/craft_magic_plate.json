@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "magicmod:magic_plate"
+    },
+    "title": "Plate o' Magic",
+    "description": "Craft magic gems into a plate",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "magicmod:craft_magic_gem",
+  "criteria": {
+    "plate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_plate"
+          }
+        ]
+      }
+    }
+  }
+}

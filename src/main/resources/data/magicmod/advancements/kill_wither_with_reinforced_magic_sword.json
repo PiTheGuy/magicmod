@@ -1,0 +1,34 @@
+{
+  "display": {
+    "icon": {
+      "item": "magicmod:reinforced_magic_sword"
+    },
+    "title": "Just When I Thought It Couldn't Get Any Easier",
+    "description": "Kill the wither with a Reinforced Magic Sword",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "parent": "magicmod:reinforce_magic_sword",
+  "criteria": {
+    "wither": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:wither"
+        },
+        "killing_blow": {
+          "source_entity": {
+            "type": "minecraft:player",
+            "equipment": {
+              "mainhand": {
+                "item": "magicmod:reinforced_magic_sword"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

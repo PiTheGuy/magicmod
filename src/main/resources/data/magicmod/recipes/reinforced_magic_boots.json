@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "PPP",
+        "PBP",
+        "PPP"
+    ],
+    
+    "key":
+    {
+        "P":
+        {
+            "item": "magicmod:magic_plate"
+        },
+        "B":
+        {
+            "item": "magicmod:magic_boots"
+        }
+    },
+	
+    "result":
+    {
+        "item": "magicmod:reinforced_magic_boots",
+        "count": 1
+    }
+}

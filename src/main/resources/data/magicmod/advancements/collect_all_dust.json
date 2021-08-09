@@ -1,0 +1,106 @@
+{
+  "display": {
+    "icon": {
+      "item": "magicmod:magic_dust_orange"
+    },
+    "title": "Rainbow Dust",
+    "description": "Collect all the colors of Magic Dust",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "magicmod:root",
+  "criteria": {
+    "red_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_dust_red"
+          }
+        ]
+      }
+    },
+    "orange_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_dust_orange"
+          }
+        ]
+      }
+    },
+    "yellow_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_dust_yellow"
+          }
+        ]
+      }
+    },
+    "green_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_dust_green"
+          }
+        ]
+      }
+    },
+    "blue_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_dust_blue"
+          }
+        ]
+      }
+    },
+    "purple_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_dust_purple"
+          }
+        ]
+      }
+    },
+    "magenta_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_dust_magenta"
+          }
+        ]
+      }
+    },
+    "black_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_dust_black"
+          }
+        ]
+      }
+    },
+    "white_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_dust_white"
+          }
+        ]
+      }
+    }
+  }
+}

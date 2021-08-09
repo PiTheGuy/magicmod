@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "magicmod:magic_core"
+    },
+    "title": "The Heart of All Things Magic",
+    "description": "Craft all 9 colors of Magic Orb into a Magic Core",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "magicmod:smelt_all_dust",
+  "criteria": {
+    "core": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_core"
+          }
+        ]
+      }
+    }
+  }
+}

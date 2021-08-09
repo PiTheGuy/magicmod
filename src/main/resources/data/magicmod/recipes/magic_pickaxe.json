@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "GGG",
+        " S ",
+        " S "
+    ],
+    
+    "key":
+    {
+        "G":
+        {
+            "item": "magicmod:magic_gem"
+        },
+		"S":
+        {
+            "item": "minecraft:stick"
+        }
+    },
+    
+    "result":
+    {
+        "item": "magicmod:magic_pickaxe",
+        "count": 1
+    }
+}

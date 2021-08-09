@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "PPP",
+        "PHP",
+		"PPP"
+    ],
+    
+    "key":
+    {
+        "P":
+        {
+            "item": "magicmod:magic_plate"
+        },
+		"H":
+		{
+			"item": "magicmod:magic_helmet"
+		}
+    },
+	
+    "result":
+    {
+        "item": "magicmod:reinforced_magic_helmet",
+        "count": 1
+    }
+}

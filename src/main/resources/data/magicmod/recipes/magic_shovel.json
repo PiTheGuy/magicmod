@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "G",
+        "S",
+        "S"
+    ],
+    
+    "key":
+    {
+        "G":
+        {
+            "item": "magicmod:magic_gem"
+        },
+		"S":
+        {
+            "item": "minecraft:stick"
+        }
+    },
+    
+    "result":
+    {
+        "item": "magicmod:magic_shovel",
+        "count": 1
+    }
+}

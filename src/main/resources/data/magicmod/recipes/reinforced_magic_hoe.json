@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "PPP",
+        "PHP",
+        "PPP"
+    ],
+    
+    "key":
+    {
+        "P":
+        {
+            "item": "magicmod:magic_plate"
+        },
+		"S":
+        {
+            "item": "magicmod:magic_hoe"
+        }
+    },
+    
+    "result":
+    {
+        "item": "magicmod:reinforced_magic_hoe",
+        "count": 1
+    }
+}

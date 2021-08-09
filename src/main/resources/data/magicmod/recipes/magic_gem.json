@@ -1,0 +1,49 @@
+{ 
+    "type": "minecraft:crafting_shapeless",
+
+    "ingredients": 
+    [
+
+    {
+      "item": "minecraft:redstone"
+    },
+	
+	{
+      "item": "minecraft:iron_ingot"
+    },
+	
+    {
+      "item": "minecraft:gold_ingot"
+    },
+	
+	{
+      "item": "magicmod:nether_shard"
+    },
+	
+    {
+      "item": "minecraft:lapis_lazuli"
+    },
+	
+    {
+      "item": "minecraft:diamond"
+    },
+	
+    {
+      "item": "minecraft:emerald"
+    },
+	
+	{
+      "item": "minecraft:quartz"
+    },
+	
+	{
+      "item": "magicmod:magic_core"
+    }
+    ],
+
+    "result": 
+    {
+        "item": "magicmod:magic_gem",
+        "count": 1
+    }
+}

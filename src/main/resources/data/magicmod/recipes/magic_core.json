@@ -1,0 +1,51 @@
+{ 
+    "type": "minecraft:crafting_shapeless",
+
+    "ingredients": 
+    [
+
+    {
+      "item": "magicmod:magic_orb_red"
+    },
+	
+	{
+      "item": "magicmod:magic_orb_orange"
+    },
+	
+	{
+      "item": "magicmod:magic_orb_yellow"
+    },
+	
+	{
+      "item": "magicmod:magic_orb_green"
+    },
+	
+	{
+      "item": "magicmod:magic_orb_blue"
+    },
+	
+	{
+      "item": "magicmod:magic_orb_purple"
+    },
+	
+	{
+      "item": "magicmod:magic_orb_magenta"
+    },
+	
+	{
+      "item": "magicmod:magic_orb_black"
+    },
+	
+	{
+      "item": "magicmod:magic_orb_white"
+    }
+	
+	
+    ],
+
+    "result": 
+    {
+        "item": "magicmod:magic_core",
+        "count": 1
+    }
+}

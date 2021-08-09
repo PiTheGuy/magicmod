@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+
+  "pattern":
+  [
+    "SS",
+    "SS"
+  ],
+
+  "key":
+  {
+    "S":
+    {
+      "item": "magicmod:nether_shard"
+    }
+  },
+
+  "result":
+  {
+    "item": "minecraft:nether_star",
+    "count": 1
+  }
+}

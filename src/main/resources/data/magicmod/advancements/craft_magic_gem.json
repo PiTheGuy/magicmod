@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "magicmod:magic_gem"
+    },
+    "title": "Oh, Oh, Oh, It's Magic!",
+    "description": "Craft a Magic Core with several different minerals and a Nether Shard to create a Magic Gem",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "magicmod:craft_magic_core",
+  "criteria": {
+    "gem": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_gem"
+          }
+        ]
+      }
+    }
+  }
+}

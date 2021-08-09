@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "###",
+        "#P#",
+        "###"
+    ],
+    
+    "key":
+    {
+        "#":
+        {
+            "item": "magicmod:magic_plate"
+        },
+		"P":
+        {
+            "item": "magicmod:magic_pickaxe"
+        }
+    },
+    
+    "result":
+    {
+        "item": "magicmod:reinforced_magic_pickaxe",
+        "count": 1
+    }
+}

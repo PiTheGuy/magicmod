@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "PPP",
+        "PLP",
+        "PPP"
+    ],
+    
+    "key":
+    {
+        "P":
+        {
+            "item": "magicmod:magic_plate"
+        },
+        "L": {
+            "item": "magicmod:magic_leggings"
+        }
+	},
+	
+    "result":
+    {
+        "item": "magicmod:reinforced_magic_leggings",
+        "count": 1
+    }
+}
