@@ -1,0 +1,18 @@
+{ 
+    "type": "minecraft:crafting_shapeless",
+
+    "ingredients": 
+    [
+
+    {
+      "item": "minecraft:magic_block"
+    }
+	
+    ],
+
+    "result": 
+    {
+        "item": "magicmod:magic_gem",
+        "count": 4
+    }
+}
