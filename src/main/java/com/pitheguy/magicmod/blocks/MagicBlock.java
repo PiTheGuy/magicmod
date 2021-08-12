@@ -8,7 +8,7 @@ import net.minecraftforge.common.ToolType;
 public class MagicBlock extends Block {
 
     public MagicBlock() {
-        super(Properties.create(Material.IRON)
+        super(Block.Properties.create(Material.IRON)
                 .hardnessAndResistance(6.5f,8.0f)
                 .sound(SoundType.METAL)
                 .harvestLevel(4)

@@ -40,5 +40,6 @@
   "item.magicmod.reinforced_magic_leggings": "Reinforced Magic Leggings",
   "item.magicmod.reinforced_magic_boots": "Reinforced Magic Boots",
   "itemGroup.magicTab": "Magic Mod",
-  "block.magicmod.magic_ore": "Magic Ore"
+  "block.magicmod.magic_ore": "Magic Ore",
+  "block.magicmod.magic_block": "Magic Block"
 }
