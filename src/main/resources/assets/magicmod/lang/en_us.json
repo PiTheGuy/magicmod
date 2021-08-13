@@ -42,5 +42,6 @@
   "itemGroup.magicTab": "Magic Mod",
   "block.magicmod.magic_ore": "Magic Ore",
   "block.magicmod.magic_block": "Magic Block",
-  "block.magicmod.magic_obsidian": "Magic Obsidian"
+  "block.magicmod.magic_obsidian": "Magic Obsidian",
+  "block.magicmod.magic_slab": "Magic Slab"
 }

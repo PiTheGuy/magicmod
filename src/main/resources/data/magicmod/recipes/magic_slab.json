@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "MMM"
+    ],
+    
+    "key":
+    {
+        "M":
+        {
+            "item": "magicmod:magic_block"
+        }
+    },
+	
+    "result":
+    {
+        "item": "magicmod:magic_slab",
+        "count": 6
+    }
+}

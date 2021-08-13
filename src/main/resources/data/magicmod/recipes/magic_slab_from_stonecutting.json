@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "magicmod:magic_block"
+  },
+  "result": "magicmod:magic_slab",
+  "count": 2
+}

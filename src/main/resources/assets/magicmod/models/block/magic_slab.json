@@ -1,0 +1,8 @@
+{
+  "parent": "block/slab",
+  "textures": {
+    "bottom": "magicmod:blocks/magic_block",
+    "top": "magicmod:blocks/magic_block",
+    "side": "magicmod:blocks/magic_block"
+  }
+}

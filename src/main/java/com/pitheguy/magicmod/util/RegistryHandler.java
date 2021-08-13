@@ -4,14 +4,12 @@ import com.pitheguy.magicmod.MagicMod;
 import com.pitheguy.magicmod.armor.CustomArmorMagic;
 import com.pitheguy.magicmod.armor.MagicArmorMaterial;
 import com.pitheguy.magicmod.armor.ReinforcedMagicArmorMaterial;
-import com.pitheguy.magicmod.blocks.MagicBlock;
-import com.pitheguy.magicmod.blocks.MagicObsidian;
-import com.pitheguy.magicmod.blocks.MagicOre;
-import com.pitheguy.magicmod.blocks.BlockItemBase;
+import com.pitheguy.magicmod.blocks.*;
 import com.pitheguy.magicmod.items.ItemBase;
 import com.pitheguy.magicmod.tools.MagicItemTier;
 import com.pitheguy.magicmod.tools.ReinforcedMagicItemTier;
 import net.minecraft.block.Block;
+import net.minecraft.block.StairsBlock;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraftforge.fml.RegistryObject;
@@ -102,11 +100,13 @@ public class RegistryHandler {
 
     //Blocks
     public static final RegistryObject<Block> MAGIC_ORE = BLOCKS.register("magic_ore", MagicOre::new);
-    public static final RegistryObject<Block> MAGIC_BLOCK = BLOCKS.register("magic_block", MagicBlock::new);
     public static final RegistryObject<Block> MAGIC_OBSIDIAN = BLOCKS.register("magic_obsidian", MagicObsidian::new);
+    public static final RegistryObject<Block> MAGIC_BLOCK = BLOCKS.register("magic_block", MagicBlock::new);
+    public static final RegistryObject<Block> MAGIC_SLAB = BLOCKS.register("magic_slab", MagicSlab::new);
 
     //Block Items
     public static final RegistryObject<Item> MAGIC_ORE_ITEM = ITEMS.register("magic_ore", () -> new BlockItemBase(MAGIC_ORE.get()));
-    public static final RegistryObject<Item> MAGIC_BLOCK_ITEM = ITEMS.register("magic_block", () -> new BlockItemBase(MAGIC_BLOCK.get()));
     public static final RegistryObject<Item> MAGIC_OBSIDIAN_ITEM = ITEMS.register("magic_obsidian", () -> new BlockItemBase(MAGIC_OBSIDIAN.get()));
+    public static final RegistryObject<Item> MAGIC_BLOCK_ITEM = ITEMS.register("magic_block", () -> new BlockItemBase(MAGIC_BLOCK.get()));
+    public static final RegistryObject<Item> MAGIC_SLAB_ITEM = ITEMS.register("magic_slab", () -> new BlockItemBase(MAGIC_SLAB.get()));
 }
