@@ -6,10 +6,11 @@ import com.pitheguy.magicmod.armor.MagicArmorMaterial;
 import com.pitheguy.magicmod.armor.ReinforcedMagicArmorMaterial;
 import com.pitheguy.magicmod.blocks.*;
 import com.pitheguy.magicmod.items.ItemBase;
+import com.pitheguy.magicmod.tools.MagicHoe;
 import com.pitheguy.magicmod.tools.MagicItemTier;
+import com.pitheguy.magicmod.tools.ReinforcedMagicHoe;
 import com.pitheguy.magicmod.tools.ReinforcedMagicItemTier;
 import net.minecraft.block.Block;
-import net.minecraft.block.StairsBlock;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraftforge.fml.RegistryObject;
@@ -64,7 +65,7 @@ public class RegistryHandler {
     public static final RegistryObject<ShovelItem> MAGIC_SHOVEL = ITEMS.register("magic_shovel", () ->
             new ShovelItem(MagicItemTier.MAGIC, 55, 0.0f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<HoeItem> MAGIC_HOE = ITEMS.register("magic_hoe", () ->
-            new HoeItem(MagicItemTier.MAGIC,0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicHoe(MagicItemTier.MAGIC,0.0f, new Item.Properties().group(MagicMod.TAB)));
 
     //Reinforced Magic Tools
     public static final RegistryObject<SwordItem> REINFORCED_MAGIC_SWORD = ITEMS.register("reinforced_magic_sword", () ->
@@ -76,7 +77,7 @@ public class RegistryHandler {
     public static final RegistryObject<ShovelItem> REINFORCED_MAGIC_SHOVEL = ITEMS.register("reinforced_magic_shovel", () ->
             new ShovelItem(ReinforcedMagicItemTier.REINFORCED_MAGIC, 160, 0.0f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<HoeItem> REINFORCED_MAGIC_HOE = ITEMS.register("reinforced_magic_hoe", () ->
-            new HoeItem(ReinforcedMagicItemTier.REINFORCED_MAGIC,0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new ReinforcedMagicHoe(ReinforcedMagicItemTier.REINFORCED_MAGIC,0.0f, new Item.Properties().group(MagicMod.TAB)));
 
     //Magic Armor
     public static final RegistryObject<ArmorItem> MAGIC_HELMET = ITEMS.register("magic_helmet",() ->
