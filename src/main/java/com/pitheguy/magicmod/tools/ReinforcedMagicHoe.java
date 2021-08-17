@@ -23,7 +23,8 @@ public class ReinforcedMagicHoe extends HoeItem {
         BlockPos blockpos = context.getPos();
         int hook = net.minecraftforge.event.ForgeEventFactory.onHoeUse(context);
         if (hook != 0) return hook > 0 ? ActionResultType.SUCCESS : ActionResultType.FAIL;
-        if (context.getFace() != Direction.DOWN && world.isAirBlock(blockpos.up())) {
+        BlockState blockstate = HOE_LOOKUP.get(world.getBlockState(blockpos).getBlock());
+        if (context.getFace() != Direction.DOWN && blockstate != null && world.isAirBlock(blockpos.up())) {
             int tillX = -3;
             int blocksTilled = 0;
             int tillZ;
@@ -31,7 +32,7 @@ public class ReinforcedMagicHoe extends HoeItem {
                 tillZ = -3;
                 while (tillZ <= 3) {
                     BlockPos tillpos = blockpos.add(tillX,0,tillZ);
-                    BlockState blockstate = HOE_LOOKUP.get(world.getBlockState(tillpos).getBlock());
+                    blockstate = HOE_LOOKUP.get(world.getBlockState(tillpos).getBlock());
                     if (blockstate != null && world.isAirBlock(tillpos.up())) {
                         PlayerEntity playerentity = context.getPlayer();
                         world.playSound(playerentity, tillpos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);

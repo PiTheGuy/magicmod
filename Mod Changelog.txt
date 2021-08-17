@@ -1,8 +1,3 @@
-- Updated mod to 1.15
-- Increased toughness of Magic Armor to 20
-- Wearing a full set of Magic Armor now gives resistance 2
-- Updated nether shard texture to better reflect that it comes from a nether star
-- Added Magic Plate
-- Added Reinforced Magic armor and tools
-- Added custom advancements
-- Removed unused files
+- Added Magic Slab
+- The Magic Hoe now tills ground in a 3x3 area around the starting block
+- The Reinforced Magic Hoe now tills ground in a 7x7 area around the starting block
