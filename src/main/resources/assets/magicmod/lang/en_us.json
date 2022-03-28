@@ -43,5 +43,14 @@
   "block.magicmod.magic_ore": "Magic Ore",
   "block.magicmod.magic_block": "Magic Block",
   "block.magicmod.magic_obsidian": "Magic Obsidian",
-  "block.magicmod.magic_slab": "Magic Slab"
+  "block.magicmod.magic_slab": "Magic Slab",
+  "block.magicmod.magic_lamp_red": "Magic Lamp (Red)",
+  "block.magicmod.magic_lamp_orange": "Magic Lamp (Orange)",
+  "block.magicmod.magic_lamp_yellow": "Magic Lamp (Yellow)",
+  "block.magicmod.magic_lamp_green": "Magic Lamp (Green)",
+  "block.magicmod.magic_lamp_blue": "Magic Lamp (Blue)",
+  "block.magicmod.magic_lamp_purple": "Magic Lamp (Purple)",
+  "block.magicmod.magic_lamp_magenta": "Magic Lamp (Magenta)",
+  "block.magicmod.magic_lamp_black": "Magic Lamp (Black)",
+  "block.magicmod.magic_lamp_white": "Magic Lamp (White)"
 }

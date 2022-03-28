@@ -65,7 +65,7 @@ public class RegistryHandler {
     public static final RegistryObject<ShovelItem> MAGIC_SHOVEL = ITEMS.register("magic_shovel", () ->
             new ShovelItem(MagicItemTier.MAGIC, 55, 0.0f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<HoeItem> MAGIC_HOE = ITEMS.register("magic_hoe", () ->
-            new MagicHoe(MagicItemTier.MAGIC,0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicHoe(MagicItemTier.MAGIC, 0.0f, new Item.Properties().group(MagicMod.TAB)));
 
     //Reinforced Magic Tools
     public static final RegistryObject<SwordItem> REINFORCED_MAGIC_SWORD = ITEMS.register("reinforced_magic_sword", () ->
@@ -77,26 +77,26 @@ public class RegistryHandler {
     public static final RegistryObject<ShovelItem> REINFORCED_MAGIC_SHOVEL = ITEMS.register("reinforced_magic_shovel", () ->
             new ShovelItem(ReinforcedMagicItemTier.REINFORCED_MAGIC, 160, 0.0f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<HoeItem> REINFORCED_MAGIC_HOE = ITEMS.register("reinforced_magic_hoe", () ->
-            new ReinforcedMagicHoe(ReinforcedMagicItemTier.REINFORCED_MAGIC,0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new ReinforcedMagicHoe(ReinforcedMagicItemTier.REINFORCED_MAGIC, 0.0f, new Item.Properties().group(MagicMod.TAB)));
 
     //Magic Armor
-    public static final RegistryObject<ArmorItem> MAGIC_HELMET = ITEMS.register("magic_helmet",() ->
-        new CustomArmorMagic(MagicArmorMaterial.MAGIC, EquipmentSlotType.HEAD, new Item.Properties().group(MagicMod.TAB)));
-    public static final RegistryObject<ArmorItem> MAGIC_CHESTPLATE = ITEMS.register("magic_chestplate",() ->
+    public static final RegistryObject<ArmorItem> MAGIC_HELMET = ITEMS.register("magic_helmet", () ->
+            new CustomArmorMagic(MagicArmorMaterial.MAGIC, EquipmentSlotType.HEAD, new Item.Properties().group(MagicMod.TAB)));
+    public static final RegistryObject<ArmorItem> MAGIC_CHESTPLATE = ITEMS.register("magic_chestplate", () ->
             new CustomArmorMagic(MagicArmorMaterial.MAGIC, EquipmentSlotType.CHEST, new Item.Properties().group(MagicMod.TAB)));
-    public static final RegistryObject<ArmorItem> MAGIC_LEGGINGS = ITEMS.register("magic_leggings",() ->
+    public static final RegistryObject<ArmorItem> MAGIC_LEGGINGS = ITEMS.register("magic_leggings", () ->
             new CustomArmorMagic(MagicArmorMaterial.MAGIC, EquipmentSlotType.LEGS, new Item.Properties().group(MagicMod.TAB)));
-    public static final RegistryObject<ArmorItem> MAGIC_BOOTS = ITEMS.register("magic_boots",() ->
+    public static final RegistryObject<ArmorItem> MAGIC_BOOTS = ITEMS.register("magic_boots", () ->
             new CustomArmorMagic(MagicArmorMaterial.MAGIC, EquipmentSlotType.FEET, new Item.Properties().group(MagicMod.TAB)));
 
     //Reinforced Magic Armor
-    public static final RegistryObject<ArmorItem> REINFORCED_MAGIC_HELMET = ITEMS.register("reinforced_magic_helmet",() ->
+    public static final RegistryObject<ArmorItem> REINFORCED_MAGIC_HELMET = ITEMS.register("reinforced_magic_helmet", () ->
             new CustomArmorMagic(ReinforcedMagicArmorMaterial.REINFORCED_MAGIC, EquipmentSlotType.HEAD, new Item.Properties().group(MagicMod.TAB)));
-    public static final RegistryObject<ArmorItem> REINFORCED_MAGIC_CHESTPLATE = ITEMS.register("reinforced_magic_chestplate",() ->
+    public static final RegistryObject<ArmorItem> REINFORCED_MAGIC_CHESTPLATE = ITEMS.register("reinforced_magic_chestplate", () ->
             new CustomArmorMagic(ReinforcedMagicArmorMaterial.REINFORCED_MAGIC, EquipmentSlotType.CHEST, new Item.Properties().group(MagicMod.TAB)));
-    public static final RegistryObject<ArmorItem> REINFORCED_MAGIC_LEGGINGS = ITEMS.register("reinforced_magic_leggings",() ->
+    public static final RegistryObject<ArmorItem> REINFORCED_MAGIC_LEGGINGS = ITEMS.register("reinforced_magic_leggings", () ->
             new CustomArmorMagic(ReinforcedMagicArmorMaterial.REINFORCED_MAGIC, EquipmentSlotType.LEGS, new Item.Properties().group(MagicMod.TAB)));
-    public static final RegistryObject<ArmorItem> REINFORCED_MAGIC_BOOTS = ITEMS.register("reinforced_magic_boots",() ->
+    public static final RegistryObject<ArmorItem> REINFORCED_MAGIC_BOOTS = ITEMS.register("reinforced_magic_boots", () ->
             new CustomArmorMagic(ReinforcedMagicArmorMaterial.REINFORCED_MAGIC, EquipmentSlotType.FEET, new Item.Properties().group(MagicMod.TAB)));
 
     //Blocks
@@ -104,10 +104,29 @@ public class RegistryHandler {
     public static final RegistryObject<Block> MAGIC_OBSIDIAN = BLOCKS.register("magic_obsidian", MagicObsidian::new);
     public static final RegistryObject<Block> MAGIC_BLOCK = BLOCKS.register("magic_block", MagicBlock::new);
     public static final RegistryObject<Block> MAGIC_SLAB = BLOCKS.register("magic_slab", MagicSlab::new);
+    public static final RegistryObject<Block> MAGIC_LAMP_RED = BLOCKS.register("magic_lamp_red", MagicLamp::new);
+    public static final RegistryObject<Block> MAGIC_LAMP_ORANGE = BLOCKS.register("magic_lamp_orange", MagicLamp::new);
+    public static final RegistryObject<Block> MAGIC_LAMP_YELLOW = BLOCKS.register("magic_lamp_yellow", MagicLamp::new);
+    public static final RegistryObject<Block> MAGIC_LAMP_GREEN = BLOCKS.register("magic_lamp_green", MagicLamp::new);
+    public static final RegistryObject<Block> MAGIC_LAMP_BLUE = BLOCKS.register("magic_lamp_blue", MagicLamp::new);
+    public static final RegistryObject<Block> MAGIC_LAMP_PURPLE = BLOCKS.register("magic_lamp_purple", MagicLamp::new);
+    public static final RegistryObject<Block> MAGIC_LAMP_MAGENTA = BLOCKS.register("magic_lamp_magenta", MagicLamp::new);
+    public static final RegistryObject<Block> MAGIC_LAMP_BLACK = BLOCKS.register("magic_lamp_black", MagicLamp::new);
+    public static final RegistryObject<Block> MAGIC_LAMP_WHITE = BLOCKS.register("magic_lamp_white", MagicLamp::new);
+
 
     //Block Items
     public static final RegistryObject<Item> MAGIC_ORE_ITEM = ITEMS.register("magic_ore", () -> new BlockItemBase(MAGIC_ORE.get()));
     public static final RegistryObject<Item> MAGIC_OBSIDIAN_ITEM = ITEMS.register("magic_obsidian", () -> new BlockItemBase(MAGIC_OBSIDIAN.get()));
     public static final RegistryObject<Item> MAGIC_BLOCK_ITEM = ITEMS.register("magic_block", () -> new BlockItemBase(MAGIC_BLOCK.get()));
     public static final RegistryObject<Item> MAGIC_SLAB_ITEM = ITEMS.register("magic_slab", () -> new BlockItemBase(MAGIC_SLAB.get()));
+    public static final RegistryObject<Item> MAGIC_LAMP_RED_ITEM = ITEMS.register("magic_lamp_red", () -> new BlockItemBase(MAGIC_LAMP_RED.get()));
+    public static final RegistryObject<Item> MAGIC_LAMP_ORANGE_ITEM = ITEMS.register("magic_lamp_orange", () -> new BlockItemBase(MAGIC_LAMP_ORANGE.get()));
+    public static final RegistryObject<Item> MAGIC_LAMP_YELLOW_ITEM = ITEMS.register("magic_lamp_yellow", () -> new BlockItemBase(MAGIC_LAMP_YELLOW.get()));
+    public static final RegistryObject<Item> MAGIC_LAMP_GREEN_ITEM = ITEMS.register("magic_lamp_green", () -> new BlockItemBase(MAGIC_LAMP_GREEN.get()));
+    public static final RegistryObject<Item> MAGIC_LAMP_BLUE_ITEM = ITEMS.register("magic_lamp_blue", () -> new BlockItemBase(MAGIC_LAMP_BLUE.get()));
+    public static final RegistryObject<Item> MAGIC_LAMP_PURPLE_ITEM = ITEMS.register("magic_lamp_purple", () -> new BlockItemBase(MAGIC_LAMP_PURPLE.get()));
+    public static final RegistryObject<Item> MAGIC_LAMP_MAGENTA_ITEM = ITEMS.register("magic_lamp_magenta", () -> new BlockItemBase(MAGIC_LAMP_MAGENTA.get()));
+    public static final RegistryObject<Item> MAGIC_LAMP_BLACK_ITEM = ITEMS.register("magic_lamp_black", () -> new BlockItemBase(MAGIC_LAMP_BLACK.get()));
+    public static final RegistryObject<Item> MAGIC_LAMP_WHITE_ITEM = ITEMS.register("magic_lamp_white", () -> new BlockItemBase(MAGIC_LAMP_WHITE.get()));
 }

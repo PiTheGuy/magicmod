@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+
+  "pattern":
+  [
+    "LLL",
+    "LOL",
+    "LLL"
+  ],
+
+  "key":
+  {
+    "L":
+    {
+      "tag": "magicmod:magic_lamp_ingredients"
+    },
+    "O": {
+      "item": "magicmod:magic_orb_magenta"
+    }
+  },
+
+  "result":
+  {
+    "item": "magicmod:magic_lamp_magenta",
+    "count": 8
+  }
+}
