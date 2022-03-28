@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "magicmod:magic_dust_yellow"
+  },
+  "result": "magicmod:magic_orb_yellow",
+  "experience": 1.2,
+  "cookingtime": 100
+}
