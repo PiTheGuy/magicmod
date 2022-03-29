@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "magicmod:reinforced_magic_pickaxe",
+      "magicmod:reinforced_magic_axe",
+      "magicmod:reinforced_magic_shovel",
+      "magicmod:reinforced_magic_sword",
+      "magicmod:reinforced_magic_hoe",
+      "magicmod:reinforced_magic_helmet",
+      "magicmod:reinforced_magic_chestplate",
+      "magicmod:reinforced_magic_leggings",
+      "magicmod:reinforced_magic_boots",
+      "magicmod:magic_obsidian"
+    ]
+  },
+  "criteria": {
+    "has_magic_plate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_plate"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_magic_plate"
+    ]
+  ]
+}

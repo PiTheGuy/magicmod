@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "magicmod:magic_gem"
+    ]
+  },
+  "criteria": {
+    "has_magic_core": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_core"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_magic_core"
+    ]
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "magicmod:nether_shard"
+    ]
+  },
+  "criteria": {
+    "has_nether_star": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:nether_star"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_nether_star"
+    ]
+  ]
+}

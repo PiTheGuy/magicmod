@@ -11,6 +11,11 @@
     "hidden": false
   },
   "parent": "magicmod:smelt_dust",
+  "rewards": {
+    "recipes": [
+      "magicmod:magic_gem"
+    ]
+  },
   "criteria": {
     "red_orb": {
       "trigger": "minecraft:inventory_changed",
