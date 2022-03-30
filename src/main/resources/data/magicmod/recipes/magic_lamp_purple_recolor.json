@@ -13,16 +13,16 @@
   {
     "L":
     {
-      "item": "minecraft:sea_lantern"
+      "tag": "magicmod:magic_lamps"
     },
     "O": {
-      "item": "magicmod:magic_orb_white"
+      "item": "magicmod:magic_orb_purple"
     }
   },
 
   "result":
   {
-    "item": "magicmod:magic_lamp_white",
+    "item": "magicmod:magic_lamp_purple",
     "count": 8
   }
 }

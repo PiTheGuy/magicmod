@@ -1,3 +1,2 @@
-- Added Magic Slab
-- The Magic Hoe now tills ground in a 3x3 area around the starting block
-- The Reinforced Magic Hoe now tills ground in a 7x7 area around the starting block
+- Added Magic Glue Block which slows down entites that walk on it and prevents them from jumping
+- Added Magic Glue (intermediate crafting item)

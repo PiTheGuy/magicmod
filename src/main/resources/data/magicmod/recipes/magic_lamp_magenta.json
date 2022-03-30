@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "group": "magic_lamps",
 
   "pattern":
   [
@@ -12,7 +13,7 @@
   {
     "L":
     {
-      "tag": "magicmod:magic_lamp_ingredients"
+      "item": "minecraft:sea_lantern"
     },
     "O": {
       "item": "magicmod:magic_orb_magenta"

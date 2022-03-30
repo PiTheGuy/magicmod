@@ -13,7 +13,7 @@
   {
     "L":
     {
-      "item": "minecraft:sea_lantern"
+      "tag": "magicmod:magic_lamps"
     },
     "O": {
       "item": "magicmod:magic_orb_white"
