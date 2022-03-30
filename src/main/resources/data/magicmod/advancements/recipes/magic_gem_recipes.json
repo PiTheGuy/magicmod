@@ -12,7 +12,8 @@
       "magicmod:magic_leggings",
       "magicmod:magic_boots",
       "magicmod:magic_plate",
-      "magicmod:magic_block"
+      "magicmod:magic_block",
+      "magicmod:magic_glue"
     ]
   },
   "criteria": {

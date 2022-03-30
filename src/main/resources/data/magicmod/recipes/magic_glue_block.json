@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+
+  "pattern":
+  [
+    "GGG",
+    "GGG",
+    "GGG"
+  ],
+
+  "key":
+  {
+    "G": {
+      "item": "magicmod:magic_glue"
+    }
+  },
+
+  "result":
+  {
+    "item": "magicmod:magic_glue_block",
+    "count": 1
+  }
+}

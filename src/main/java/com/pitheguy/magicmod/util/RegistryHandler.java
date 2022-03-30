@@ -32,6 +32,7 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_CORE = ITEMS.register("magic_core", ItemBase::new);
     public static final RegistryObject<Item> NETHER_SHARD = ITEMS.register("nether_shard", ItemBase::new);
     public static final RegistryObject<Item> MAGIC_PLATE = ITEMS.register("magic_plate", ItemBase::new);
+    public static final RegistryObject<Item> MAGIC_GLUE = ITEMS.register("magic_glue", ItemBase::new);
 
     //Magic Dust
     public static final RegistryObject<Item> MAGIC_DUST_RED = ITEMS.register("magic_dust_red", ItemBase::new);

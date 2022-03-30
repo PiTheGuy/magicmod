@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+
+  "ingredients":
+  [
+
+    {
+      "item": "magicmod:magic_glue_block"
+    }
+  ],
+
+  "result":
+  {
+    "item": "magicmod:magic_glue",
+    "count": 9
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "magicmod:magic_glue_block"
+    ]
+  },
+  "criteria": {
+    "has_magic_glue": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_glue"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_magic_glue"
+    ]
+  ]
+}

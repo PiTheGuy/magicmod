@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+
+  "pattern":
+  [
+    "SSS",
+    "SGS",
+    "SSS"
+  ],
+
+  "key":
+  {
+    "S":
+    {
+      "item": "minecraft:slime_ball"
+    },
+    "G": {
+      "item": "magicmod:magic_gem"
+    }
+  },
+
+  "result":
+  {
+    "item": "magicmod:magic_glue",
+    "count": 8
+  }
+}
