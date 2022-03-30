@@ -8,7 +8,7 @@ public class MagicLamp extends Block {
     public MagicLamp() {
         super(Properties.create(Material.IRON)
                 .hardnessAndResistance(2.0f, 2.0f)
-                .sound(SoundType.METAL)
+                .sound(SoundType.GLASS)
                 .lightValue(15)
         );
     }
