@@ -6,10 +6,7 @@ import com.pitheguy.magicmod.armor.MagicArmorMaterial;
 import com.pitheguy.magicmod.armor.ReinforcedMagicArmorMaterial;
 import com.pitheguy.magicmod.blocks.*;
 import com.pitheguy.magicmod.items.ItemBase;
-import com.pitheguy.magicmod.tools.MagicHoe;
-import com.pitheguy.magicmod.tools.MagicItemTier;
-import com.pitheguy.magicmod.tools.ReinforcedMagicHoe;
-import com.pitheguy.magicmod.tools.ReinforcedMagicItemTier;
+import com.pitheguy.magicmod.tools.*;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
@@ -76,7 +73,7 @@ public class RegistryHandler {
     public static final RegistryObject<AxeItem> REINFORCED_MAGIC_AXE = ITEMS.register("reinforced_magic_axe", () ->
             new AxeItem(ReinforcedMagicItemTier.REINFORCED_MAGIC, 225, -1.0f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<ShovelItem> REINFORCED_MAGIC_SHOVEL = ITEMS.register("reinforced_magic_shovel", () ->
-            new ShovelItem(ReinforcedMagicItemTier.REINFORCED_MAGIC, 160, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new ReinforcedMagicShovel(ReinforcedMagicItemTier.REINFORCED_MAGIC, 160, 0.0f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<HoeItem> REINFORCED_MAGIC_HOE = ITEMS.register("reinforced_magic_hoe", () ->
             new ReinforcedMagicHoe(ReinforcedMagicItemTier.REINFORCED_MAGIC, 0.0f, new Item.Properties().group(MagicMod.TAB)));
 
