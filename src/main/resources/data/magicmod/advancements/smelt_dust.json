@@ -11,6 +11,11 @@
     "hidden": false
   },
   "parent": "magicmod:root",
+  "rewards": {
+    "recipies": [
+      "magicmod:magic_infuser"
+    ]
+  },
   "criteria": {
     "red_orb": {
       "trigger": "minecraft:inventory_changed",

@@ -46,6 +46,7 @@
   "block.magicmod.magic_obsidian": "Magic Obsidian",
   "block.magicmod.magic_slab": "Magic Slab",
   "block.magicmod.magic_glue_block": "Magic Glue Block",
+  "block.magicmod.magic_infuser": "Magic Infuser",
   "block.magicmod.magic_lamp_red": "Magic Lamp (Red)",
   "block.magicmod.magic_lamp_orange": "Magic Lamp (Orange)",
   "block.magicmod.magic_lamp_yellow": "Magic Lamp (Yellow)",
@@ -54,5 +55,6 @@
   "block.magicmod.magic_lamp_purple": "Magic Lamp (Purple)",
   "block.magicmod.magic_lamp_magenta": "Magic Lamp (Magenta)",
   "block.magicmod.magic_lamp_black": "Magic Lamp (Black)",
-  "block.magicmod.magic_lamp_white": "Magic Lamp (White)"
+  "block.magicmod.magic_lamp_white": "Magic Lamp (White)",
+  "container.magicmod.magic_infuser": "Magic Infuser"
 }

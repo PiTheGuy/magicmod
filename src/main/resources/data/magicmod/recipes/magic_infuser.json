@@ -1,0 +1,30 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "OOO",
+        "PIP",
+        "PPP"
+    ],
+    
+    "key":
+    {
+        "O":
+        {
+            "tag": "magicmod:magic_orbs"
+        },
+        "P": {
+            "tag": "minecraft:planks"
+        },
+        "I": {
+            "item": "minecraft:iron_ingot"
+        }
+    },
+	
+    "result":
+    {
+        "item": "magicmod:magic_infuser",
+        "count": 1
+    }
+}

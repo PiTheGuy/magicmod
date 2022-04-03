@@ -1,10 +1,15 @@
 package com.pitheguy.magicmod;
 
+import com.pitheguy.magicmod.client.gui.MagicInfuserScreen;
+import com.pitheguy.magicmod.init.ModContainerTypes;
+import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.RegistryHandler;
 import com.pitheguy.magicmod.world.gen.ModOreGen;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -23,12 +28,19 @@ public class MagicMod
     public static final String MOD_ID = "magicmod";
 
     public MagicMod() {
+        final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modEventBus.addListener(this::setup);
+
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
         RegistryHandler.init();
 
+        ModTileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
+        ModContainerTypes.CONTAINER_TYPES.register(modEventBus);
+
         MinecraftForge.EVENT_BUS.register(this);
+
     }
 
     private void setup(final FMLCommonSetupEvent event)
@@ -37,7 +49,7 @@ public class MagicMod
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-
+        ScreenManager.registerFactory(ModContainerTypes.MAGIC_INFUSER.get(), MagicInfuserScreen::new);
     }
 
     @SubscribeEvent
