@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "magicmod:magic_infuser"
+    },
+    "title": "A True Magician",
+    "description": "Craft a Magic Infuser to get double the Magic Cores from the same Magic orbs",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "magicmod:craft_magic_gem",
+  "criteria": {
+    "gem": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_infuser"
+          }
+        ]
+      }
+    }
+  }
+}

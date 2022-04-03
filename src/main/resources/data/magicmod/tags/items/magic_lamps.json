@@ -8,7 +8,6 @@
     "magicmod:magic_lamp_purple",
     "magicmod:magic_lamp_magenta",
     "magicmod:magic_lamp_black",
-    "magicmod:magic_lamp_white",
-    "minecraft:sea_lantern"
+    "magicmod:magic_lamp_white"
   ]
 }
