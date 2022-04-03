@@ -29,7 +29,7 @@ public class MagicInfuserScreen extends ContainerScreen<MagicInfuserContainer> {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         this.font.drawString(this.title.getFormattedText(), 8, 8, 0x404040);
-        //this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8, 125, 0x404040);
+        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8, 120, 0x404040);
     }
 
     @Override
