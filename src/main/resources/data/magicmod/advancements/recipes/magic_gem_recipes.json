@@ -13,7 +13,8 @@
       "magicmod:magic_boots",
       "magicmod:magic_plate",
       "magicmod:magic_block",
-      "magicmod:magic_glue"
+      "magicmod:magic_glue",
+      "magicmod:magic_infuser"
     ]
   },
   "criteria": {

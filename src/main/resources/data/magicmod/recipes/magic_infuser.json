@@ -3,16 +3,16 @@
     
     "pattern":
     [
-        "OOO",
+        "GGG",
         "PIP",
         "PPP"
     ],
     
     "key":
     {
-        "O":
+        "G":
         {
-            "tag": "magicmod:magic_orbs"
+            "item": "magicmod:magic_gem"
         },
         "P": {
             "tag": "minecraft:planks"
