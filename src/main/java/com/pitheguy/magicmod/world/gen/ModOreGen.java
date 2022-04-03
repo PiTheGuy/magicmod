@@ -1,6 +1,5 @@
 package com.pitheguy.magicmod.world.gen;
 
-import com.pitheguy.magicmod.blocks.MagicOre;
 import com.pitheguy.magicmod.util.RegistryHandler;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;

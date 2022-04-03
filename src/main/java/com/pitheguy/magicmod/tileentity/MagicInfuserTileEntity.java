@@ -3,7 +3,6 @@ package com.pitheguy.magicmod.tileentity;
 import com.pitheguy.magicmod.container.MagicInfuserContainer;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.init.RecipeSerializerInit;
-import com.pitheguy.magicmod.recipes.IModRecipe;
 import com.pitheguy.magicmod.recipes.MagicOrbRecipe;
 import com.pitheguy.magicmod.util.ModItemHandler;
 import com.pitheguy.magicmod.util.RegistryHandler;
@@ -59,7 +58,7 @@ public class MagicInfuserTileEntity extends TileEntity implements ITickableTileE
     @Override
     public void read(CompoundNBT compound) {
         super.read(compound);
-        NonNullList<ItemStack> inv = NonNullList.<ItemStack>withSize(this.inventory.getSlots(), ItemStack.EMPTY);
+        NonNullList<ItemStack> inv = NonNullList.withSize(this.inventory.getSlots(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, inv);
         this.inventory.setNonNullList(inv);
     }
@@ -123,8 +122,9 @@ public class MagicInfuserTileEntity extends TileEntity implements ITickableTileE
                     this.inventory.getStackInSlot(5).getItem() == RegistryHandler.MAGIC_ORB_PURPLE.get() &&
                     this.inventory.getStackInSlot(6).getItem() == RegistryHandler.MAGIC_ORB_MAGENTA.get() &&
                     this.inventory.getStackInSlot(7).getItem() == RegistryHandler.MAGIC_ORB_BLACK.get() &&
-                    this.inventory.getStackInSlot(8).getItem() == RegistryHandler.MAGIC_ORB_WHITE.get()) {
-                this.inventory.insertItem(9, new ItemStack(RegistryHandler.MAGIC_GEM.get(), 1), false);
+                    this.inventory.getStackInSlot(8).getItem() == RegistryHandler.MAGIC_ORB_WHITE.get() &&
+                    this.inventory.getStackInSlot(9).getCount() < 63) {
+                this.inventory.insertItem(9, new ItemStack(RegistryHandler.MAGIC_CORE.get(), 2), false);
                 for (int i = 0; i < 9; i++) {
                     this.inventory.decrStackSize(i, 1);
                     dirty = true;
@@ -186,9 +186,7 @@ public class MagicInfuserTileEntity extends TileEntity implements ITickableTileE
         for (IRecipe<?> recipe : recipes) {
             NonNullList<Ingredient> ingredients = recipe.getIngredients();
             ingredients.forEach(ingredient -> {
-                for (ItemStack stack : ingredient.getMatchingStacks()) {
-                    inputs.add(stack);
-                }
+                Collections.addAll(inputs, ingredient.getMatchingStacks());
             });
         }
         return inputs;

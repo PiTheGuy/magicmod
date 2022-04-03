@@ -1,5 +1,6 @@
 package com.pitheguy.magicmod.container;
 
+import com.pitheguy.magicmod.container.itemhandlers.magicinfuser.SingleItemSlotItemHandler;
 import com.pitheguy.magicmod.init.ModContainerTypes;
 import com.pitheguy.magicmod.tileentity.MagicInfuserTileEntity;
 import com.pitheguy.magicmod.util.RegistryHandler;
@@ -7,11 +8,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -43,10 +44,11 @@ public class MagicInfuserContainer extends Container {
         }
         //Magic Infuser Inventory
         final int[][] inputCoords = {{79,8},{113,21},{130,51},{124,86},{97,108},{63,108},{36,86},{30,51},{47,21}};
+        final Item[] slotItems = {RegistryHandler.MAGIC_ORB_RED.get(), RegistryHandler.MAGIC_ORB_ORANGE.get(), RegistryHandler.MAGIC_ORB_YELLOW.get(), RegistryHandler.MAGIC_ORB_GREEN.get(), RegistryHandler.MAGIC_ORB_BLUE.get(), RegistryHandler.MAGIC_ORB_PURPLE.get(), RegistryHandler.MAGIC_ORB_MAGENTA.get(), RegistryHandler.MAGIC_ORB_BLACK.get(), RegistryHandler.MAGIC_ORB_WHITE.get()};
         for (int i = 0; i < 9; i++) {
-            this.addSlot(new SlotItemHandler(tile.getInventory(), i, inputCoords[i][0], inputCoords[i][1]));
+            this.addSlot(new SingleItemSlotItemHandler(tile.getInventory(), i, inputCoords[i][0], inputCoords[i][1], slotItems[i]));
         }
-        this.addSlot(new SlotItemHandler(tile.getInventory(), 9, 80, 58));
+        this.addSlot(new SingleItemSlotItemHandler(tile.getInventory(), 9, 80, 58, RegistryHandler.MAGIC_CORE.get()));
 
 
     }
