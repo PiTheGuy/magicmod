@@ -114,8 +114,8 @@ public class MagicInfuserTileEntity extends TileEntity implements ITickableTileE
     @Override
     public void tick() {
         boolean dirty = false;
-        while (world != null && !world.isRemote()) {
-            if(this.inventory.getStackInSlot(0).getItem() == RegistryHandler.MAGIC_ORB_RED.get() &&
+        if (world != null && !world.isRemote()) {
+            while(this.inventory.getStackInSlot(0).getItem() == RegistryHandler.MAGIC_ORB_RED.get() &&
                     this.inventory.getStackInSlot(1).getItem() == RegistryHandler.MAGIC_ORB_ORANGE.get() &&
                     this.inventory.getStackInSlot(2).getItem() == RegistryHandler.MAGIC_ORB_YELLOW.get() &&
                     this.inventory.getStackInSlot(3).getItem() == RegistryHandler.MAGIC_ORB_GREEN.get() &&
