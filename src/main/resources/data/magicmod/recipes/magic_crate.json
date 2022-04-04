@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "PPP",
+        "PBP",
+        "PPP"
+    ],
+    
+    "key":
+    {
+        "P": {
+            "item": "magicmod:magic_plate"
+        },
+        "B": {
+            "item": "minecraft:barrel"
+        }
+    },
+	
+    "result":
+    {
+        "item": "magicmod:magic_crate",
+        "count": 1
+    }
+}

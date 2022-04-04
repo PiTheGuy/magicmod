@@ -105,6 +105,7 @@ public class RegistryHandler {
     public static final RegistryObject<Block> MAGIC_SLAB = BLOCKS.register("magic_slab", MagicSlab::new);
     public static final RegistryObject<Block> MAGIC_GLUE_BLOCK = BLOCKS.register("magic_glue_block", MagicGlueBlock::new);
     public static final RegistryObject<Block> MAGIC_INFUSER = BLOCKS.register("magic_infuser", MagicInfuser::new);
+    public static final RegistryObject<Block> MAGIC_CRATE = BLOCKS.register("magic_crate", MagicCrate::new);
     public static final RegistryObject<Block> MAGIC_LAMP_RED = BLOCKS.register("magic_lamp_red", MagicLamp::new);
     public static final RegistryObject<Block> MAGIC_LAMP_ORANGE = BLOCKS.register("magic_lamp_orange", MagicLamp::new);
     public static final RegistryObject<Block> MAGIC_LAMP_YELLOW = BLOCKS.register("magic_lamp_yellow", MagicLamp::new);
@@ -123,6 +124,7 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_SLAB_ITEM = ITEMS.register("magic_slab", () -> new BlockItemBase(MAGIC_SLAB.get()));
     public static final RegistryObject<Item> MAGIC_GLUE_BLOCK_ITEM = ITEMS.register("magic_glue_block", () -> new BlockItemBase(MAGIC_GLUE_BLOCK.get()));
     public static final RegistryObject<Item> MAGIC_INFUSER_ITEM = ITEMS.register("magic_infuser", () -> new BlockItemBase(MAGIC_INFUSER.get()));
+    public static final RegistryObject<Item> MAGIC_CRATE_ITEM = ITEMS.register("magic_crate", () -> new BlockItemBase(MAGIC_CRATE.get()));
     public static final RegistryObject<Item> MAGIC_LAMP_RED_ITEM = ITEMS.register("magic_lamp_red", () -> new BlockItemBase(MAGIC_LAMP_RED.get()));
     public static final RegistryObject<Item> MAGIC_LAMP_ORANGE_ITEM = ITEMS.register("magic_lamp_orange", () -> new BlockItemBase(MAGIC_LAMP_ORANGE.get()));
     public static final RegistryObject<Item> MAGIC_LAMP_YELLOW_ITEM = ITEMS.register("magic_lamp_yellow", () -> new BlockItemBase(MAGIC_LAMP_YELLOW.get()));
