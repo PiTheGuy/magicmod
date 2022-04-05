@@ -1,3 +1,3 @@
-- Added Magic Glue Block which slows down entites that walk on it and prevents them from jumping
-- Added Magic Glue (intermediate crafting item)
-- Seperated base magic lamp recipe from recolor recipes
+- Added Magic Crate (upgraded barrel block)
+- Added new advancement for breaking the reinforced magic hoe
+- Magic hoes now break multiple crops at a time (3x3 for regular Magic hoe, 5x5 for reinforced)
