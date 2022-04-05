@@ -1,16 +1,24 @@
 package com.pitheguy.magicmod.tools;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.HoeItem;
 import net.minecraft.item.IItemTier;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class ReinforcedMagicHoe extends HoeItem {
     public ReinforcedMagicHoe(IItemTier tier, float attackSpeedIn, Properties builder) {
@@ -56,5 +64,20 @@ public class ReinforcedMagicHoe extends HoeItem {
         }
 
         return ActionResultType.PASS;
+    }
+    private static final List<Block> CROP_BLOCKS_AGE_7 = Arrays.asList(Blocks.WHEAT, Blocks.CARROTS, Blocks.POTATOES);
+    private static final List<Block> CROP_BLOCKS_AGE_3 = Arrays.asList(Blocks.BEETROOTS, Blocks.NETHER_WART);
+
+    @Override
+    public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
+        for (int x = -2; x <= 2; x++) {
+            for (int z = -2; z <= 2; z++) {
+                BlockState currBlock = worldIn.getBlockState(pos.add(x, 0, z));
+                if((CROP_BLOCKS_AGE_7.contains(currBlock.getBlock()) && currBlock.get(BlockStateProperties.AGE_0_7) == 7) || (CROP_BLOCKS_AGE_3.contains(currBlock.getBlock()) && currBlock.get(BlockStateProperties.AGE_0_3) == 3)) {
+                    worldIn.destroyBlock(pos.add(x, 0, z), true);
+                }
+            }
+        }
+        return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
     }
 }
