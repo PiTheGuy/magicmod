@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 public enum MagicArmorMaterial implements IArmorMaterial {
 
-    MAGIC("magicmod:magic",1200, new int[] {50,105,125,50}, 40, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 20.0f, () -> { return Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get()); });
+    MAGIC(new int[] {50,105,125,50}, () -> { return Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get()); });
 
     private static final int[] MAX_DAMAGE_ARRAY = new int[] {11,16,15,13};
     private final String name;
@@ -24,13 +24,13 @@ public enum MagicArmorMaterial implements IArmorMaterial {
     private final float toughness;
     private final Supplier<Ingredient> repairMaterial;
 
-    MagicArmorMaterial(String name, int maxDamageFactor, int[] damageReductionAmountArray, int enchantability, SoundEvent soundEvent, float toughness, Supplier<Ingredient> repairMaterial){
-        this.name = name;
-        this.maxDamageFactor = maxDamageFactor;
+    MagicArmorMaterial(int[] damageReductionAmountArray, Supplier<Ingredient> repairMaterial){
+        this.name = "magicmod:magic";
+        this.maxDamageFactor = 1200;
         this.damageReductionAmountArray = damageReductionAmountArray;
-        this.enchantability = enchantability;
-        this.soundEvent = soundEvent;
-        this.toughness = toughness;
+        this.enchantability = 40;
+        this.soundEvent = SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND;
+        this.toughness = (float) 20.0;
         this.repairMaterial = repairMaterial;
     }
 

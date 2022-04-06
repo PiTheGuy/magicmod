@@ -7,7 +7,7 @@ import net.minecraft.item.crafting.Ingredient;
 import java.util.function.Supplier;
 
 public enum ReinforcedMagicItemTier implements IItemTier {
-    REINFORCED_MAGIC(6,200000, 75.0F, 0.0F, 60, () -> {
+    REINFORCED_MAGIC(() -> {
         return Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get());
     });
 
@@ -18,12 +18,12 @@ public enum ReinforcedMagicItemTier implements IItemTier {
     private final int enchantability;
     private final Supplier<Ingredient> repairMaterial;
 
-    ReinforcedMagicItemTier(int harvestLevel, int maxUses, float efficiency, float attackDamage, int enchantability, Supplier<Ingredient> repairMaterial) {
-        this.harvestLevel = harvestLevel;
-        this.maxUses = maxUses;
-        this.efficiency = efficiency;
-        this.attackDamage = attackDamage;
-        this.enchantability = enchantability;
+    ReinforcedMagicItemTier(Supplier<Ingredient> repairMaterial) {
+        this.harvestLevel = 6;
+        this.maxUses = 200000;
+        this.efficiency = (float) 75.0;
+        this.attackDamage = (float) 0.0;
+        this.enchantability = 60;
         this.repairMaterial = repairMaterial;
     }
 

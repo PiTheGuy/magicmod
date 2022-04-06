@@ -18,13 +18,11 @@ import java.util.Objects;
 
 public class MagicCrateContainer extends Container {
 
-    private MagicCrateTileEntity tileEntity;
-    private IWorldPosCallable canInteractWithCallable;
+    private final IWorldPosCallable canInteractWithCallable;
 
     //Server constructor
     public MagicCrateContainer(final int windowID, final PlayerInventory playerInv, final MagicCrateTileEntity tile) {
         super(ModContainerTypes.MAGIC_CRATE.get(), windowID);
-        this.tileEntity = tile;
         this.canInteractWithCallable = IWorldPosCallable.of(tile.getWorld(), tile.getPos());
 
         final int slotSizePlus2 = 18;

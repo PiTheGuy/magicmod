@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 
 public class MagicCrateTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
     private ITextComponent customName;
-    private ModItemHandler inventory;
+    private final ModItemHandler inventory;
 
     public MagicCrateTileEntity(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);

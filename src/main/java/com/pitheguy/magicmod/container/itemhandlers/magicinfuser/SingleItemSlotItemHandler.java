@@ -7,7 +7,7 @@ import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class SingleItemSlotItemHandler extends SlotItemHandler {
-    Item validItem;
+    final Item validItem;
     public SingleItemSlotItemHandler(IItemHandler itemHandler, int index, int xPosition, int yPosition, Item validItem) {
         super(itemHandler, index, xPosition, yPosition);
         this.validItem = validItem;

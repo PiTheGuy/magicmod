@@ -19,13 +19,11 @@ import java.util.Objects;
 
 public class MagicInfuserContainer extends Container {
 
-    private MagicInfuserTileEntity tileEntity;
-    private IWorldPosCallable canInteractWithCallable;
+    private final IWorldPosCallable canInteractWithCallable;
 
     //Server constructor
     public MagicInfuserContainer(final int windowID, final PlayerInventory playerInv, final MagicInfuserTileEntity tile) {
         super(ModContainerTypes.MAGIC_INFUSER.get(), windowID);
-        this.tileEntity = tile;
         this.canInteractWithCallable = IWorldPosCallable.of(tile.getWorld(), tile.getPos());
 
         final int slotSizePlus2 = 18;

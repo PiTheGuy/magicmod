@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 public enum ReinforcedMagicArmorMaterial implements IArmorMaterial {
 
-    REINFORCED_MAGIC("magicmod:reinforced_magic",7500, new int[] {120,225,275,120}, 60, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 75.0f, () -> { return Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get()); });
+    REINFORCED_MAGIC(new int[] {120,225,275,120}, () -> { return Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get()); });
 
     private static final int[] MAX_DAMAGE_ARRAY = new int[] {11,16,15,13};
     private final String name;
@@ -24,13 +24,13 @@ public enum ReinforcedMagicArmorMaterial implements IArmorMaterial {
     private final float toughness;
     private final Supplier<Ingredient> repairMaterial;
 
-    ReinforcedMagicArmorMaterial(String name, int maxDamageFactor, int[] damageReductionAmountArray, int enchantability, SoundEvent soundEvent, float toughness, Supplier<Ingredient> repairMaterial){
-        this.name = name;
-        this.maxDamageFactor = maxDamageFactor;
+    ReinforcedMagicArmorMaterial(int[] damageReductionAmountArray, Supplier<Ingredient> repairMaterial){
+        this.name = "magicmod:reinforced_magic";
+        this.maxDamageFactor = 7500;
         this.damageReductionAmountArray = damageReductionAmountArray;
-        this.enchantability = enchantability;
-        this.soundEvent = soundEvent;
-        this.toughness = toughness;
+        this.enchantability = 60;
+        this.soundEvent = SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND;
+        this.toughness = (float) 75.0;
         this.repairMaterial = repairMaterial;
     }
 

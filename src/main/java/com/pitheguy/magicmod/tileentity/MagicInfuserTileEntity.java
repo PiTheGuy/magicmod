@@ -2,21 +2,14 @@ package com.pitheguy.magicmod.tileentity;
 
 import com.pitheguy.magicmod.container.MagicInfuserContainer;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
-import com.pitheguy.magicmod.init.RecipeSerializerInit;
-import com.pitheguy.magicmod.recipes.MagicOrbRecipe;
 import com.pitheguy.magicmod.util.ModItemHandler;
 import com.pitheguy.magicmod.util.RegistryHandler;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -27,24 +20,16 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class MagicInfuserTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
     private ITextComponent customName;
-    private ModItemHandler inventory;
+    private final ModItemHandler inventory;
 
     public MagicInfuserTileEntity(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
@@ -153,42 +138,5 @@ public class MagicInfuserTileEntity extends TileEntity implements ITickableTileE
     @Nullable
     public ITextComponent getCustomName() {
         return this.customName;
-    }
-
-    @Nullable
-    private MagicOrbRecipe getRecipe(ItemStack stack) {
-        if (stack == null) {
-            return null;
-        }
-
-        Set<IRecipe<?>> recipes = findRecipesByType(RecipeSerializerInit.EXAMPLE_TYPE, this.world);
-
-        for (IRecipe<?> iRecipe : recipes) {
-            MagicOrbRecipe recipe = (MagicOrbRecipe) iRecipe;
-            if (recipe.matches(new RecipeWrapper(this.inventory), this.world)) {
-                return recipe;
-            }
-        }
-        return null;
-    }
-
-    public static Set<IRecipe<?>> findRecipesByType(IRecipeType<?> typeIn, World world) {
-        return world != null ? world.getRecipeManager().getRecipes().stream().filter(recipe -> recipe.getType() == typeIn).collect(Collectors.toSet()) : Collections.EMPTY_SET;
-    }
-    @OnlyIn(Dist.CLIENT)
-    public static Set<IRecipe<?>> findRecipesByType(IRecipeType<?> typeIn) {
-        ClientWorld world = Minecraft.getInstance().world;
-        return world != null ? world.getRecipeManager().getRecipes().stream().filter(recipe -> recipe.getType() == typeIn).collect(Collectors.toSet()) : Collections.EMPTY_SET;
-    }
-    public static Set<ItemStack> getAllRecipeInputs(IRecipeType<?> typeIn, World worldIn) {
-        Set<ItemStack> inputs = new HashSet<ItemStack>();
-        Set<IRecipe<?>> recipes = findRecipesByType(typeIn, worldIn);
-        for (IRecipe<?> recipe : recipes) {
-            NonNullList<Ingredient> ingredients = recipe.getIngredients();
-            ingredients.forEach(ingredient -> {
-                Collections.addAll(inputs, ingredient.getMatchingStacks());
-            });
-        }
-        return inputs;
     }
 }

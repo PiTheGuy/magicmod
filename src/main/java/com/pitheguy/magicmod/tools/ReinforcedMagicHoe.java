@@ -48,9 +48,7 @@ public class ReinforcedMagicHoe extends HoeItem {
                             world.setBlockState(tillpos, blockstate, 11);
                             blocksTilled++;
                             if (playerentity != null && blocksTilled == 1) {
-                                context.getItem().damageItem(1, playerentity, (p_220043_1_) -> {
-                                    p_220043_1_.sendBreakAnimation(context.getHand());
-                                });
+                                context.getItem().damageItem(1, playerentity, (p_220043_1_) -> p_220043_1_.sendBreakAnimation(context.getHand()));
                             }
                         }
                     }

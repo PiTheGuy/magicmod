@@ -56,7 +56,7 @@ public class MagicCrate extends Block {
             TileEntity tile = worldIn.getTileEntity(pos);
             if(tile instanceof MagicCrateTileEntity) {
                 NetworkHooks.openGui((ServerPlayerEntity) player,(INamedContainerProvider) tile,pos);
-                worldIn.playSound((PlayerEntity) null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_BARREL_OPEN, SoundCategory.BLOCKS, 0.5f,
+                worldIn.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_BARREL_OPEN, SoundCategory.BLOCKS, 0.5f,
                         worldIn.rand.nextFloat() * 0.1f + 0.9f);
                 return ActionResultType.SUCCESS;
             }

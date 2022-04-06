@@ -28,11 +28,10 @@ public class ModItemHandler extends ItemStackHandler {
         return false;
     }
 
-    public ItemStack decrStackSize(int index, int count) {
+    public void decrStackSize(int index, int count) {
         ItemStack stack = getStackInSlot(index);
         stack.shrink(count);
         this.onContentsChanged(index);
-        return stack;
     }
 
     public void removeStackFromSlot(int index) {
@@ -42,9 +41,7 @@ public class ModItemHandler extends ItemStackHandler {
 
     public NonNullList<ItemStack> toNonNullList() {
         NonNullList<ItemStack> items = NonNullList.create();
-        for (ItemStack stack : this.stacks) {
-            items.add(stack);
-        }
+        items.addAll(this.stacks);
         return items;
     }
 
