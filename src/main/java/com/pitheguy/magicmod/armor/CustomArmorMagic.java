@@ -1,6 +1,6 @@
 package com.pitheguy.magicmod.armor;
 
-import com.pitheguy.magicmod.util.RegistryHandler;
+import com.pitheguy.magicmod.util.ArmorHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
@@ -17,18 +17,7 @@ public class CustomArmorMagic extends ArmorItem {
 
     @Override
     public void onArmorTick(ItemStack itemstack, World world, PlayerEntity player) {
-        if(player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == RegistryHandler.MAGIC_HELMET.get()
-                && player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegistryHandler.MAGIC_CHESTPLATE.get() &&
-                player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == RegistryHandler.MAGIC_LEGGINGS.get() &&
-                player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == RegistryHandler.MAGIC_BOOTS.get()
-        ) {
-            player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 1, 1, true, false));
-        } else if (player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == RegistryHandler.REINFORCED_MAGIC_HELMET.get()
-                && player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegistryHandler.REINFORCED_MAGIC_CHESTPLATE.get() &&
-                player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == RegistryHandler.REINFORCED_MAGIC_LEGGINGS.get() &&
-                player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == RegistryHandler.REINFORCED_MAGIC_BOOTS.get()
-        ) {
-            player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 1, 3, true, false));
+        if (ArmorHandler.isWearingReinforcedMagicArmor(player)) {
             player.addPotionEffect(new EffectInstance(Effects.REGENERATION, 2, 1, true, false));
         }
     }
