@@ -2,6 +2,7 @@ package com.pitheguy.magicmod;
 
 import com.pitheguy.magicmod.client.gui.MagicCrateScreen;
 import com.pitheguy.magicmod.client.gui.MagicInfuserScreen;
+import com.pitheguy.magicmod.client.gui.MagicPressScreen;
 import com.pitheguy.magicmod.init.ModContainerTypes;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.RegistryHandler;
@@ -51,6 +52,7 @@ public class MagicMod
     private void doClientStuff(final FMLClientSetupEvent event) {
         ScreenManager.registerFactory(ModContainerTypes.MAGIC_INFUSER.get(), MagicInfuserScreen::new);
         ScreenManager.registerFactory(ModContainerTypes.MAGIC_CRATE.get(), MagicCrateScreen::new);
+        ScreenManager.registerFactory(ModContainerTypes.MAGIC_PRESS.get(), MagicPressScreen::new);
     }
 
     @SubscribeEvent

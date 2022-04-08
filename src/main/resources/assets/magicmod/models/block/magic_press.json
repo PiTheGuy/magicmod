@@ -1,0 +1,8 @@
+{
+   "parent": "block/cube_bottom_top",
+   "textures": {
+       "side": "magicmod:blocks/magic_press_side",
+       "top": "magicmod:blocks/magic_press_top",
+       "bottom": "magicmod:blocks/magic_press_top"
+   }
+}

@@ -1,4 +1,4 @@
-package com.pitheguy.magicmod.container.itemhandlers.magicinfuser;
+package com.pitheguy.magicmod.container.itemhandlers;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

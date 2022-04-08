@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "GRG",
+        "GPG",
+        "GMG"
+    ],
+    
+    "key":
+    {
+        "G":
+        {
+            "item": "magicmod:magic_gem"
+        },
+        "R":
+        {
+            "item": "minecraft:redstone_block"
+        },
+        "P":
+        {
+            "item": "minecraft:piston"
+        },
+        "M":
+        {
+            "item": "magicmod:magic_plate"
+        }
+    },
+	
+    "result":
+    {
+        "item": "magicmod:magic_chestplate",
+        "count": 1
+    }
+}

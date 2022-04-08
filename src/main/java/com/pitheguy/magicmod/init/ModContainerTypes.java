@@ -2,6 +2,7 @@ package com.pitheguy.magicmod.init;
 
 import com.pitheguy.magicmod.container.MagicCrateContainer;
 import com.pitheguy.magicmod.container.MagicInfuserContainer;
+import com.pitheguy.magicmod.container.MagicPressContainer;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.fml.RegistryObject;
@@ -15,4 +16,6 @@ public class ModContainerTypes {
             .register("magic_infuser", () -> IForgeContainerType.create(MagicInfuserContainer::new));
     public static final RegistryObject<ContainerType<MagicCrateContainer>> MAGIC_CRATE = CONTAINER_TYPES
             .register("magic_crate", () -> IForgeContainerType.create(MagicCrateContainer::new));
+    public static final RegistryObject<ContainerType<MagicPressContainer>> MAGIC_PRESS = CONTAINER_TYPES
+            .register("magic_press", () -> IForgeContainerType.create(MagicPressContainer::new));
 }
