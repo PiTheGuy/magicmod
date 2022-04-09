@@ -8,6 +8,8 @@ import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.RegistryHandler;
 import com.pitheguy.magicmod.world.gen.ModOreGen;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -53,6 +55,7 @@ public class MagicMod
         ScreenManager.registerFactory(ModContainerTypes.MAGIC_INFUSER.get(), MagicInfuserScreen::new);
         ScreenManager.registerFactory(ModContainerTypes.MAGIC_CRATE.get(), MagicCrateScreen::new);
         ScreenManager.registerFactory(ModContainerTypes.MAGIC_PRESS.get(), MagicPressScreen::new);
+        RenderTypeLookup.setRenderLayer(RegistryHandler.MAGIC_VEIN.get(), RenderType.getCutout());
     }
 
     @SubscribeEvent
