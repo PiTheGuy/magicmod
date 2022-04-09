@@ -37,17 +37,17 @@ public class MagicPressTileEntity extends TileEntity implements ITickableTileEnt
     private final ModItemHandler inventory;
     public int fuel = 0;
     public final int maxFuel = 20;
-    public static final Map<Item,Integer> ITEM_FUEL_AMOUNT = Maps.newHashMap(ImmutableMap.of(MAGIC_GEM.get(), 2, MAGIC_BLOCK_ITEM.get(), 18));
+    public static final Map<Item,Integer> ITEM_FUEL_AMOUNT = Maps.newHashMap(ImmutableMap.of(MAGIC_GEM.get(), 1, MAGIC_BLOCK_ITEM.get(), 9));
     public static final Map<Item, Item> RECIPES = Maps.newHashMap(new ImmutableMap.Builder<Item, Item>()
-            .put(MAGIC_HELMET.get(),REINFORCED_MAGIC_HELMET.get())
-            .put(MAGIC_CHESTPLATE.get(),REINFORCED_MAGIC_CHESTPLATE.get())
-            .put(MAGIC_LEGGINGS.get(),REINFORCED_MAGIC_LEGGINGS.get())
-            .put(MAGIC_BOOTS.get(),REINFORCED_MAGIC_BOOTS.get())
-            .put(MAGIC_PICKAXE.get(),REINFORCED_MAGIC_PICKAXE.get())
-            .put(MAGIC_AXE.get(),REINFORCED_MAGIC_AXE.get())
-            .put(MAGIC_SHOVEL.get(),REINFORCED_MAGIC_SHOVEL.get())
-            .put(MAGIC_SWORD.get(),REINFORCED_MAGIC_SWORD.get())
-            .put(MAGIC_HOE.get(),REINFORCED_MAGIC_HOE.get())
+            .put(REINFORCED_MAGIC_HELMET.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_HELMET.get())
+            .put(REINFORCED_MAGIC_CHESTPLATE.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_CHESTPLATE.get())
+            .put(REINFORCED_MAGIC_LEGGINGS.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_LEGGINGS.get())
+            .put(REINFORCED_MAGIC_BOOTS.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_BOOTS.get())
+            .put(REINFORCED_MAGIC_PICKAXE.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_PICKAXE.get())
+            .put(REINFORCED_MAGIC_AXE.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_AXE.get())
+            .put(REINFORCED_MAGIC_SHOVEL.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_SHOVEL.get())
+            .put(REINFORCED_MAGIC_SWORD.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_SWORD.get())
+            .put(REINFORCED_MAGIC_HOE.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_HOE.get())
             .build());
     public MagicPressTileEntity(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
@@ -124,11 +124,11 @@ public class MagicPressTileEntity extends TileEntity implements ITickableTileEnt
                 this.inventory.decrStackSize(3, 1);
                 dirty = true;
             }
-            if (RECIPES.get(this.inventory.getStackInSlot(0).getItem()) != null && this.inventory.getStackInSlot(1).getItem() == MAGIC_PLATE.get() && this.inventory.getStackInSlot(1).getCount() >= 8 && fuel >= 1) {
+            if (RECIPES.get(this.inventory.getStackInSlot(0).getItem()) != null && this.inventory.getStackInSlot(1).getItem() == OBSIDIAN_PLATE.get() && this.inventory.getStackInSlot(1).getCount() >= 32 && fuel >= 1) {
                 fuel--;
                 this.inventory.insertItem(2,new ItemStack(RECIPES.get(this.inventory.getStackInSlot(0).getItem()), 1), false);
                 this.inventory.decrStackSize(0,1);
-                this.inventory.decrStackSize(1,8);
+                this.inventory.decrStackSize(1,32);
                 dirty = true;
             }
         }

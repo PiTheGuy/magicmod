@@ -1,0 +1,6 @@
+{
+   "parent": "item/handheld",
+   "textures": {
+       "layer0": "magicmod:items/obsidian_plated_reinforced_magic_sword"
+   }
+}

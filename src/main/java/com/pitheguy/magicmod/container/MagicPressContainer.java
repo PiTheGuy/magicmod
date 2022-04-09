@@ -49,9 +49,9 @@ public class MagicPressContainer extends Container {
             }
         }
         //Magic Press Inventory
-        this.addSlot(new MultiItemSlotItemHandler(tile.getInventory(), 0, 27, 19, Arrays.asList(MAGIC_HELMET.get(),MAGIC_CHESTPLATE.get(),MAGIC_LEGGINGS.get(),MAGIC_BOOTS.get(),MAGIC_PICKAXE.get(),MAGIC_AXE.get(),MAGIC_SHOVEL.get(),MAGIC_SWORD.get(),MAGIC_HOE.get())));
-        this.addSlot(new SingleItemSlotItemHandler(tile.getInventory(), 1, 76, 19, MAGIC_PLATE.get()));
-        this.addSlot(new MultiItemSlotItemHandler(tile.getInventory(), 2, 134,19, Arrays.asList(REINFORCED_MAGIC_HELMET.get(), REINFORCED_MAGIC_CHESTPLATE.get(), REINFORCED_MAGIC_LEGGINGS.get(), REINFORCED_MAGIC_BOOTS.get(), REINFORCED_MAGIC_PICKAXE.get(), REINFORCED_MAGIC_AXE.get(), REINFORCED_MAGIC_SHOVEL.get(), REINFORCED_MAGIC_SWORD.get(), REINFORCED_MAGIC_HOE.get())));
+        this.addSlot(new MultiItemSlotItemHandler(tile.getInventory(), 0, 27, 19, Arrays.asList(REINFORCED_MAGIC_HELMET.get(),REINFORCED_MAGIC_CHESTPLATE.get(),REINFORCED_MAGIC_LEGGINGS.get(),REINFORCED_MAGIC_BOOTS.get(),REINFORCED_MAGIC_PICKAXE.get(),REINFORCED_MAGIC_AXE.get(),REINFORCED_MAGIC_SHOVEL.get(),REINFORCED_MAGIC_SWORD.get(),REINFORCED_MAGIC_HOE.get())));
+        this.addSlot(new SingleItemSlotItemHandler(tile.getInventory(), 1, 76, 19, OBSIDIAN_PLATE.get()));
+        this.addSlot(new MultiItemSlotItemHandler(tile.getInventory(), 2, 134,19, Arrays.asList(OBSIDIAN_PLATED_REINFORCED_MAGIC_HELMET.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_CHESTPLATE.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_LEGGINGS.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_BOOTS.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_PICKAXE.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_AXE.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_SHOVEL.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_SWORD.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_HOE.get())));
         this.addSlot(new MultiItemSlotItemHandler(tile.getInventory(), 3,15,53, Arrays.asList(MAGIC_GEM.get(), MAGIC_BLOCK_ITEM.get())));
 
         this.trackInt(fuel = new FunctionalIntReferenceHolder(() -> this.tileEntity.fuel,

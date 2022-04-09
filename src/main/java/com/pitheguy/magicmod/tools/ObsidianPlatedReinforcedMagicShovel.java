@@ -9,16 +9,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 
-public class ReinforcedMagicShovel extends ShovelItem {
-    public ReinforcedMagicShovel(IItemTier tier, float attackDamageIn, float attackSpeedIn, Properties builder) {
+public class ObsidianPlatedReinforcedMagicShovel extends ShovelItem {
+    public ObsidianPlatedReinforcedMagicShovel(IItemTier tier, float attackDamageIn, float attackSpeedIn, Properties builder) {
         super(tier, attackDamageIn, attackSpeedIn, builder);
     }
 
     @Override
     public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
-                for (int z = -1; z <= 1; z++) {
+        for (int x = -2; x <= 2; x++) {
+            for (int y = -2; y <= 2; y++) {
+                for (int z = -2; z <= 2; z++) {
                     if (worldIn.getBlockState(pos.add(x, y, z)).getBlock().getHarvestTool(null) == ToolType.SHOVEL) {
                         worldIn.destroyBlock(pos.add(x, y, z), true);
                     }

@@ -16,4 +16,10 @@ public class ArmorHandler {
                 player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == RegistryHandler.REINFORCED_MAGIC_LEGGINGS.get() &&
                 player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == RegistryHandler.REINFORCED_MAGIC_BOOTS.get();
     }
+    public static boolean isWearingObsidianPlatedReinforcedMagicArmor (PlayerEntity player) {
+        return player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == RegistryHandler.OBSIDIAN_PLATED_REINFORCED_MAGIC_HELMET.get()
+                && player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegistryHandler.OBSIDIAN_PLATED_REINFORCED_MAGIC_CHESTPLATE.get() &&
+                player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == RegistryHandler.OBSIDIAN_PLATED_REINFORCED_MAGIC_LEGGINGS.get() &&
+                player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == RegistryHandler.OBSIDIAN_PLATED_REINFORCED_MAGIC_BOOTS.get();
+    }
 }

@@ -3,6 +3,7 @@ package com.pitheguy.magicmod.util;
 import com.pitheguy.magicmod.MagicMod;
 import com.pitheguy.magicmod.armor.CustomArmorMagic;
 import com.pitheguy.magicmod.armor.MagicArmorMaterial;
+import com.pitheguy.magicmod.armor.ObsidianPlatedReinforcedMagicArmorMaterial;
 import com.pitheguy.magicmod.armor.ReinforcedMagicArmorMaterial;
 import com.pitheguy.magicmod.blocks.*;
 import com.pitheguy.magicmod.items.ItemBase;
@@ -30,6 +31,7 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_CORE = ITEMS.register("magic_core", ItemBase::new);
     public static final RegistryObject<Item> NETHER_SHARD = ITEMS.register("nether_shard", ItemBase::new);
     public static final RegistryObject<Item> MAGIC_PLATE = ITEMS.register("magic_plate", ItemBase::new);
+    public static final RegistryObject<Item> OBSIDIAN_PLATE = ITEMS.register("obsidian_plate", ItemBase::new);
     public static final RegistryObject<Item> MAGIC_GLUE = ITEMS.register("magic_glue", ItemBase::new);
 
     //Magic Dust
@@ -78,6 +80,18 @@ public class RegistryHandler {
     public static final RegistryObject<HoeItem> REINFORCED_MAGIC_HOE = ITEMS.register("reinforced_magic_hoe", () ->
             new ReinforcedMagicHoe(ReinforcedMagicItemTier.REINFORCED_MAGIC, 0.0f, new Item.Properties().group(MagicMod.TAB)));
 
+    //Obsidian Plated Reinforced Magic Tools
+    public static final RegistryObject<SwordItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_SWORD = ITEMS.register("obsidian_plated_reinforced_magic_sword", () ->
+            new SwordItem(ObsidianPlatedReinforcedMagicItemTier.OBSIDIAN_PLATED_REINFORCED_MAGIC, 450, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+    public static final RegistryObject<PickaxeItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_PICKAXE = ITEMS.register("obsidian_plated_reinforced_magic_pickaxe", () ->
+            new PickaxeItem(ObsidianPlatedReinforcedMagicItemTier.OBSIDIAN_PLATED_REINFORCED_MAGIC, 350, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+    public static final RegistryObject<AxeItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_AXE = ITEMS.register("obsidian_plated_reinforced_magic_axe", () ->
+            new AxeItem(ObsidianPlatedReinforcedMagicItemTier.OBSIDIAN_PLATED_REINFORCED_MAGIC, 480, -0.5f, new Item.Properties().group(MagicMod.TAB)));
+    public static final RegistryObject<ShovelItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_SHOVEL = ITEMS.register("obsidian_plated_reinforced_magic_shovel", () ->
+            new ObsidianPlatedReinforcedMagicShovel(ObsidianPlatedReinforcedMagicItemTier.OBSIDIAN_PLATED_REINFORCED_MAGIC, 350, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+    public static final RegistryObject<HoeItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_HOE = ITEMS.register("obsidian_plated_reinforced_magic_hoe", () ->
+            new ObsidianPlatedReinforcedMagicHoe(ObsidianPlatedReinforcedMagicItemTier.OBSIDIAN_PLATED_REINFORCED_MAGIC, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+
     //Magic Armor
     public static final RegistryObject<ArmorItem> MAGIC_HELMET = ITEMS.register("magic_helmet", () ->
             new CustomArmorMagic(MagicArmorMaterial.MAGIC, EquipmentSlotType.HEAD, new Item.Properties().group(MagicMod.TAB)));
@@ -97,6 +111,16 @@ public class RegistryHandler {
             new CustomArmorMagic(ReinforcedMagicArmorMaterial.REINFORCED_MAGIC, EquipmentSlotType.LEGS, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<ArmorItem> REINFORCED_MAGIC_BOOTS = ITEMS.register("reinforced_magic_boots", () ->
             new CustomArmorMagic(ReinforcedMagicArmorMaterial.REINFORCED_MAGIC, EquipmentSlotType.FEET, new Item.Properties().group(MagicMod.TAB)));
+
+    //Obsidian Plated Reinforced Magic Armor
+    public static final RegistryObject<ArmorItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_HELMET = ITEMS.register("obsidian_plated_reinforced_magic_helmet", () ->
+            new CustomArmorMagic(ObsidianPlatedReinforcedMagicArmorMaterial.OBSIDIAN_PLATED_REINFORCED_MAGIC, EquipmentSlotType.HEAD, new Item.Properties().group(MagicMod.TAB)));
+    public static final RegistryObject<ArmorItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_CHESTPLATE = ITEMS.register("obsidian_plated_reinforced_magic_chestplate", () ->
+            new CustomArmorMagic(ObsidianPlatedReinforcedMagicArmorMaterial.OBSIDIAN_PLATED_REINFORCED_MAGIC, EquipmentSlotType.CHEST, new Item.Properties().group(MagicMod.TAB)));
+    public static final RegistryObject<ArmorItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_LEGGINGS = ITEMS.register("obsidian_plated_reinforced_magic_leggings", () ->
+            new CustomArmorMagic(ObsidianPlatedReinforcedMagicArmorMaterial.OBSIDIAN_PLATED_REINFORCED_MAGIC, EquipmentSlotType.LEGS, new Item.Properties().group(MagicMod.TAB)));
+    public static final RegistryObject<ArmorItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_BOOTS = ITEMS.register("obsidian_plated_reinforced_magic_boots", () ->
+            new CustomArmorMagic(ObsidianPlatedReinforcedMagicArmorMaterial.OBSIDIAN_PLATED_REINFORCED_MAGIC, EquipmentSlotType.FEET, new Item.Properties().group(MagicMod.TAB)));
 
     //Blocks
     public static final RegistryObject<Block> MAGIC_ORE = BLOCKS.register("magic_ore", MagicOre::new);

@@ -1,0 +1,31 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "RRR",
+        "GGG",
+        "PPP"
+    ],
+    
+    "key":
+    {
+        "R":
+        {
+            "item": "magicmod:reinforced_obsidian"
+        },
+        "G":
+        {
+            "item": "magicmod:magic_glue"
+        },
+        "P": {
+            "item": "magicmod:magic_plate"
+        }
+    },
+	
+    "result":
+    {
+        "item": "magicmod:obsidian_plate",
+        "count": 1
+    }
+}

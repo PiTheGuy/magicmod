@@ -17,6 +17,8 @@ public class ModClientEvents {
                 event.setAmount(event.getAmount() * 0.6f);
             } else if (ArmorHandler.isWearingReinforcedMagicArmor(player)) {
                 event.setAmount(event.getAmount() * 0.2f);
+            } else if (ArmorHandler.isWearingObsidianPlatedReinforcedMagicArmor(player)) {
+                event.setAmount(event.getAmount() * 0.05f);
             }
         }
     }
