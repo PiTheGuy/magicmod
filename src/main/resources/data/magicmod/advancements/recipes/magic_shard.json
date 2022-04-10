@@ -1,0 +1,26 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "magicmod:magic_shard",
+      "magicmod:magic_shard_from_blasting"
+    ]
+  },
+  "criteria": {
+    "has_magic_powder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_powder"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_magic_powder"
+    ]
+  ]
+}

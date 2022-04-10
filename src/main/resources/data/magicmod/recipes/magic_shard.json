@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "magicmod:magic_powder"
+  },
+  "result": "magicmod:magic_shard",
+  "experience": 0.4,
+  "cookingtime": 200
+}
