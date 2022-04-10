@@ -36,7 +36,8 @@ public class MagicPressTileEntity extends TileEntity implements ITickableTileEnt
     private ITextComponent customName;
     private final ModItemHandler inventory;
     public int fuel = 0;
-    public final int maxFuel = 20;
+    public final int maxFuel = 100;
+    public final int fuelPerOperation = 5;
     public static final Map<Item,Integer> ITEM_FUEL_AMOUNT = Maps.newHashMap(ImmutableMap.of(MAGIC_GEM.get(), 1, MAGIC_BLOCK_ITEM.get(), 9));
     public static final Map<Item, Item> RECIPES = Maps.newHashMap(new ImmutableMap.Builder<Item, Item>()
             .put(REINFORCED_MAGIC_HELMET.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_HELMET.get())
@@ -124,8 +125,8 @@ public class MagicPressTileEntity extends TileEntity implements ITickableTileEnt
                 this.inventory.decrStackSize(3, 1);
                 dirty = true;
             }
-            if (RECIPES.get(this.inventory.getStackInSlot(0).getItem()) != null && this.inventory.getStackInSlot(1).getItem() == OBSIDIAN_PLATE.get() && this.inventory.getStackInSlot(1).getCount() >= 32 && fuel >= 1) {
-                fuel--;
+            if (RECIPES.get(this.inventory.getStackInSlot(0).getItem()) != null && this.inventory.getStackInSlot(1).getItem() == OBSIDIAN_PLATE.get() && this.inventory.getStackInSlot(1).getCount() >= 32 && fuel >= fuelPerOperation) {
+                fuel -= fuelPerOperation;
                 this.inventory.insertItem(2,new ItemStack(RECIPES.get(this.inventory.getStackInSlot(0).getItem()), 1), false);
                 this.inventory.decrStackSize(0,1);
                 this.inventory.decrStackSize(1,32);
