@@ -1,38 +1,40 @@
 package com.pitheguy.magicmod.tileentity;
 
+import com.pitheguy.magicmod.blocks.MagicCrate;
 import com.pitheguy.magicmod.container.MagicCrateContainer;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
-import com.pitheguy.magicmod.util.ModItemHandler;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
-public class MagicCrateTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
-    private ITextComponent customName;
-    private final ModItemHandler inventory;
+public class MagicCrateTileEntity extends LockableLootTileEntity {
+    private NonNullList<ItemStack> crateContents = NonNullList.withSize(88, ItemStack.EMPTY);
+    protected int numPlayersUsing;
+    private IItemHandlerModifiable items = createHandler();
+    private LazyOptional<IItemHandlerModifiable> itemHandler = LazyOptional.of(() -> items);
 
-    public MagicCrateTileEntity(TileEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
-        this.inventory = new ModItemHandler(88);
+    public MagicCrateTileEntity(TileEntityType<?> typeIn) {
+        super(typeIn);
     }
 
     public MagicCrateTileEntity() {
@@ -40,83 +42,138 @@ public class MagicCrateTileEntity extends TileEntity implements ITickableTileEnt
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
-        NonNullList<ItemStack> inv = NonNullList.withSize(this.inventory.getSlots(), ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(compound, inv);
-        this.inventory.setNonNullList(inv);
+    public int getSizeInventory() {
+        return 88;
+    }
+
+    @Override
+    public NonNullList<ItemStack> getItems() {
+        return this.crateContents;
+    }
+
+    @Override
+    public void setItems(NonNullList<ItemStack> itemsIn) {
+        this.crateContents = itemsIn;
+    }
+
+    @Override
+    protected ITextComponent getDefaultName() {
+        return new TranslationTextComponent("container.magicmod.magic_crate");
+    }
+
+    @Override
+    protected Container createMenu(int id, PlayerInventory player) {
+        return new MagicCrateContainer(id, player, this);
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
-        ItemStackHelper.saveAllItems(compound, this.inventory.toNonNullList());
+        if (!this.checkLootAndWrite(compound)) {
+            ItemStackHelper.saveAllItems(compound, this.crateContents);
+        }
         return compound;
     }
 
-    public final IItemHandlerModifiable getInventory() {
-        return this.inventory;
+    @Override
+    public void read(CompoundNBT compound) {
+        super.read(compound);
+        this.crateContents = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
+        if (!this.checkLootAndRead(compound)) {
+            ItemStackHelper.loadAllItems(compound, this.crateContents);
+        }
     }
 
-    @Nullable
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        CompoundNBT nbt = new CompoundNBT();
-        this.write(nbt);
-        return new SUpdateTileEntityPacket(this.pos, 0, nbt);
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(pkt.getNbtCompound());
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT nbt = new CompoundNBT();
-        this.write(nbt);
-        return nbt;
+    private void playSound(SoundEvent sound) {
+        double dx = (double) this.pos.getX() + 0.5D;
+        double dy = (double) this.pos.getY() + 0.5D;
+        double dz = (double) this.pos.getZ() + 0.5D;
+        this.world.playSound(null, dx, dy, dz, sound, SoundCategory.BLOCKS, 0.5f,
+                this.world.rand.nextFloat() * 0.1f + 0.9f);
     }
 
     @Override
-    public void handleUpdateTag(CompoundNBT nbt) {
-        this.read(nbt);
+    public boolean receiveClientEvent(int id, int type) {
+        if (id == 1) {
+            this.numPlayersUsing = type;
+            return true;
+        } else {
+            return super.receiveClientEvent(id, type);
+        }
     }
 
     @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> this.inventory));
-    }
+    public void openInventory(PlayerEntity player) {
+        if (!player.isSpectator()) {
+            if (this.numPlayersUsing < 0) {
+                this.numPlayersUsing = 0;
+            }
 
-    @Nullable
-    @Override
-    public Container createMenu(final int windowId, final PlayerInventory playerInv, final PlayerEntity playerIn) {
-        return new MagicCrateContainer(windowId, playerInv, this);
-    }
-
-    @Override
-    public void tick() {
-
-    }
-    public void setCustomName(ITextComponent name) {
-        this.customName = name;
-    }
-
-    public ITextComponent getName() {
-        return this.customName != null ? this.customName : this.getDefaultName();
-    }
-
-    private ITextComponent getDefaultName() {
-        return new TranslationTextComponent("container.magicmod.magic_crate");
+            ++this.numPlayersUsing;
+            this.onOpenOrClose();
+        }
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-        return this.getName();
+    public void closeInventory(PlayerEntity player) {
+        if (!player.isSpectator()) {
+            --this.numPlayersUsing;
+            this.onOpenOrClose();
+        }
     }
 
-    @Nullable
-    public ITextComponent getCustomName() {
-        return this.customName;
+    protected void onOpenOrClose() {
+        Block block = this.getBlockState().getBlock();
+        if (block instanceof MagicCrate) {
+            this.world.addBlockEvent(this.pos, block, 1, this.numPlayersUsing);
+            this.world.notifyNeighborsOfStateChange(this.pos, block);
+        }
     }
+
+    public static int getPlayersUsing(IBlockReader reader, BlockPos pos) {
+        BlockState blockstate = reader.getBlockState(pos);
+        if (blockstate.hasTileEntity()) {
+            TileEntity tileentity = reader.getTileEntity(pos);
+            if (tileentity instanceof MagicCrateTileEntity) {
+                return ((MagicCrateTileEntity) tileentity).numPlayersUsing;
+            }
+        }
+        return 0;
+    }
+
+    public static void swapContents(MagicCrateTileEntity te, MagicCrateTileEntity otherTe) {
+        NonNullList<ItemStack> list = te.getItems();
+        te.setItems(otherTe.getItems());
+        otherTe.setItems(list);
+    }
+
+    @Override
+    public void updateContainingBlockInfo() {
+        super.updateContainingBlockInfo();
+        if (this.itemHandler != null) {
+            this.itemHandler.invalidate();
+            this.itemHandler = null;
+        }
+    }
+
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nonnull Direction side) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return itemHandler.cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    private IItemHandlerModifiable createHandler() {
+        return new InvWrapper(this);
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+        if(itemHandler != null) {
+            itemHandler.invalidate();
+        }
+    }
+
 }

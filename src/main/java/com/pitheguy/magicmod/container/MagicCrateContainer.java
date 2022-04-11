@@ -11,60 +11,61 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraftforge.items.SlotItemHandler;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public class MagicCrateContainer extends Container {
 
+    public final MagicCrateTileEntity tileEntity;
     private final IWorldPosCallable canInteractWithCallable;
 
-    //Server constructor
-    public MagicCrateContainer(final int windowID, final PlayerInventory playerInv, final MagicCrateTileEntity tile) {
-        super(ModContainerTypes.MAGIC_CRATE.get(), windowID);
-        this.canInteractWithCallable = IWorldPosCallable.of(tile.getWorld(), tile.getPos());
+    public MagicCrateContainer(final int windowId, final PlayerInventory playerInventory,
+                                 final MagicCrateTileEntity tileEntity) {
+        super(ModContainerTypes.MAGIC_CRATE.get(), windowId);
+        this.tileEntity = tileEntity;
+        this.canInteractWithCallable = IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos());
 
-        final int slotSizePlus2 = 18;
-        final int startX = 8;
-        final int invStartX = 26;
-        //Magic Crate Inventory
-
-        for (int row = 0; row  < 8; row++) {
-            for (int col = 0; col < 11; col++) {
-                int startY = 18;
-                this.addSlot(new SlotItemHandler(tile.getInventory(), (row * 11) + col, startX + (col * slotSizePlus2), startY + (row * slotSizePlus2)));
+        // Main Inventory
+        int startX = 8;
+        int startY = 18;
+        int slotSizePlus2 = 18;
+        for (int row = 0; row < 8; ++row) {
+            for (int column = 0; column < 11; ++column) {
+                this.addSlot(new Slot(tileEntity, (row * 11) + column, startX + (column * slotSizePlus2),
+                        startY + (row * slotSizePlus2)));
             }
         }
 
-        //Hotbar
+        // Main Player Inventory
+        int startPlayerInvY = 173;
+        int startPlayerInvX = 26;
+        for (int row = 0; row < 3; ++row) {
+            for (int column = 0; column < 9; ++column) {
+                this.addSlot(new Slot(playerInventory, 9 + (row * 9) + column, startPlayerInvX + (column * slotSizePlus2),
+                        startPlayerInvY + (row * slotSizePlus2)));
+            }
+        }
+
+        // Hotbar
         int hotbarY = 231;
-        for (int col = 0; col < 9; col++) {
-            this.addSlot(new Slot(playerInv, col, (invStartX + (col * slotSizePlus2)), hotbarY));
+        for (int column = 0; column < 9; ++column) {
+            this.addSlot(new Slot(playerInventory, column, startPlayerInvX + (column * slotSizePlus2), hotbarY));
         }
-        //Main Player Inventory
-        int invStartY = 173;
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 9; col++) {
-                this.addSlot(new Slot(playerInv, 9+(row*9)+col, invStartX + (col * slotSizePlus2), invStartY + (row * slotSizePlus2)));
-            }
-        }
-
-
-    }
-    //Client constructor
-    public MagicCrateContainer(final int windowID, final PlayerInventory playerInv, final PacketBuffer data) {
-        this(windowID, playerInv, getTileEntity(playerInv, data));
     }
 
-    private static MagicCrateTileEntity getTileEntity(final PlayerInventory playerInv, final PacketBuffer data) {
-        Objects.requireNonNull(playerInv, "playerInv cannot be null");
+    private static MagicCrateTileEntity getTileEntity(final PlayerInventory playerInventory,
+                                                        final PacketBuffer data) {
+        Objects.requireNonNull(playerInventory, "playerInventory cannot be null");
         Objects.requireNonNull(data, "data cannot be null");
-        final TileEntity tileAtPos = playerInv.player.world.getTileEntity(data.readBlockPos());
+        final TileEntity tileAtPos = playerInventory.player.world.getTileEntity(data.readBlockPos());
         if (tileAtPos instanceof MagicCrateTileEntity) {
             return (MagicCrateTileEntity) tileAtPos;
         }
-        throw new IllegalStateException("TileEntity is not correct " + tileAtPos);
+        throw new IllegalStateException("Tile entity is not correct! " + tileAtPos);
+    }
+
+    public MagicCrateContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
+        this(windowId, playerInventory, getTileEntity(playerInventory, data));
     }
 
     @Override
@@ -72,33 +73,27 @@ public class MagicCrateContainer extends Container {
         return isWithinUsableDistance(canInteractWithCallable, playerIn, RegistryHandler.MAGIC_CRATE.get());
     }
 
-    @Nonnull
     @Override
-    public ItemStack transferStackInSlot(final PlayerEntity player, final int index) {
-        ItemStack returnStack = ItemStack.EMPTY;
-        final Slot slot = this.inventorySlots.get(index);
+    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
-            final ItemStack slotStack = slot.getStack();
-            returnStack = slotStack.copy();
-
-            final int containerSlots = this.inventorySlots.size() - player.inventory.mainInventory.size();
-            if (index < containerSlots) {
-                if (!mergeItemStack(slotStack, containerSlots, this.inventorySlots.size(), true)) {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+            if (index < 88) {
+                if (!this.mergeItemStack(itemstack1, 88, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!mergeItemStack(slotStack, 0, containerSlots, false)) {
+            } else if (!this.mergeItemStack(itemstack1, 0, 88, false)) {
                 return ItemStack.EMPTY;
             }
-            if (slotStack.getCount() == 0) {
+
+            if (itemstack1.isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
-            if (slotStack.getCount() == returnStack.getCount()) {
-                return ItemStack.EMPTY;
-            }
-            slot.onTake(player, slotStack);
         }
-        return returnStack;
+        return itemstack;
     }
 }
