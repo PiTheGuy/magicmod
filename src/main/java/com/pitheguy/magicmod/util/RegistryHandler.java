@@ -7,6 +7,7 @@ import com.pitheguy.magicmod.armor.ObsidianPlatedReinforcedMagicArmorMaterial;
 import com.pitheguy.magicmod.armor.ReinforcedMagicArmorMaterial;
 import com.pitheguy.magicmod.blocks.*;
 import com.pitheguy.magicmod.items.ItemBase;
+import com.pitheguy.magicmod.items.MagicPearl;
 import com.pitheguy.magicmod.tools.*;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -36,6 +37,7 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_POWDER = ITEMS.register("magic_powder", ItemBase::new);
     public static final RegistryObject<Item> MAGIC_SHARD = ITEMS.register("magic_shard", ItemBase::new);
     public static final RegistryObject<Item> MAGIC_NUGGET = ITEMS.register("magic_nugget", ItemBase::new);
+    public static final RegistryObject<Item> MAGIC_PEARL = ITEMS.register("magic_pearl", MagicPearl::new);
 
     //Magic Dust
     public static final RegistryObject<Item> MAGIC_DUST_RED = ITEMS.register("magic_dust_red", ItemBase::new);
@@ -161,7 +163,7 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_VEIN_ITEM = ITEMS.register("magic_vein", () -> new BlockItemBase(MAGIC_VEIN.get()));
     public static final RegistryObject<Item> MAGIC_INFUSED_STONE_ITEM = ITEMS.register("magic_infused_stone", () -> new BlockItemBase(MAGIC_INFUSED_STONE.get()));
 
-    //Magic LampsA
+    //Magic Lamps
     public static final RegistryObject<Item> MAGIC_LAMP_RED_ITEM = ITEMS.register("magic_lamp_red", () -> new BlockItemBase(MAGIC_LAMP_RED.get()));
     public static final RegistryObject<Item> MAGIC_LAMP_ORANGE_ITEM = ITEMS.register("magic_lamp_orange", () -> new BlockItemBase(MAGIC_LAMP_ORANGE.get()));
     public static final RegistryObject<Item> MAGIC_LAMP_YELLOW_ITEM = ITEMS.register("magic_lamp_yellow", () -> new BlockItemBase(MAGIC_LAMP_YELLOW.get()));
