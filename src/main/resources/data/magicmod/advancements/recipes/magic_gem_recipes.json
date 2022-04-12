@@ -14,7 +14,8 @@
       "magicmod:magic_plate",
       "magicmod:magic_block",
       "magicmod:magic_glue",
-      "magicmod:magic_infuser"
+      "magicmod:magic_infuser",
+      "magicmod:magic_nugget_from_gem"
     ]
   },
   "criteria": {

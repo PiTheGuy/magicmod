@@ -1,0 +1,19 @@
+{ 
+    "type": "minecraft:crafting_shapeless",
+    "group": "magic_gem",
+
+    "ingredients": 
+    [
+
+    {
+      "item": "magicmod:magic_gem"
+    }
+	
+    ],
+
+    "result": 
+    {
+        "item": "magicmod:magic_nugget",
+        "count": 9
+    }
+}

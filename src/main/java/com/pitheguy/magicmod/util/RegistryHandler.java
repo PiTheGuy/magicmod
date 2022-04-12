@@ -7,6 +7,7 @@ import com.pitheguy.magicmod.armor.ObsidianPlatedReinforcedMagicArmorMaterial;
 import com.pitheguy.magicmod.armor.ReinforcedMagicArmorMaterial;
 import com.pitheguy.magicmod.blocks.*;
 import com.pitheguy.magicmod.items.ItemBase;
+import com.pitheguy.magicmod.items.MagicPearl;
 import com.pitheguy.magicmod.tools.*;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -33,6 +34,10 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_PLATE = ITEMS.register("magic_plate", ItemBase::new);
     public static final RegistryObject<Item> OBSIDIAN_PLATE = ITEMS.register("obsidian_plate", ItemBase::new);
     public static final RegistryObject<Item> MAGIC_GLUE = ITEMS.register("magic_glue", ItemBase::new);
+    public static final RegistryObject<Item> MAGIC_POWDER = ITEMS.register("magic_powder", ItemBase::new);
+    public static final RegistryObject<Item> MAGIC_SHARD = ITEMS.register("magic_shard", ItemBase::new);
+    public static final RegistryObject<Item> MAGIC_NUGGET = ITEMS.register("magic_nugget", ItemBase::new);
+    public static final RegistryObject<Item> MAGIC_PEARL = ITEMS.register("magic_pearl", MagicPearl::new);
 
     //Magic Dust
     public static final RegistryObject<Item> MAGIC_DUST_RED = ITEMS.register("magic_dust_red", ItemBase::new);
@@ -131,6 +136,8 @@ public class RegistryHandler {
     public static final RegistryObject<Block> MAGIC_INFUSER = BLOCKS.register("magic_infuser", MagicInfuser::new);
     public static final RegistryObject<Block> MAGIC_CRATE = BLOCKS.register("magic_crate", MagicCrate::new);
     public static final RegistryObject<Block> MAGIC_PRESS = BLOCKS.register("magic_press", MagicPress::new);
+    public static final RegistryObject<Block> MAGIC_VEIN = BLOCKS.register("magic_vein", MagicVein::new);
+    public static final RegistryObject<Block> MAGIC_INFUSED_STONE = BLOCKS.register("magic_infused_stone", MagicInfusedStone::new);
 
     //Magic Lamps
     public static final RegistryObject<Block> MAGIC_LAMP_RED = BLOCKS.register("magic_lamp_red", MagicLamp::new);
@@ -153,6 +160,8 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_INFUSER_ITEM = ITEMS.register("magic_infuser", () -> new BlockItemBase(MAGIC_INFUSER.get()));
     public static final RegistryObject<Item> MAGIC_CRATE_ITEM = ITEMS.register("magic_crate", () -> new BlockItemBase(MAGIC_CRATE.get()));
     public static final RegistryObject<Item> MAGIC_PRESS_ITEM = ITEMS.register("magic_press", () -> new BlockItemBase(MAGIC_PRESS.get()));
+    public static final RegistryObject<Item> MAGIC_VEIN_ITEM = ITEMS.register("magic_vein", () -> new BlockItemBase(MAGIC_VEIN.get()));
+    public static final RegistryObject<Item> MAGIC_INFUSED_STONE_ITEM = ITEMS.register("magic_infused_stone", () -> new BlockItemBase(MAGIC_INFUSED_STONE.get()));
 
     //Magic Lamps
     public static final RegistryObject<Item> MAGIC_LAMP_RED_ITEM = ITEMS.register("magic_lamp_red", () -> new BlockItemBase(MAGIC_LAMP_RED.get()));

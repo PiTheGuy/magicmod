@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+
+    "pattern":
+    [
+        "SS",
+        "SS"
+    ],
+
+    "key":
+    {
+        "S":
+        {
+            "item": "magicmod:magic_shard"
+        }
+    },
+
+    "result":
+    {
+        "item": "magicmod:magic_nugget",
+        "count": 1
+    }
+}

@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '2.7-dev'
+version = '2.7'
 group = 'com.pitheguy.magicmod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'magicmod'
 

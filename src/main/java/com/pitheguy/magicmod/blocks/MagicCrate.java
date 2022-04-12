@@ -2,19 +2,20 @@ package com.pitheguy.magicmod.blocks;
 
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.tileentity.MagicCrateTileEntity;
-import com.pitheguy.magicmod.util.ModItemHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
@@ -55,27 +56,22 @@ public class MagicCrate extends Block {
         if (!worldIn.isRemote()) {
             TileEntity tile = worldIn.getTileEntity(pos);
             if(tile instanceof MagicCrateTileEntity) {
-                NetworkHooks.openGui((ServerPlayerEntity) player,(INamedContainerProvider) tile,pos);
+                NetworkHooks.openGui((ServerPlayerEntity) player,(MagicCrateTileEntity) tile,pos);
                 worldIn.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_BARREL_OPEN, SoundCategory.BLOCKS, 0.5f,
                         worldIn.rand.nextFloat() * 0.1f + 0.9f);
                 return ActionResultType.SUCCESS;
             }
         }
-        return ActionResultType.SUCCESS;
+        return ActionResultType.FAIL;
     }
 
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        TileEntity tile = worldIn.getTileEntity(pos);
-        if(tile instanceof MagicCrateTileEntity) {
-            MagicCrateTileEntity crate = (MagicCrateTileEntity) tile;
-            ((ModItemHandler)crate.getInventory()).toNonNullList().forEach(item -> {
-                ItemEntity itemEntity = new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), item);
-                worldIn.addEntity(itemEntity);
-            });
-        }
-        if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
-            worldIn.removeTileEntity(pos);
+        if (state.getBlock() != newState.getBlock()) {
+            TileEntity te = worldIn.getTileEntity(pos);
+            if (te instanceof MagicCrateTileEntity) {
+                InventoryHelper.dropItems(worldIn, pos, ((MagicCrateTileEntity) te).getItems());
+            }
         }
     }
 }

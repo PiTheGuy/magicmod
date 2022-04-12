@@ -33,11 +33,11 @@ import java.util.Map;
 import static com.pitheguy.magicmod.util.RegistryHandler.*;
 
 public class MagicPressTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
-    private ITextComponent customName;
     private final ModItemHandler inventory;
     public int fuel = 0;
-    public final int maxFuel = 20;
-    public static final Map<Item,Integer> ITEM_FUEL_AMOUNT = Maps.newHashMap(ImmutableMap.of(MAGIC_GEM.get(), 1, MAGIC_BLOCK_ITEM.get(), 9));
+    public final int maxFuel = 900;
+    public final int fuelPerOperation = 27;
+    public static final Map<Item,Integer> ITEM_FUEL_AMOUNT = Maps.newHashMap(ImmutableMap.of(MAGIC_NUGGET.get(), 1, MAGIC_GEM.get(), 9, MAGIC_BLOCK_ITEM.get(), 36));
     public static final Map<Item, Item> RECIPES = Maps.newHashMap(new ImmutableMap.Builder<Item, Item>()
             .put(REINFORCED_MAGIC_HELMET.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_HELMET.get())
             .put(REINFORCED_MAGIC_CHESTPLATE.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_CHESTPLATE.get())
@@ -124,8 +124,8 @@ public class MagicPressTileEntity extends TileEntity implements ITickableTileEnt
                 this.inventory.decrStackSize(3, 1);
                 dirty = true;
             }
-            if (RECIPES.get(this.inventory.getStackInSlot(0).getItem()) != null && this.inventory.getStackInSlot(1).getItem() == OBSIDIAN_PLATE.get() && this.inventory.getStackInSlot(1).getCount() >= 32 && fuel >= 1) {
-                fuel--;
+            if (RECIPES.get(this.inventory.getStackInSlot(0).getItem()) != null && this.inventory.getStackInSlot(1).getItem() == OBSIDIAN_PLATE.get() && this.inventory.getStackInSlot(1).getCount() >= 32 && fuel >= fuelPerOperation) {
+                fuel -= fuelPerOperation;
                 this.inventory.insertItem(2,new ItemStack(RECIPES.get(this.inventory.getStackInSlot(0).getItem()), 1), false);
                 this.inventory.decrStackSize(0,1);
                 this.inventory.decrStackSize(1,32);
@@ -134,12 +134,9 @@ public class MagicPressTileEntity extends TileEntity implements ITickableTileEnt
         }
         if(dirty) this.markDirty();
     }
-    public void setCustomName(ITextComponent name) {
-        this.customName = name;
-    }
 
     public ITextComponent getName() {
-        return this.customName != null ? this.customName : this.getDefaultName();
+        return this.getDefaultName();
     }
 
     private ITextComponent getDefaultName() {
@@ -151,8 +148,4 @@ public class MagicPressTileEntity extends TileEntity implements ITickableTileEnt
         return this.getName();
     }
 
-    @Nullable
-    public ITextComponent getCustomName() {
-        return this.customName;
-    }
 }

@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "magicmod:magic_nugget"
+    ]
+  },
+  "criteria": {
+    "has_magic_shard": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_shard"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_magic_shard"
+    ]
+  ]
+}
