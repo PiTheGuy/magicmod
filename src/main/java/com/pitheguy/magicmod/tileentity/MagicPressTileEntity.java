@@ -33,12 +33,11 @@ import java.util.Map;
 import static com.pitheguy.magicmod.util.RegistryHandler.*;
 
 public class MagicPressTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
-    private ITextComponent customName;
     private final ModItemHandler inventory;
     public int fuel = 0;
-    public final int maxFuel = 100;
-    public final int fuelPerOperation = 5;
-    public static final Map<Item,Integer> ITEM_FUEL_AMOUNT = Maps.newHashMap(ImmutableMap.of(MAGIC_GEM.get(), 1, MAGIC_BLOCK_ITEM.get(), 4));
+    public final int maxFuel = 900;
+    public final int fuelPerOperation = 27;
+    public static final Map<Item,Integer> ITEM_FUEL_AMOUNT = Maps.newHashMap(ImmutableMap.of(MAGIC_NUGGET.get(), 1, MAGIC_GEM.get(), 9, MAGIC_BLOCK_ITEM.get(), 36));
     public static final Map<Item, Item> RECIPES = Maps.newHashMap(new ImmutableMap.Builder<Item, Item>()
             .put(REINFORCED_MAGIC_HELMET.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_HELMET.get())
             .put(REINFORCED_MAGIC_CHESTPLATE.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_CHESTPLATE.get())
@@ -135,12 +134,9 @@ public class MagicPressTileEntity extends TileEntity implements ITickableTileEnt
         }
         if(dirty) this.markDirty();
     }
-    public void setCustomName(ITextComponent name) {
-        this.customName = name;
-    }
 
     public ITextComponent getName() {
-        return this.customName != null ? this.customName : this.getDefaultName();
+        return this.getDefaultName();
     }
 
     private ITextComponent getDefaultName() {
@@ -152,8 +148,4 @@ public class MagicPressTileEntity extends TileEntity implements ITickableTileEnt
         return this.getName();
     }
 
-    @Nullable
-    public ITextComponent getCustomName() {
-        return this.customName;
-    }
 }

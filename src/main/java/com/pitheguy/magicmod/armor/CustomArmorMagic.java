@@ -25,8 +25,10 @@ public class CustomArmorMagic extends ArmorItem {
         } else {
             if (ArmorHandler.isWearingReinforcedMagicArmor(player))
                 player.addPotionEffect(new EffectInstance(Effects.REGENERATION, 2, 1, true, false));
-            player.abilities.allowFlying = false;
-            player.abilities.isFlying = false;
+            if (!player.abilities.isCreativeMode && player.abilities.allowFlying) {
+                player.abilities.allowFlying = false;
+                player.abilities.isFlying = false;
+            }
         }
     }
 }

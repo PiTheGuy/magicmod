@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        " P ",
+        "PEP",
+        " P "
+    ],
+    
+    "key":
+    {
+        "P": {
+            "item": "magicmod:magic_plate"
+        },
+        "E": {
+            "item": "minecraft:ender_pearl"
+        }
+    },
+	
+    "result":
+    {
+        "item": "magicmod:magic_pearl",
+        "count": 1
+    }
+}
