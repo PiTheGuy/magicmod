@@ -1,0 +1,6 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "magicmod:blocks/magic_web"
+  }
+}

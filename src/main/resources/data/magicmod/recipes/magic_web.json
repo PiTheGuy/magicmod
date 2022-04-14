@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "magic_gem",
+
+  "ingredients":
+  [
+
+    {
+      "item": "minecraft:cobweb"
+    },
+
+    {
+      "item": "magicmod:magic_glue"
+    }
+
+  ],
+
+  "result":
+  {
+    "item": "magicmod:magic_web",
+    "count": 1
+  }
+}
