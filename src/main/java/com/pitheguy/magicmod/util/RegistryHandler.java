@@ -6,8 +6,11 @@ import com.pitheguy.magicmod.armor.MagicArmorMaterial;
 import com.pitheguy.magicmod.armor.ObsidianPlatedReinforcedMagicArmorMaterial;
 import com.pitheguy.magicmod.armor.ReinforcedMagicArmorMaterial;
 import com.pitheguy.magicmod.blocks.*;
+import com.pitheguy.magicmod.init.ModEntityTypes;
 import com.pitheguy.magicmod.items.ItemBase;
 import com.pitheguy.magicmod.items.MagicPearl;
+import com.pitheguy.magicmod.items.ModSpawnEggItem;
+import com.pitheguy.magicmod.items.PopularityOrb;
 import com.pitheguy.magicmod.tools.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.SlabBlock;
@@ -42,6 +45,7 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_SHARD = ITEMS.register("magic_shard", ItemBase::new);
     public static final RegistryObject<Item> MAGIC_NUGGET = ITEMS.register("magic_nugget", ItemBase::new);
     public static final RegistryObject<Item> MAGIC_PEARL = ITEMS.register("magic_pearl", MagicPearl::new);
+    public static final RegistryObject<Item> POPULARITY_ORB = ITEMS.register("popularity_orb", PopularityOrb::new);
 
     //Magic Dust
     public static final RegistryObject<Item> MAGIC_DUST_RED = ITEMS.register("magic_dust_red", ItemBase::new);
@@ -64,6 +68,9 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_ORB_MAGENTA = ITEMS.register("magic_orb_magenta", ItemBase::new);
     public static final RegistryObject<Item> MAGIC_ORB_BLACK = ITEMS.register("magic_orb_black", ItemBase::new);
     public static final RegistryObject<Item> MAGIC_ORB_WHITE = ITEMS.register("magic_orb_white", ItemBase::new);
+
+    //Spawn Eggs
+    public static final RegistryObject<ModSpawnEggItem> MAGIC_FRIEND_SPAWN_EGG = ITEMS.register("magic_friend_spawn_egg", () -> new ModSpawnEggItem(ModEntityTypes.MAGIC_FRIEND, 0xFF0000, 0x00FF00, new Item.Properties().group(MagicMod.TAB)));
 
     //Magic Tools
     public static final RegistryObject<SwordItem> MAGIC_SWORD = ITEMS.register("magic_sword", () ->

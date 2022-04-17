@@ -1,20 +1,23 @@
 package com.pitheguy.magicmod;
 
-import com.pitheguy.magicmod.client.entity.render.ModEntityRender;
+import com.pitheguy.magicmod.client.entity.render.MagicFriendRender;
 import com.pitheguy.magicmod.client.gui.MagicCrateScreen;
 import com.pitheguy.magicmod.client.gui.MagicInfuserScreen;
 import com.pitheguy.magicmod.client.gui.MagicPressScreen;
 import com.pitheguy.magicmod.init.ModContainerTypes;
 import com.pitheguy.magicmod.init.ModEntityTypes;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
+import com.pitheguy.magicmod.items.ModSpawnEggItem;
 import com.pitheguy.magicmod.util.RegistryHandler;
 import com.pitheguy.magicmod.world.gen.ModOreGen;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -61,12 +64,17 @@ public class MagicMod
         ScreenManager.registerFactory(ModContainerTypes.MAGIC_PRESS.get(), MagicPressScreen::new);
         RenderTypeLookup.setRenderLayer(RegistryHandler.MAGIC_VEIN.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(RegistryHandler.MAGIC_WEB.get(), RenderType.getCutout());
-        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.MAGIC_FRIEND.get(), ModEntityRender::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.MAGIC_FRIEND.get(), MagicFriendRender::new);
     }
 
     @SubscribeEvent
     public static void loadCompleteEvent(FMLLoadCompleteEvent event) {
         ModOreGen.generateOre();
+    }
+
+    @SubscribeEvent
+    public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event) {
+        ModSpawnEggItem.initSpawnEggs();
     }
 
     public static final ItemGroup TAB = new ItemGroup("magicTab") {

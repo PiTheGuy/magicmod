@@ -6,12 +6,12 @@ import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 
-public class ModEntityRender extends MobRenderer<MagicFriend, MagicFriendModel<MagicFriend>> {
+public class MagicFriendRender extends MobRenderer<MagicFriend, MagicFriendModel<MagicFriend>> {
 
     public static final ResourceLocation TEXTURE = new ResourceLocation("magicmod","textures/entities/magic_friend.png");
 
-    public ModEntityRender(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new MagicFriendModel<MagicFriend>(), 0.5f);
+    public MagicFriendRender(EntityRendererManager renderManagerIn) {
+        super(renderManagerIn, new MagicFriendModel<>(), 0.5f);
     }
 
     @Override
