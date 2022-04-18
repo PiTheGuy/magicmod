@@ -1,6 +1,7 @@
 package com.pitheguy.magicmod.init;
 
 import com.pitheguy.magicmod.entities.FluffyMagician;
+import com.pitheguy.magicmod.entities.FluffyMagicianBare;
 import com.pitheguy.magicmod.entities.MagicFriend;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -22,5 +23,10 @@ public class ModEntityTypes {
                     () -> EntityType.Builder.create(FluffyMagician::new, EntityClassification.CREATURE)
                             .size(1f, 0.8f)
                             .build(new ResourceLocation("magicmod", "fluffy_magician").toString()));
+    public static final RegistryObject<EntityType<FluffyMagicianBare>> FLUFFY_MAGICIAN_BARE = ENTITY_TYPES
+            .register("fluffy_magician_bare",
+                    () -> EntityType.Builder.create(FluffyMagicianBare::new, EntityClassification.CREATURE)
+                            .size(0.8f, 0.8f)
+                            .build(new ResourceLocation("magicmod", "fluffy_magician_bare").toString()));
 
 }

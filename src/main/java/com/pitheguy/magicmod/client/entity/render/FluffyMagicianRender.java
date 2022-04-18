@@ -10,11 +10,10 @@ public class FluffyMagicianRender extends MobRenderer<FluffyMagician, FluffyMagi
 
     public FluffyMagicianRender(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new FluffyMagicianModel<>(), 0.5f);
-        //this.addLayer(new PowderLayer(this));
     }
 
     @Override
     public ResourceLocation getEntityTexture(FluffyMagician entity) {
-        return entity.hasPowder ? new ResourceLocation("magicmod","textures/entities/fluffy_magician.png") : new ResourceLocation("magicmod","textures/entities/fluffy_magician_bare.png");
+        return new ResourceLocation("magicmod","textures/entities/fluffy_magician.png");
     }
 }

@@ -55,16 +55,6 @@ public class FluffyMagician extends AnimalEntity {
     }
 
     @Override
-    public void livingTick() {
-        if (powderRegrowTime == 0 && !hasPowder && this.world.getBlockState(this.getPosition().down()).getBlock() == RegistryHandler.MAGIC_BLOCK.get()) {
-            this.hasPowder = true;
-            this.recreate();
-        }
-        powderRegrowTime = Math.max(0, powderRegrowTime - 1);
-        super.livingTick();
-    }
-
-    @Override
     public boolean processInteract(PlayerEntity player, Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
         if (itemstack.getItem() == Items.SHEARS && this.hasPowder) { //TODO: Add custom shears for this
@@ -82,6 +72,7 @@ public class FluffyMagician extends AnimalEntity {
                 itemstack.damageItem(1, player, (p_213613_1_) -> p_213613_1_.sendBreakAnimation(hand));
             }
             this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
+            this.recreate();
             return true;
         }
         return super.processInteract(player, hand);
@@ -102,8 +93,9 @@ public class FluffyMagician extends AnimalEntity {
     }
 
     public void recreate() {
-        if (!this.world.isRemote) {
-            FluffyMagician newEntity = new FluffyMagician(ModEntityTypes.FLUFFY_MAGICIAN.get(), this.world);
+        if (!this.world.isRemote && !hasPowder) {
+            FluffyMagicianBare newEntity = new FluffyMagicianBare(ModEntityTypes.FLUFFY_MAGICIAN_BARE.get(), this.world);
+            //LOGGER.info("Converting to Bare Fluffy Magician");
             this.world.addEntity(newEntity);
             newEntity.setPosition(this.getPosX(), this.getPosY(), this.getPosZ());
             newEntity.copyDataFromOld(this);
