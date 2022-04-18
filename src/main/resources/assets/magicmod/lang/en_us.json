@@ -79,5 +79,7 @@
   "block.magicmod.magic_web": "Magic Web",
   "container.magicmod.magic_infuser": "Magic Infuser",
   "container.magicmod.magic_crate": "Magic Crate",
-  "container.magicmod.magic_press": "Magic Press"
+  "container.magicmod.magic_press": "Magic Press",
+  "entity.magicmod.magic_friend": "Magic Friend",
+  "entity.magicmod.fluffy_magician": "Fluffy Magician"
 }

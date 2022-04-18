@@ -1,5 +1,6 @@
 package com.pitheguy.magicmod;
 
+import com.pitheguy.magicmod.client.entity.render.FluffyMagicianRender;
 import com.pitheguy.magicmod.client.entity.render.MagicFriendRender;
 import com.pitheguy.magicmod.client.gui.MagicCrateScreen;
 import com.pitheguy.magicmod.client.gui.MagicInfuserScreen;
@@ -65,6 +66,7 @@ public class MagicMod
         RenderTypeLookup.setRenderLayer(RegistryHandler.MAGIC_VEIN.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(RegistryHandler.MAGIC_WEB.get(), RenderType.getCutout());
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.MAGIC_FRIEND.get(), MagicFriendRender::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.FLUFFY_MAGICIAN.get(), FluffyMagicianRender::new);
     }
 
     @SubscribeEvent
