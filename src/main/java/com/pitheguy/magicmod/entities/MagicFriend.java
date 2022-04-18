@@ -66,7 +66,7 @@ public class MagicFriend extends AnimalEntity {
                 this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
 
                 if (this.canPassengerSteer()) {
-                    this.setAIMoveSpeed((float)this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getValue());
+                    this.setAIMoveSpeed((float) this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getValue() * 1.5f);
                     super.travel(new Vec3d(0.0D, 0.0D, 1.0D));
                     this.newPosRotationIncrements = 0;
                 } else {
@@ -113,6 +113,10 @@ public class MagicFriend extends AnimalEntity {
 
     @Override
     public boolean canBeSteered() {
-        return true;
+        Entity entity = this.getControllingPassenger();
+        if (entity instanceof PlayerEntity) {
+            PlayerEntity playerentity = (PlayerEntity)entity;
+            return playerentity.getHeldItemMainhand().getItem() == RegistryHandler.MAGIC_GEM.get() || playerentity.getHeldItemOffhand().getItem() == RegistryHandler.MAGIC_GEM.get(); //TODO: Add custom bait for this
+        } else return false;
     }
 }
