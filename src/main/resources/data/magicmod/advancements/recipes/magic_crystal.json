@@ -2,8 +2,8 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "magicmod:magic_shard",
-      "magicmod:magic_shard_from_blasting"
+      "magicmod:magic_crystal",
+      "magicmod:magic_crystal_from_blasting"
     ]
   },
   "criteria": {
