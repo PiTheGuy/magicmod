@@ -36,7 +36,7 @@ public class MagicFriend extends AnimalEntity {
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(1, new TemptGoal(this, 1.2, Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get()), false));
+        this.goalSelector.addGoal(1, new TemptGoal(this, 1.2, Ingredient.fromItems(RegistryHandler.MAGIC_CARROT.get()), false));
         this.goalSelector.addGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0));
     }
 
@@ -116,7 +116,7 @@ public class MagicFriend extends AnimalEntity {
         Entity entity = this.getControllingPassenger();
         if (entity instanceof PlayerEntity) {
             PlayerEntity playerentity = (PlayerEntity)entity;
-            return playerentity.getHeldItemMainhand().getItem() == RegistryHandler.MAGIC_GEM.get() || playerentity.getHeldItemOffhand().getItem() == RegistryHandler.MAGIC_GEM.get(); //TODO: Add custom bait for this
+            return playerentity.getHeldItemMainhand().getItem() == RegistryHandler.MAGIC_CARROT.get() || playerentity.getHeldItemOffhand().getItem() == RegistryHandler.MAGIC_CARROT.get();
         } else return false;
     }
 }
