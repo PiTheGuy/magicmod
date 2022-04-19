@@ -28,6 +28,7 @@
   "item.magicmod.magic_pearl": "Magic Pearl",
   "item.magicmod.nether_shard": "Nether Shard",
   "item.magicmod.popularity_orb": "Orb of Popularity",
+  "item.magicmod.magic_shears": "Magic Shears",
   "item.magicmod.magic_sword": "Magic Sword",
   "item.magicmod.magic_axe": "Magic Axe",
   "item.magicmod.magic_pickaxe": "Magic Pickaxe",
@@ -81,5 +82,6 @@
   "container.magicmod.magic_crate": "Magic Crate",
   "container.magicmod.magic_press": "Magic Press",
   "entity.magicmod.magic_friend": "Magic Friend",
-  "entity.magicmod.fluffy_magician": "Fluffy Magician"
+  "entity.magicmod.fluffy_magician": "Fluffy Magician",
+  "entity.magicmod.fluffy_magician_bare": "Fluffy Magician"
 }

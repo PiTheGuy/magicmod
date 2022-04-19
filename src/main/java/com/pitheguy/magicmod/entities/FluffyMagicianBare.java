@@ -30,7 +30,7 @@ public class FluffyMagicianBare extends FluffyMagician {
 
     @Override
     public void livingTick() {
-        if (powderRegrowTime <= POWDER_REGROW_INTERVAL && this.world.getBlockState(this.getPosition().down()).getBlock() == RegistryHandler.MAGIC_BLOCK.get()) {
+        if (powderRegrowTime <= -POWDER_REGROW_INTERVAL && this.world.getBlockState(this.getPosition().down()).getBlock() == RegistryHandler.MAGIC_BLOCK.get()) {
             this.hasPowder = true;
             this.recreate();
         }

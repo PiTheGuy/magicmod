@@ -7,10 +7,7 @@ import com.pitheguy.magicmod.armor.ObsidianPlatedReinforcedMagicArmorMaterial;
 import com.pitheguy.magicmod.armor.ReinforcedMagicArmorMaterial;
 import com.pitheguy.magicmod.blocks.*;
 import com.pitheguy.magicmod.init.ModEntityTypes;
-import com.pitheguy.magicmod.items.ItemBase;
-import com.pitheguy.magicmod.items.MagicPearl;
-import com.pitheguy.magicmod.items.ModSpawnEggItem;
-import com.pitheguy.magicmod.items.PopularityOrb;
+import com.pitheguy.magicmod.items.*;
 import com.pitheguy.magicmod.tools.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.SlabBlock;
@@ -46,6 +43,7 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_NUGGET = ITEMS.register("magic_nugget", ItemBase::new);
     public static final RegistryObject<Item> MAGIC_PEARL = ITEMS.register("magic_pearl", MagicPearl::new);
     public static final RegistryObject<Item> POPULARITY_ORB = ITEMS.register("popularity_orb", PopularityOrb::new);
+    public static final RegistryObject<ShearsItem> MAGIC_SHEARS = ITEMS.register("magic_shears", MagicShears::new);
 
     //Magic Dust
     public static final RegistryObject<Item> MAGIC_DUST_RED = ITEMS.register("magic_dust_red", ItemBase::new);

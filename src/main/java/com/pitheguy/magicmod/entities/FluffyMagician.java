@@ -13,7 +13,6 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
@@ -57,7 +56,7 @@ public class FluffyMagician extends AnimalEntity {
     @Override
     public boolean processInteract(PlayerEntity player, Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
-        if (itemstack.getItem() == Items.SHEARS && this.hasPowder) { //TODO: Add custom shears for this
+        if (itemstack.getItem() == RegistryHandler.MAGIC_SHEARS.get() && this.hasPowder) {
             if (!this.world.isRemote) {
                 this.hasPowder = false;
                 this.powderRegrowTime = 2400;
