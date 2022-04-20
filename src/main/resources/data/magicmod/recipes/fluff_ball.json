@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "WGW",
+        "GEG",
+        "WGW"
+    ],
+    
+    "key":
+    {
+        "G":
+        {
+            "item": "magicmod:magic_gem"
+        },
+		"W":
+        {
+            "tag": "minecraft:wool"
+        },
+        "E":
+        {
+            "item": "minecraft:egg"
+        }
+    },
+    
+    "result":
+    {
+        "item": "magicmod:fluff_ball",
+        "count": 1
+    }
+}

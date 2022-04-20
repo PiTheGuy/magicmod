@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        " P ",
+        "PSP",
+        " p "
+    ],
+    
+    "key":
+    {
+        "P":
+        {
+            "item": "magicmod:magic_plate"
+        },
+		"S":
+        {
+            "item": "minecraft:shears"
+        }
+    },
+    
+    "result":
+    {
+        "item": "magicmod:magic_shears",
+        "count": 1
+    }
+}

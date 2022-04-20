@@ -8,10 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
-
-import java.util.Random;
 
 public class MagicVein extends Block {
     public MagicVein() {
@@ -33,13 +30,5 @@ public class MagicVein extends Block {
     @Override
     public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
         return true;
-    }
-
-    @Override
-    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
-        super.tick(state, worldIn, pos, rand);
-        if(worldIn.getBlockState(pos.down()).isAir()) {
-            worldIn.destroyBlock(pos, false);
-        }
     }
 }
