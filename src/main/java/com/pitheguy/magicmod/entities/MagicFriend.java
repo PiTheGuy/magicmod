@@ -11,7 +11,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -118,5 +120,30 @@ public class MagicFriend extends AnimalEntity {
             PlayerEntity playerentity = (PlayerEntity)entity;
             return playerentity.getHeldItemMainhand().getItem() == RegistryHandler.MAGIC_CARROT.get() || playerentity.getHeldItemOffhand().getItem() == RegistryHandler.MAGIC_CARROT.get();
         } else return false;
+    }
+
+    public boolean onLivingFall(float distance, float damageMultiplier) {
+        if (distance > 1.0F) {
+            this.playSound(SoundEvents.ENTITY_HORSE_LAND, 0.4F, 1.0F);
+        }
+
+        int i = this.calculateFallDamage(distance, damageMultiplier);
+        if (i <= 0) {
+            return false;
+        } else {
+            this.attackEntityFrom(DamageSource.FALL, i);
+            if (this.isBeingRidden()) {
+                for(Entity entity : this.getRecursivePassengers()) {
+                    entity.attackEntityFrom(DamageSource.FALL, i);
+                }
+            }
+
+            this.playFallSound();
+            return true;
+        }
+    }
+
+    protected int calculateFallDamage(float distance, float damageMultiplier) {
+        return MathHelper.ceil((distance * 0.15F - 7.0F) * damageMultiplier);
     }
 }

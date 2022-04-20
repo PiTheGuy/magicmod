@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+
+  "pattern":
+  [
+    "gGg",
+    "GSG",
+    "gGg"
+  ],
+
+  "key":
+  {
+    "S":
+    {
+      "item": "minecraft:saddle"
+    },
+    "G":
+    {
+      "item": "magicmod:magic_gem"
+    },
+    "g":
+    {
+      "item": "magicmod:magic_glue"
+    }
+  },
+
+  "result":
+  {
+    "item": "magicmod:popularity_orb",
+    "count": 1
+  }
+}

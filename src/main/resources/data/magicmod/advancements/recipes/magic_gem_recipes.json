@@ -15,7 +15,9 @@
       "magicmod:magic_block",
       "magicmod:magic_glue",
       "magicmod:magic_infuser",
-      "magicmod:magic_nugget_from_gem"
+      "magicmod:magic_nugget_from_gem",
+      "magicmod:popularity_orb",
+      "magicmod:fluff_ball"
     ]
   },
   "criteria": {

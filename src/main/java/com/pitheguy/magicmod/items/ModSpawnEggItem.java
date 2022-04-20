@@ -38,6 +38,12 @@ public class ModSpawnEggItem extends SpawnEggItem {
         UNADDED_EGGS.add(this);
     }
 
+    public ModSpawnEggItem(final RegistryObject<? extends EntityType<?>> entityTypeSupplier, final Item.Properties properties) {
+        super(null, 0, 0, properties);
+        this.entityTypeSupplier = Lazy.of(entityTypeSupplier);
+        UNADDED_EGGS.add(this);
+    }
+
     public static void initSpawnEggs() {
         final Map<EntityType<?>, SpawnEggItem> EGGS = ObfuscationReflectionHelper.getPrivateValue(SpawnEggItem.class,
                 null, "field_195987_b");

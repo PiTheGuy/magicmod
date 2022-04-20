@@ -44,6 +44,8 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_PEARL = ITEMS.register("magic_pearl", MagicPearl::new);
     public static final RegistryObject<Item> POPULARITY_ORB = ITEMS.register("popularity_orb", PopularityOrb::new);
     public static final RegistryObject<Item> MAGIC_CARROT = ITEMS.register("magic_carrot", ItemBase::new);
+
+    //Magic Shears
     public static final RegistryObject<ShearsItem> MAGIC_SHEARS = ITEMS.register("magic_shears", MagicShears::new);
 
     //Magic Dust
@@ -70,6 +72,7 @@ public class RegistryHandler {
 
     //Spawn Eggs
     public static final RegistryObject<ModSpawnEggItem> MAGIC_FRIEND_SPAWN_EGG = ITEMS.register("magic_friend_spawn_egg", () -> new ModSpawnEggItem(ModEntityTypes.MAGIC_FRIEND, 0xFF0000, 0x00FF00, new Item.Properties().group(MagicMod.TAB)));
+    public static final RegistryObject<Item> FLUFF_BALL = ITEMS.register("fluff_ball", FluffBall::new);
 
     //Magic Tools
     public static final RegistryObject<SwordItem> MAGIC_SWORD = ITEMS.register("magic_sword", () ->
