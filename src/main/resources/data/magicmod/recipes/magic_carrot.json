@@ -3,26 +3,26 @@
     
     "pattern":
     [
-        " P ",
-        "PSP",
-        " P "
+        "GGG",
+        "GCG",
+        "GGG"
     ],
     
     "key":
     {
-        "P":
+        "G":
         {
-            "item": "magicmod:magic_plate"
+            "item": "magicmod:magic_gem"
         },
-		"S":
+		"C":
         {
-            "item": "minecraft:shears"
+            "item": "minecraft:carrot"
         }
     },
     
     "result":
     {
-        "item": "magicmod:magic_shears",
+        "item": "magicmod:magic_carrot",
         "count": 1
     }
 }
