@@ -13,7 +13,11 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
+<<<<<<< Updated upstream
 version = '2.8-dev'
+=======
+version = '2.9-dev'
+>>>>>>> Stashed changes
 group = 'com.pitheguy.magicmod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'magicmod'
 

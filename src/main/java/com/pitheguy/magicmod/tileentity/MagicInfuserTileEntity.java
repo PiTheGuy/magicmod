@@ -28,7 +28,6 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import javax.annotation.Nullable;
 
 public class MagicInfuserTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
-    private ITextComponent customName;
     private final ModItemHandler inventory;
 
     public MagicInfuserTileEntity(TileEntityType<?> tileEntityTypeIn) {
@@ -118,12 +117,9 @@ public class MagicInfuserTileEntity extends TileEntity implements ITickableTileE
         }
         if(dirty) this.markDirty();
     }
-    public void setCustomName(ITextComponent name) {
-        this.customName = name;
-    }
 
     public ITextComponent getName() {
-        return this.customName != null ? this.customName : this.getDefaultName();
+        return this.getDefaultName();
     }
 
     private ITextComponent getDefaultName() {
@@ -135,8 +131,4 @@ public class MagicInfuserTileEntity extends TileEntity implements ITickableTileE
         return this.getName();
     }
 
-    @Nullable
-    public ITextComponent getCustomName() {
-        return this.customName;
-    }
 }

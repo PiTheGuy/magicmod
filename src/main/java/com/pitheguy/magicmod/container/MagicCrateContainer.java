@@ -11,6 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.util.Objects;
 
@@ -95,5 +99,14 @@ public class MagicCrateContainer extends Container {
             }
         }
         return itemstack;
+    }
+
+    @Override
+    public void onContainerClosed(PlayerEntity playerIn) {
+        super.onContainerClosed(playerIn);
+        World world = tileEntity.getWorld();
+        BlockPos pos = tileEntity.getPos();
+        world.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_BARREL_CLOSE, SoundCategory.BLOCKS, 0.5f,
+                world.rand.nextFloat() * 0.1f + 0.9f);
     }
 }
