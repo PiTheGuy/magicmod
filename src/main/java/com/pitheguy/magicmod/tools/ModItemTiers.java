@@ -3,13 +3,14 @@ package com.pitheguy.magicmod.tools;
 import com.pitheguy.magicmod.util.RegistryHandler;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.crafting.Ingredient;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-public enum MagicItemTier implements IItemTier { //TODO: Refactor to combine enums
-    MAGIC(() -> {
-        return Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get());
-    });
+public enum ModItemTiers implements IItemTier { //TODO: Refactor to combine enums
+    MAGIC(() -> Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get()), 5, 75000, 42, 0, 40),
+    REINFORCED_MAGIC(() -> Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get()), 6, 2000, 75, 0, 60),
+    OBSIDIAN_PLATED_REINFORCED_MAGIC(() -> Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get()), 7, 550000, 135, 0, 80);
 
     private final int harvestLevel;
     private final int maxUses;
@@ -18,12 +19,12 @@ public enum MagicItemTier implements IItemTier { //TODO: Refactor to combine enu
     private final int enchantability;
     private final Supplier<Ingredient> repairMaterial;
 
-    MagicItemTier(Supplier<Ingredient> repairMaterial) {
-        this.harvestLevel = 5;
-        this.maxUses = 75000;
-        this.efficiency = (float) 42.0;
-        this.attackDamage = (float) 0.0;
-        this.enchantability = 40;
+    ModItemTiers(Supplier<Ingredient> repairMaterial, int harvestLevel, int maxUses, float efficiency, float attackDamage, int enchantability) {
+        this.harvestLevel = harvestLevel;
+        this.maxUses = maxUses;
+        this.efficiency = efficiency;
+        this.attackDamage = attackDamage;
+        this.enchantability = enchantability;
         this.repairMaterial = repairMaterial;
     }
 
@@ -53,7 +54,7 @@ public enum MagicItemTier implements IItemTier { //TODO: Refactor to combine enu
     }
 
     @Override
-    public Ingredient getRepairMaterial() {
+    public @NotNull Ingredient getRepairMaterial() {
         return repairMaterial.get();
     }
 }
