@@ -6,7 +6,7 @@ import net.minecraft.item.crafting.Ingredient;
 
 import java.util.function.Supplier;
 
-public enum MagicItemTier implements IItemTier {
+public enum MagicItemTier implements IItemTier { //TODO: Refactor to combine enums
     MAGIC(() -> {
         return Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get());
     });

@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+
+    "pattern":
+    [
+        " G ",
+        "GGG"
+    ],
+
+    "key":
+    {
+        "G":
+        {
+            "item": "magicmod:magic_gem"
+        }
+    },
+
+    "result":
+    {
+        "item": "magicmod:magic_spike",
+        "count": 1
+    }
+}

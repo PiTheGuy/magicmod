@@ -152,6 +152,7 @@ public class RegistryHandler {
     public static final RegistryObject<Block> MAGIC_VEIN = BLOCKS.register("magic_vein", MagicVein::new);
     public static final RegistryObject<Block> MAGIC_INFUSED_STONE = BLOCKS.register("magic_infused_stone", () -> new Block(Block.Properties.create(Material.IRON).hardnessAndResistance(2.0f, 8.0f).sound(SoundType.STONE).harvestLevel(1).harvestTool(ToolType.PICKAXE)));
     public static final RegistryObject<Block> MAGIC_WEB = BLOCKS.register("magic_web", MagicWeb::new);
+    public static final RegistryObject<Block> MAGIC_SPIKE = BLOCKS.register("magic_spike", MagicSpike::new);
 
     //Magic Lamps
     public static final RegistryObject<Block> MAGIC_LAMP_RED = BLOCKS.register("magic_lamp_red", MagicLamp::new);
@@ -177,6 +178,7 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_VEIN_ITEM = ITEMS.register("magic_vein", () -> new BlockItemBase(MAGIC_VEIN.get()));
     public static final RegistryObject<Item> MAGIC_INFUSED_STONE_ITEM = ITEMS.register("magic_infused_stone", () -> new BlockItemBase(MAGIC_INFUSED_STONE.get()));
     public static final RegistryObject<Item> MAGIC_WEB_ITEM = ITEMS.register("magic_web", () -> new BlockItemBase(MAGIC_WEB.get()));
+    public static final RegistryObject<Item> MAGIC_SPIKE_ITEM = ITEMS.register("magic_spike", () -> new BlockItemBase(MAGIC_SPIKE.get()));
 
     //Magic Lamps
     public static final RegistryObject<Item> MAGIC_LAMP_RED_ITEM = ITEMS.register("magic_lamp_red", () -> new BlockItemBase(MAGIC_LAMP_RED.get()));
