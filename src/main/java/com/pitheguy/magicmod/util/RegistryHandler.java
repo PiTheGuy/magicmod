@@ -42,6 +42,7 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_PEARL = ITEMS.register("magic_pearl", MagicPearl::new);
     public static final RegistryObject<Item> POPULARITY_ORB = ITEMS.register("popularity_orb", PopularityOrb::new);
     public static final RegistryObject<Item> MAGIC_CARROT = ITEMS.register("magic_carrot", ItemBase::new);
+    public static final RegistryObject<Item> MAGIC_SHELTER = ITEMS.register("magic_shelter", MagicShelter::new);
 
     //Magic Shears
     public static final RegistryObject<ShearsItem> MAGIC_SHEARS = ITEMS.register("magic_shears", MagicShears::new);
