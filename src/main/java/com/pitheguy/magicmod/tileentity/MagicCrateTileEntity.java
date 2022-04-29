@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 public class MagicCrateTileEntity extends LockableLootTileEntity {
     private NonNullList<ItemStack> crateContents = NonNullList.withSize(88, ItemStack.EMPTY);
     protected int numPlayersUsing;
-    private IItemHandlerModifiable items = createHandler();
+    private final IItemHandlerModifiable items = createHandler();
     private LazyOptional<IItemHandlerModifiable> itemHandler = LazyOptional.of(() -> items);
 
     public MagicCrateTileEntity(TileEntityType<?> typeIn) {

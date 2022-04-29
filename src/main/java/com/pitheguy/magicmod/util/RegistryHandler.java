@@ -5,6 +5,7 @@ import com.pitheguy.magicmod.armor.CustomArmorMagic;
 import com.pitheguy.magicmod.armor.ModArmorMaterials;
 import com.pitheguy.magicmod.blocks.*;
 import com.pitheguy.magicmod.enchantments.MagicFinderEnchantment;
+import com.pitheguy.magicmod.enchantments.VeinminerEnchantment;
 import com.pitheguy.magicmod.init.ModEntityTypes;
 import com.pitheguy.magicmod.items.*;
 import com.pitheguy.magicmod.tools.*;
@@ -198,5 +199,5 @@ public class RegistryHandler {
 
     //Enchantments
     public static final RegistryObject<Enchantment> MAGIC_FINDER = ENCHANTMENTS.register("magic_finder", () -> new MagicFinderEnchantment(Rarity.VERY_RARE, EnchantmentType.create("magic_tool", item -> item instanceof MagicPickaxe || item instanceof MagicAxe || item instanceof MagicShovel), new EquipmentSlotType[]{EquipmentSlotType.MAINHAND}));
-    public static final RegistryObject<Enchantment> VEINMINER = ENCHANTMENTS.register("veinminer", () -> new MagicFinderEnchantment(Rarity.VERY_RARE, EnchantmentType.create("pickaxe", item -> item instanceof MagicPickaxe), new EquipmentSlotType[]{EquipmentSlotType.MAINHAND}));
+    public static final RegistryObject<Enchantment> VEINMINER = ENCHANTMENTS.register("veinminer", () -> new VeinminerEnchantment(Rarity.VERY_RARE, EnchantmentType.create("pickaxe", item -> item instanceof MagicPickaxe), new EquipmentSlotType[]{EquipmentSlotType.MAINHAND}));
 }

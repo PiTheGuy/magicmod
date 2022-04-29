@@ -88,5 +88,6 @@
   "entity.magicmod.magic_friend": "Magic Friend",
   "entity.magicmod.fluffy_magician": "Fluffy Magician",
   "entity.magicmod.fluffy_magician_bare": "Fluffy Magician",
-  "enchantment.magicmod.magic_finder": "Magic Finder"
+  "enchantment.magicmod.magic_finder": "Magic Finder",
+  "enchantment.magicmod.veinminer": "Veinminer"
 }

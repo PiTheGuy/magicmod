@@ -10,14 +10,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.tileentity.LockableLootTileEntity;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,6 +75,10 @@ public class MagicShelter extends Item {
                     BlockPos placePos = pos.add(x, y + 1, z);
                     if (blockState != null && context.getWorld().getBlockState(placePos).isAir()) {
                         context.getWorld().setBlockState(placePos, blockState);
+                        if (key.equals("C")) {
+                            Chunk chunk = context.getWorld().getChunkAt(placePos);
+                            LockableLootTileEntity.setLootTable(context.getWorld().getBlockReader(chunk.getPos().x, chunk.getPos().z), new Random(), placePos, new ResourceLocation("magicmod", "chests/magic_shelter_chest"));
+                        }
                         placedBlock = true;
                     }
                 }
@@ -83,6 +86,7 @@ public class MagicShelter extends Item {
         }
         if (placedBlock) {
             context.getWorld().playSound(context.getPlayer(), pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 1, context.getWorld().rand.nextFloat() * 0.1f + 0.9f);
+            context.getPlayer().getHeldItem(context.getHand()).shrink(1);
             return ActionResultType.SUCCESS;
         }
         return ActionResultType.PASS;
