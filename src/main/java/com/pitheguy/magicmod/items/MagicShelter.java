@@ -36,8 +36,8 @@ public class MagicShelter extends Item {
             .put("B", Blocks.STONE_BUTTON.getDefaultState().with(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH))
             .put("u", Blocks.IRON_DOOR.getDefaultState().with(BlockStateProperties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.LOWER))
             .put("l", Blocks.IRON_DOOR.getDefaultState().with(BlockStateProperties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.UPPER))
+            .put("C", Blocks.CHEST.getDefaultState().with(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH))
             .put("L", Blocks.LADDER.getDefaultState())
-            .put("C", Blocks.CHEST.getDefaultState())
             .put("M", MAGIC_LAMPS[RANDOM.nextInt(MAGIC_LAMPS.length)].getDefaultState())
             .build());
 

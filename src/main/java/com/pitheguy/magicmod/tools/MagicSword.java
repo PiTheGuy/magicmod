@@ -9,14 +9,15 @@ import net.minecraft.item.IItemTier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.tags.BlockTags;
+import org.jetbrains.annotations.NotNull;
 
-public class MagicSwordItem extends SwordItem {
-    public MagicSwordItem(IItemTier tier, int attackDamageIn, float attackSpeedIn, Properties builder) {
+public class MagicSword extends SwordItem {
+    public MagicSword(IItemTier tier, int attackDamageIn, float attackSpeedIn, Properties builder) {
         super(tier, attackDamageIn, attackSpeedIn, builder);
     }
 
     @Override
-    public float getDestroySpeed(ItemStack stack, BlockState state) {
+    public float getDestroySpeed(@NotNull ItemStack stack, BlockState state) {
         Block block = state.getBlock();
         if (block == Blocks.COBWEB || block == RegistryHandler.MAGIC_WEB.get()) {
             return 15.0F;

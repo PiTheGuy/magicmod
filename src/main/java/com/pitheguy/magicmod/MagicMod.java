@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
 @Mod.EventBusSubscriber(modid = "magicmod", bus = EventBusSubscriber.Bus.MOD)
 public class MagicMod
 {
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "magicmod";
 
     public MagicMod() {

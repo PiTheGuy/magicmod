@@ -4,6 +4,7 @@ import com.pitheguy.magicmod.MagicMod;
 import com.pitheguy.magicmod.armor.CustomArmorMagic;
 import com.pitheguy.magicmod.armor.ModArmorMaterials;
 import com.pitheguy.magicmod.blocks.*;
+import com.pitheguy.magicmod.enchantments.MagicFinderEnchantment;
 import com.pitheguy.magicmod.init.ModEntityTypes;
 import com.pitheguy.magicmod.items.*;
 import com.pitheguy.magicmod.tools.*;
@@ -11,6 +12,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantment.Rarity;
+import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraftforge.common.ToolType;
@@ -23,10 +27,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class RegistryHandler {
     public static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, MagicMod.MOD_ID);
     public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, MagicMod.MOD_ID);
+    public static final DeferredRegister<Enchantment> ENCHANTMENTS = new DeferredRegister<>(ForgeRegistries.ENCHANTMENTS, MagicMod.MOD_ID);
 
     public static void init() {
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ENCHANTMENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     //Items
@@ -75,23 +81,23 @@ public class RegistryHandler {
 
     //Magic Tools
     public static final RegistryObject<SwordItem> MAGIC_SWORD = ITEMS.register("magic_sword", () ->
-            new MagicSwordItem(ModItemTiers.MAGIC, 70, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicSword(ModItemTiers.MAGIC, 70, 0.0f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<PickaxeItem> MAGIC_PICKAXE = ITEMS.register("magic_pickaxe", () ->
-            new PickaxeItem(ModItemTiers.MAGIC, 50, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicPickaxe(ModItemTiers.MAGIC, 50, 0.0f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<AxeItem> MAGIC_AXE = ITEMS.register("magic_axe", () ->
-            new AxeItem(ModItemTiers.MAGIC, 80, -1.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicAxe(ModItemTiers.MAGIC, 80, -1.0f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<ShovelItem> MAGIC_SHOVEL = ITEMS.register("magic_shovel", () ->
-            new ShovelItem(ModItemTiers.MAGIC, 55, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicShovel(ModItemTiers.MAGIC, 55, 0.0f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<HoeItem> MAGIC_HOE = ITEMS.register("magic_hoe", () ->
             new MagicHoe(ModItemTiers.MAGIC, 0.0f, new Item.Properties().group(MagicMod.TAB)));
 
     //Reinforced Magic Tools
     public static final RegistryObject<SwordItem> REINFORCED_MAGIC_SWORD = ITEMS.register("reinforced_magic_sword", () ->
-            new MagicSwordItem(ModItemTiers.REINFORCED_MAGIC, 200, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicSword(ModItemTiers.REINFORCED_MAGIC, 200, 0.0f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<PickaxeItem> REINFORCED_MAGIC_PICKAXE = ITEMS.register("reinforced_magic_pickaxe", () ->
-            new PickaxeItem(ModItemTiers.REINFORCED_MAGIC, 150, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicPickaxe(ModItemTiers.REINFORCED_MAGIC, 150, 0.0f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<AxeItem> REINFORCED_MAGIC_AXE = ITEMS.register("reinforced_magic_axe", () ->
-            new AxeItem(ModItemTiers.REINFORCED_MAGIC, 225, -1.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicAxe(ModItemTiers.REINFORCED_MAGIC, 225, -1.0f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<ShovelItem> REINFORCED_MAGIC_SHOVEL = ITEMS.register("reinforced_magic_shovel", () ->
             new ReinforcedMagicShovel(ModItemTiers.REINFORCED_MAGIC, 160, 0.0f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<HoeItem> REINFORCED_MAGIC_HOE = ITEMS.register("reinforced_magic_hoe", () ->
@@ -99,11 +105,11 @@ public class RegistryHandler {
 
     //Obsidian Plated Reinforced Magic Tools
     public static final RegistryObject<SwordItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_SWORD = ITEMS.register("obsidian_plated_reinforced_magic_sword", () ->
-            new MagicSwordItem(ModItemTiers.OBSIDIAN_PLATED_REINFORCED_MAGIC, 450, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicSword(ModItemTiers.OBSIDIAN_PLATED_REINFORCED_MAGIC, 450, 0.0f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<PickaxeItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_PICKAXE = ITEMS.register("obsidian_plated_reinforced_magic_pickaxe", () ->
-            new PickaxeItem(ModItemTiers.OBSIDIAN_PLATED_REINFORCED_MAGIC, 350, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicPickaxe(ModItemTiers.OBSIDIAN_PLATED_REINFORCED_MAGIC, 350, 0.0f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<AxeItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_AXE = ITEMS.register("obsidian_plated_reinforced_magic_axe", () ->
-            new AxeItem(ModItemTiers.OBSIDIAN_PLATED_REINFORCED_MAGIC, 480, -0.5f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicAxe(ModItemTiers.OBSIDIAN_PLATED_REINFORCED_MAGIC, 480, -0.5f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<ShovelItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_SHOVEL = ITEMS.register("obsidian_plated_reinforced_magic_shovel", () ->
             new ObsidianPlatedReinforcedMagicShovel(ModItemTiers.OBSIDIAN_PLATED_REINFORCED_MAGIC, 350, 0.0f, new Item.Properties().group(MagicMod.TAB)));
     public static final RegistryObject<HoeItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_HOE = ITEMS.register("obsidian_plated_reinforced_magic_hoe", () ->
@@ -189,4 +195,8 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_LAMP_MAGENTA_ITEM = ITEMS.register("magic_lamp_magenta", () -> new BlockItemBase(MAGIC_LAMP_MAGENTA.get()));
     public static final RegistryObject<Item> MAGIC_LAMP_BLACK_ITEM = ITEMS.register("magic_lamp_black", () -> new BlockItemBase(MAGIC_LAMP_BLACK.get()));
     public static final RegistryObject<Item> MAGIC_LAMP_WHITE_ITEM = ITEMS.register("magic_lamp_white", () -> new BlockItemBase(MAGIC_LAMP_WHITE.get()));
+
+    //Enchantments
+    public static final RegistryObject<Enchantment> MAGIC_FINDER = ENCHANTMENTS.register("magic_finder", () -> new MagicFinderEnchantment(Rarity.VERY_RARE, EnchantmentType.create("magic_tool", item -> item instanceof MagicPickaxe || item instanceof MagicAxe || item instanceof MagicShovel), new EquipmentSlotType[]{EquipmentSlotType.MAINHAND}));
+    public static final RegistryObject<Enchantment> VEINMINER = ENCHANTMENTS.register("veinminer", () -> new MagicFinderEnchantment(Rarity.VERY_RARE, EnchantmentType.create("pickaxe", item -> item instanceof MagicPickaxe), new EquipmentSlotType[]{EquipmentSlotType.MAINHAND}));
 }
