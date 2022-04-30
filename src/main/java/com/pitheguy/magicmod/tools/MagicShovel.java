@@ -22,10 +22,8 @@ public class MagicShovel extends ShovelItem {
     public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
         if (entityLiving instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) entityLiving;
-            MagicMod.LOGGER.info("Player breaking block with " + player.getHeldItemMainhand() + " enchanted with Magic Finder level " + EnchantmentHelper.getEnchantmentLevel(RegistryHandler.MAGIC_FINDER.get(), player.getHeldItemMainhand()));
             if (Math.random() < EnchantmentHelper.getEnchantmentLevel(RegistryHandler.MAGIC_FINDER.get(), player.getHeldItemMainhand()) * 0.1) {
                 World world = player.getEntityWorld();
-                MagicMod.LOGGER.info("Dropping Magic Powder from enchantment at " + pos.getX() + "," + pos.getY() + "," + pos.getZ());
                 world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(RegistryHandler.MAGIC_POWDER.get())));
             }
         }

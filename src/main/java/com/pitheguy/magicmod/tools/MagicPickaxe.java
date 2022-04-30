@@ -24,9 +24,9 @@ public class MagicPickaxe extends PickaxeItem {
         int blocksBroken = 1;
         if (entityLiving instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) entityLiving;
-            if (Math.random() < EnchantmentHelper.getEnchantmentLevel(RegistryHandler.MAGIC_FINDER.get(), player.getHeldItemMainhand()) * 0.1) {
-                World world = player.getEntityWorld();
-                world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(RegistryHandler.MAGIC_POWDER.get())));
+            double d = state.getPlayerRelativeBlockHardness(player, player.world.getBlockReader(player.world.getChunkAt(pos).getPos().x, player.world.getChunkAt(pos).getPos().z), pos) >= 1 ? 0.02 : 0.1;
+            if (Math.random() < EnchantmentHelper.getEnchantmentLevel(RegistryHandler.MAGIC_FINDER.get(), player.getHeldItemMainhand()) * d) {
+                player.world.addEntity(new ItemEntity(player.world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(RegistryHandler.MAGIC_POWDER.get())));
             }
             int veinminerLevel = EnchantmentHelper.getEnchantmentLevel(RegistryHandler.VEINMINER.get(), player.getHeldItemMainhand());
             if (veinminerLevel > 0 && state.getHarvestTool() == ToolType.PICKAXE) {
