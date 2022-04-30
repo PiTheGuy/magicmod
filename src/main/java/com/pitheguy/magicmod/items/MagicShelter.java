@@ -86,7 +86,9 @@ public class MagicShelter extends Item {
         }
         if (placedBlock) {
             context.getWorld().playSound(context.getPlayer(), pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 1, context.getWorld().rand.nextFloat() * 0.1f + 0.9f);
-            context.getPlayer().getHeldItem(context.getHand()).shrink(1);
+            if (!context.getPlayer().abilities.isCreativeMode) {
+                context.getPlayer().getHeldItem(context.getHand()).shrink(1);
+            }
             return ActionResultType.SUCCESS;
         }
         return ActionResultType.PASS;
@@ -98,7 +100,7 @@ public class MagicShelter extends Item {
 
     private boolean hasEnoughSpace(PlayerEntity player, World world) {
         for (int x = -2; x <= 2; x++) {
-            for (int y = 1; y <= STRUCTURE_1.length; y++) {
+            for (int y = 0; y < STRUCTURE_1.length; y++) {
                 for (int z = -2; z <= 2; z++) {
                     if (!world.getBlockState(player.getPosition().add(x, y, z)).isAir()) {
                         return false;

@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "OOO",
+        "OMO",
+        "OOO"
+    ],
+    
+    "key":
+    {
+        "O":
+        {
+            "item": "magicmod:obsidian_plate"
+        },
+		"M":
+        {
+            "item": "magicmod:magic_obsidian"
+        }
+    },
+    
+    "result":
+    {
+        "item": "magicmod:magic_shelter",
+        "count": 1
+    }
+}

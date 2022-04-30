@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "magicmod:magic_shelter"
+    ]
+  },
+  "criteria": {
+    "has_obsidian_plate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:obsidian_plate"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_obsidian_plate"
+    ]
+  ]
+}

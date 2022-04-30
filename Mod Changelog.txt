@@ -1,3 +1,0 @@
-- Added Magic Crate (upgraded barrel block)
-- Added new advancement for breaking the reinforced magic hoe
-- Magic hoes now break multiple crops at a time (3x3 for regular Magic hoe, 5x5 for reinforced)
