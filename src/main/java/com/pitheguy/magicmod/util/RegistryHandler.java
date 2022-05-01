@@ -18,6 +18,8 @@ import net.minecraft.enchantment.Enchantment.Rarity;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -48,7 +50,7 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_NUGGET = ITEMS.register("magic_nugget", ItemBase::new);
     public static final RegistryObject<Item> MAGIC_PEARL = ITEMS.register("magic_pearl", MagicPearl::new);
     public static final RegistryObject<Item> POPULARITY_ORB = ITEMS.register("popularity_orb", PopularityOrb::new);
-    public static final RegistryObject<Item> MAGIC_CARROT = ITEMS.register("magic_carrot", ItemBase::new);
+    public static final RegistryObject<Item> MAGIC_CARROT = ITEMS.register("magic_carrot", () -> new Item(new Item.Properties().group(MagicMod.TAB).food(new Food.Builder().hunger(12).saturation(1.8F).effect(new EffectInstance(Effects.REGENERATION, 100, 2), 1).effect(new EffectInstance(Effects.RESISTANCE, 2400, 2), 1).setAlwaysEdible().build())));
     public static final RegistryObject<Item> MAGIC_SHELTER = ITEMS.register("magic_shelter", MagicShelter::new);
 
     //Magic Shears
