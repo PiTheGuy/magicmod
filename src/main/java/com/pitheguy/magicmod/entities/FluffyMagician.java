@@ -93,10 +93,8 @@ public class FluffyMagician extends AnimalEntity {
 
     public void recreate() {
         if (!this.world.isRemote && !hasPowder) {
-            FluffyMagicianBare newEntity = new FluffyMagicianBare(ModEntityTypes.FLUFFY_MAGICIAN_BARE.get(), this.world);
             //LOGGER.info("Converting to Bare Fluffy Magician");
-            this.world.addEntity(newEntity);
-            newEntity.setPosition(this.getPosX(), this.getPosY(), this.getPosZ());
+            FluffyMagicianBare newEntity = ModEntityTypes.FLUFFY_MAGICIAN_BARE.get().spawn(this.world, null, null, null, this.getPosition(), SpawnReason.CONVERSION, true, true);
             newEntity.copyDataFromOld(this);
             this.remove();
         }
