@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 
 public enum ModItemTiers implements IItemTier {
     MAGIC(() -> Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get()), 5, 75000, 42, 0, 40),
-    REINFORCED_MAGIC(() -> Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get()), 6, 2000, 75, 0, 60),
+    REINFORCED_MAGIC(() -> Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get()), 6, 200000, 75, 0, 60),
     OBSIDIAN_PLATED_REINFORCED_MAGIC(() -> Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get()), 7, 550000, 135, 0, 80);
 
     private final int harvestLevel;
