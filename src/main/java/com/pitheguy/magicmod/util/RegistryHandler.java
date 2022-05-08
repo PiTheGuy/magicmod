@@ -50,8 +50,9 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_NUGGET = ITEMS.register("magic_nugget", ItemBase::new);
     public static final RegistryObject<Item> MAGIC_PEARL = ITEMS.register("magic_pearl", MagicPearl::new);
     public static final RegistryObject<Item> POPULARITY_ORB = ITEMS.register("popularity_orb", PopularityOrb::new);
-    public static final RegistryObject<Item> MAGIC_CARROT = ITEMS.register("magic_carrot", () -> new Item(new Item.Properties().group(MagicMod.TAB).food(new Food.Builder().hunger(12).saturation(1.8F).effect(new EffectInstance(Effects.REGENERATION, 100, 2), 1).effect(new EffectInstance(Effects.RESISTANCE, 2400, 2), 1).setAlwaysEdible().build())));
+    public static final RegistryObject<Item> MAGIC_CARROT = ITEMS.register("magic_carrot", () -> new Item(new Item.Properties().group(MagicMod.TAB).food(new Food.Builder().hunger(12).saturation(1.8F).effect(new EffectInstance(Effects.REGENERATION, 100, 2), 1).effect(() -> new EffectInstance(Effects.RESISTANCE, 2400, 2), 1).setAlwaysEdible().build())));
     public static final RegistryObject<Item> MAGIC_SHELTER = ITEMS.register("magic_shelter", MagicShelter::new);
+    public static final RegistryObject<Item> MAGIC_FUEL = ITEMS.register("magic_fuel", ItemBase::new);
 
     //Magic Shears
     public static final RegistryObject<ShearsItem> MAGIC_SHEARS = ITEMS.register("magic_shears", MagicShears::new);
@@ -157,6 +158,7 @@ public class RegistryHandler {
     public static final RegistryObject<Block> MAGIC_INFUSER = BLOCKS.register("magic_infuser", MagicInfuser::new);
     public static final RegistryObject<Block> MAGIC_CRATE = BLOCKS.register("magic_crate", MagicCrate::new);
     public static final RegistryObject<Block> MAGIC_PRESS = BLOCKS.register("magic_press", MagicPress::new);
+    public static final RegistryObject<Block> MAGIC_ENERGIZER = BLOCKS.register("magic_energizer", MagicEnergizer::new);
     public static final RegistryObject<Block> MAGIC_VEIN = BLOCKS.register("magic_vein", MagicVein::new);
     public static final RegistryObject<Block> MAGIC_INFUSED_STONE = BLOCKS.register("magic_infused_stone", () -> new Block(Block.Properties.create(Material.IRON).hardnessAndResistance(2.0f, 8.0f).sound(SoundType.STONE).harvestLevel(1).harvestTool(ToolType.PICKAXE)));
     public static final RegistryObject<Block> MAGIC_WEB = BLOCKS.register("magic_web", MagicWeb::new);
@@ -183,6 +185,7 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_INFUSER_ITEM = ITEMS.register("magic_infuser", () -> new BlockItemBase(MAGIC_INFUSER.get()));
     public static final RegistryObject<Item> MAGIC_CRATE_ITEM = ITEMS.register("magic_crate", () -> new BlockItemBase(MAGIC_CRATE.get()));
     public static final RegistryObject<Item> MAGIC_PRESS_ITEM = ITEMS.register("magic_press", () -> new BlockItemBase(MAGIC_PRESS.get()));
+    public static final RegistryObject<Item> MAGIC_ENERGIZER_ITEM = ITEMS.register("magic_energizer", () -> new BlockItemBase(MAGIC_ENERGIZER.get()));
     public static final RegistryObject<Item> MAGIC_VEIN_ITEM = ITEMS.register("magic_vein", () -> new BlockItemBase(MAGIC_VEIN.get()));
     public static final RegistryObject<Item> MAGIC_INFUSED_STONE_ITEM = ITEMS.register("magic_infused_stone", () -> new BlockItemBase(MAGIC_INFUSED_STONE.get()));
     public static final RegistryObject<Item> MAGIC_WEB_ITEM = ITEMS.register("magic_web", () -> new BlockItemBase(MAGIC_WEB.get()));

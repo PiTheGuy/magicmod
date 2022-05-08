@@ -1,7 +1,10 @@
 package com.pitheguy.magicmod;
 
-import com.pitheguy.magicmod.client.entity.render.*;
+import com.pitheguy.magicmod.client.entity.render.FluffyMagicianBareRender;
+import com.pitheguy.magicmod.client.entity.render.FluffyMagicianRender;
+import com.pitheguy.magicmod.client.entity.render.MagicFriendRender;
 import com.pitheguy.magicmod.client.gui.MagicCrateScreen;
+import com.pitheguy.magicmod.client.gui.MagicEnergizerScreen;
 import com.pitheguy.magicmod.client.gui.MagicInfuserScreen;
 import com.pitheguy.magicmod.client.gui.MagicPressScreen;
 import com.pitheguy.magicmod.init.ModContainerTypes;
@@ -62,6 +65,7 @@ public class MagicMod
         ScreenManager.registerFactory(ModContainerTypes.MAGIC_INFUSER.get(), MagicInfuserScreen::new);
         ScreenManager.registerFactory(ModContainerTypes.MAGIC_CRATE.get(), MagicCrateScreen::new);
         ScreenManager.registerFactory(ModContainerTypes.MAGIC_PRESS.get(), MagicPressScreen::new);
+        ScreenManager.registerFactory(ModContainerTypes.MAGIC_ENERGIZER.get(), MagicEnergizerScreen::new);
         RenderTypeLookup.setRenderLayer(RegistryHandler.MAGIC_VEIN.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(RegistryHandler.MAGIC_WEB.get(), RenderType.getCutout());
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.MAGIC_FRIEND.get(), MagicFriendRender::new);
