@@ -6,15 +6,18 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
-public class SingleItemSlotItemHandler extends SlotItemHandler {
-    final Item validItem;
-    public SingleItemSlotItemHandler(IItemHandler itemHandler, int index, int xPosition, int yPosition, Item validItem) {
+import java.util.List;
+
+public class ExcludeItemsSlotItemHandler extends SlotItemHandler {
+    final List<Item> invalidItems;
+
+    public ExcludeItemsSlotItemHandler(IItemHandler itemHandler, int index, int xPosition, int yPosition, List<Item> invalidItems) {
         super(itemHandler, index, xPosition, yPosition);
-        this.validItem = validItem;
+        this.invalidItems = invalidItems;
     }
 
     @Override
     public boolean isItemValid(@NotNull ItemStack stack) {
-        return stack.getItem() == validItem && super.isItemValid(stack);
+        return !invalidItems.contains(stack.getItem()) && super.isItemValid(stack);
     }
 }

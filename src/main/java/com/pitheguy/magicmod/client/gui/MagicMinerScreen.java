@@ -1,20 +1,21 @@
 package com.pitheguy.magicmod.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.pitheguy.magicmod.container.MagicEnergizerContainer;
+import com.pitheguy.magicmod.container.MagicMinerContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-public class MagicEnergizerScreen extends ContainerScreen<MagicEnergizerContainer> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("magicmod", "textures/gui/magic_energizer.png");
-    public MagicEnergizerScreen(MagicEnergizerContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
+public class MagicMinerScreen extends ContainerScreen<MagicMinerContainer> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation("magicmod", "textures/gui/magic_miner.png");
+    public MagicMinerScreen(MagicMinerContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(screenContainer, inv, titleIn);
+
         this.guiLeft = 0;
         this.guiTop = 0;
-        this.xSize = 176;
-        this.ySize = 134;
+        this.xSize = 201;
+        this.ySize = 186;
     }
 
     @Override
@@ -22,14 +23,15 @@ public class MagicEnergizerScreen extends ContainerScreen<MagicEnergizerContaine
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
         this.minecraft.getTextureManager().bindTexture(TEXTURE);
         this.blit(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-        this.blit(this.guiLeft + 49, this.guiTop + 20, 0, 137, this.container.getFuelScaled(), 16);
+        this.blit(this.guiLeft + 116, this.guiTop + 93, 0, 188, this.container.getMineCooldownScaled(), 16);
+
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        this.font.drawString(this.title.getFormattedText(), 8, 5, 0x404040);
-        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8, 39, 0x404040);
+        this.font.drawString(String.format("%s (Status: %s)", this.title.getFormattedText(), this.container.tileEntity.getStatus().getMessage()), 8, 8, 0x404040);
+        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8, 94, 0x404040);
     }
 
     @Override

@@ -28,16 +28,18 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Map;
 
-import static com.pitheguy.magicmod.util.RegistryHandler.*;
+import static com.pitheguy.magicmod.util.RegistryHandler.MAGIC_FUEL;
 
 public class MagicEnergizerTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
     private final ModItemHandler inventory;
     public int fuel = 0;
     public int fuelConsumptionPerTick = 0;
-    public static final int MAX_FUEL = 2000;
-    public static final Map<Item,Integer> ITEM_FUEL_AMOUNT = Maps.newHashMap(ImmutableMap.of(MAGIC_FUEL.get(), 100));
+    public ArrayList<TileEntity> fuelConsumers = new ArrayList<>();
+    public static final int MAX_FUEL = 6000;
+    public static final Map<Item,Integer> ITEM_FUEL_AMOUNT = Maps.newHashMap(ImmutableMap.of(MAGIC_FUEL.get(), 300));
     public MagicEnergizerTileEntity(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
         this.inventory = new ModItemHandler(1);
@@ -109,6 +111,7 @@ public class MagicEnergizerTileEntity extends TileEntity implements ITickableTil
     @Override
     public void tick() {
         boolean dirty = false;
+        this.fuelConsumptionPerTick = this.fuelConsumers.size();
         if (world != null && !world.isRemote()) {
             while(ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(0).getItem()) != null && fuel <= MAX_FUEL - ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(0).getItem())) {
                 fuel += ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(0).getItem());
@@ -125,7 +128,7 @@ public class MagicEnergizerTileEntity extends TileEntity implements ITickableTil
     }
 
     private ITextComponent getDefaultName() {
-        return new TranslationTextComponent("container.magicmod.magic_press");
+        return new TranslationTextComponent("container.magicmod.magic_energizer");
     }
 
     @Override
@@ -133,7 +136,13 @@ public class MagicEnergizerTileEntity extends TileEntity implements ITickableTil
         return this.getName();
     }
 
-    public void addFuelConsumption(int fuelConsumption) {
-        this.fuelConsumptionPerTick += fuelConsumption;
+    public void registerFuelConsumer(TileEntity consumer) {
+        if (!this.fuelConsumers.contains(consumer)) {
+            this.fuelConsumers.add(consumer);
+        }
+    }
+
+    public void unregisterFuelConsumer(TileEntity consumer) {
+        this.fuelConsumers.remove(consumer);
     }
 }
