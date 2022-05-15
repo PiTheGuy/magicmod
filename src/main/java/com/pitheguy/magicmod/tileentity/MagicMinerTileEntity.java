@@ -119,7 +119,6 @@ public class MagicMinerTileEntity extends TileEntity implements ITickableTileEnt
     @Override
     public void tick() {
         boolean dirty = false;
-        MagicMod.LOGGER.info(this.getStatus());
         if (this.status != Status.FINISHED && (this.status != Status.INVENTORY_FULL || this.hasInventorySpace())) {
             this.updateStatus();
             this.updateUpgrades();
