@@ -1,6 +1,6 @@
 package com.pitheguy.magicmod.container;
 
-import com.pitheguy.magicmod.container.itemhandlers.ExcludeItemsSlotItemHandler;
+import com.pitheguy.magicmod.container.itemhandlers.ExcludeUpgradesSlotItemHandler;
 import com.pitheguy.magicmod.container.itemhandlers.UpgradeSlotItemHandler;
 import com.pitheguy.magicmod.init.ModContainerTypes;
 import com.pitheguy.magicmod.tileentity.MagicMinerTileEntity;
@@ -16,7 +16,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class MagicMinerContainer extends Container {
@@ -40,7 +39,7 @@ public class MagicMinerContainer extends Container {
         int startY = 18;
         for (int row = 0; row < 4; row++) {
             for (int column = 0; column < 9; column++) {
-                this.addSlot(new ExcludeItemsSlotItemHandler(tile.getInventory(), (row * 9) + column, startX + (column * slotSizePlus2), startY + (row * slotSizePlus2), Arrays.asList(RegistryHandler.SPEED_UPGRADE.get(), RegistryHandler.RANGE_UPGRADE.get())));
+                this.addSlot(new ExcludeUpgradesSlotItemHandler(tile.getInventory(), (row * 9) + column, startX + (column * slotSizePlus2), startY + (row * slotSizePlus2)));
             }
         }
 

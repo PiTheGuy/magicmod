@@ -1,6 +1,6 @@
 package com.pitheguy.magicmod.container.itemhandlers;
 
-import com.pitheguy.magicmod.util.RegistryHandler;
+import com.pitheguy.magicmod.items.UpgradeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -15,7 +15,7 @@ public class UpgradeSlotItemHandler extends SlotItemHandler {
 
     @Override
     public boolean isItemValid(@Nonnull ItemStack stack) {
-        return super.isItemValid(stack) && (stack.getItem() == RegistryHandler.SPEED_UPGRADE.get() || stack.getItem() == RegistryHandler.RANGE_UPGRADE.get());
+        return super.isItemValid(stack) && stack.getItem() instanceof UpgradeItem;
     }
 
     @Override

@@ -34,6 +34,10 @@ public class MagicEnergizerContainer extends Container {
         this.tileEntity = tile;
         final int slotSizePlus2 = 18;
         final int startX = 8;
+        //Magic Energizer Inventory
+        this.addSlot(new SingleItemSlotItemHandler(tile.getInventory(), 0, 15, 20, MAGIC_FUEL.get()));
+        this.trackInt(fuel = new FunctionalIntReferenceHolder(() -> this.tileEntity.fuel,
+                value -> this.tileEntity.fuel = value));
         //Hotbar
         int hotbarY = 110;
         for (int col = 0; col < 9; col++) {
@@ -46,10 +50,6 @@ public class MagicEnergizerContainer extends Container {
                 this.addSlot(new Slot(playerInv, 9+(row*9)+col, startX + (col * slotSizePlus2), startY + (row * slotSizePlus2)));
             }
         }
-        //Magic Energizer Inventory
-        this.addSlot(new SingleItemSlotItemHandler(tile.getInventory(), 0, 15, 20, MAGIC_FUEL.get()));
-        this.trackInt(fuel = new FunctionalIntReferenceHolder(() -> this.tileEntity.fuel,
-                value -> this.tileEntity.fuel = value));
 
     }
     //Client constructor

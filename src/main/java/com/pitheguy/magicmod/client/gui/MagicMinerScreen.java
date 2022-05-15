@@ -21,6 +21,7 @@ public class MagicMinerScreen extends ContainerScreen<MagicMinerContainer> {
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+        this.container.tileEntity.updateStatus();
         this.minecraft.getTextureManager().bindTexture(TEXTURE);
         this.blit(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         this.blit(this.guiLeft + 116, this.guiTop + 93, 0, 188, this.container.getMineCooldownScaled(), 16);
@@ -30,7 +31,7 @@ public class MagicMinerScreen extends ContainerScreen<MagicMinerContainer> {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        this.font.drawString(String.format("%s (Status: %s)", this.title.getFormattedText(), this.container.tileEntity.getStatus().getMessage()), 8, 8, 0x404040);
+        this.font.drawString(String.format("%s (Status: %s)", this.title.getFormattedText(), this.container.tileEntity.getStatus()), 8, 8, 0x404040);
         this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8, 94, 0x404040);
     }
 

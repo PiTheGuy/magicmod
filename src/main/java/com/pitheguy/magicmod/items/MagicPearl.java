@@ -16,6 +16,7 @@ public class MagicPearl extends Item {
     public MagicPearl() {
         super(new Properties().group(MagicMod.TAB));
     }
+
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
         worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_ENDER_PEARL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
@@ -31,5 +32,4 @@ public class MagicPearl extends Item {
 
         return ActionResult.resultSuccess(itemstack);
     }
-
 }

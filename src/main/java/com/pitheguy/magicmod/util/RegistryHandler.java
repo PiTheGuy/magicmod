@@ -53,8 +53,13 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_CARROT = ITEMS.register("magic_carrot", () -> new Item(new Item.Properties().group(MagicMod.TAB).food(new Food.Builder().hunger(12).saturation(1.8F).effect(new EffectInstance(Effects.REGENERATION, 100, 2), 1).effect(() -> new EffectInstance(Effects.RESISTANCE, 2400, 2), 1).setAlwaysEdible().build())));
     public static final RegistryObject<Item> MAGIC_SHELTER = ITEMS.register("magic_shelter", MagicShelter::new);
     public static final RegistryObject<Item> MAGIC_FUEL = ITEMS.register("magic_fuel", ItemBase::new);
-    public static final RegistryObject<Item> SPEED_UPGRADE = ITEMS.register("speed_upgrade", ItemBase::new);
-    public static final RegistryObject<Item> RANGE_UPGRADE = ITEMS.register("range_upgrade", ItemBase::new);
+
+    //Upgrades
+    public static final RegistryObject<Item> SPEED_UPGRADE = ITEMS.register("speed_upgrade", UpgradeItem::new);
+    public static final RegistryObject<Item> RANGE_UPGRADE = ITEMS.register("range_upgrade", UpgradeItem::new);
+    public static final RegistryObject<Item> OBSIDIAN_PLATED_SPEED_UPGRADE = ITEMS.register("obsidian_plated_speed_upgrade", UpgradeItem::new);
+    public static final RegistryObject<Item> OBSIDIAN_PLATED_RANGE_UPGRADE = ITEMS.register("obsidian_plated_range_upgrade", UpgradeItem::new);
+
     //Magic Shears
     public static final RegistryObject<ShearsItem> MAGIC_SHEARS = ITEMS.register("magic_shears", MagicShears::new);
 

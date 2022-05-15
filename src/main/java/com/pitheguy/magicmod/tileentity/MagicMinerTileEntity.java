@@ -1,10 +1,12 @@
 package com.pitheguy.magicmod.tileentity;
 
+import com.pitheguy.magicmod.MagicMod;
 import com.pitheguy.magicmod.container.MagicMinerContainer;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.ModItemHandler;
 import com.pitheguy.magicmod.util.RegistryHandler;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -30,18 +32,20 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class MagicMinerTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
+    public static final List<Block> MINE_BLACKLIST = Arrays.asList(Blocks.LAVA, Blocks.WATER);
     private final ModItemHandler inventory;
-    public Status status = Status.NOT_ENOUGH_FUEL;
+    public volatile Status status;
     @Nullable public MagicEnergizerTileEntity fuelSourceTileEntity = null;
     public int mineCooldown = 60;
     public static final int BASE_TICKS_PER_MINE = 60;
     public static final int BASE_RANGE = 5;
     public int ticksPerMine = BASE_TICKS_PER_MINE;
     public int range = BASE_RANGE;
+    private boolean fullInventory;
 
     public MagicMinerTileEntity(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
@@ -66,6 +70,7 @@ public class MagicMinerTileEntity extends TileEntity implements ITickableTileEnt
         super.write(compound);
         ItemStackHelper.saveAllItems(compound, this.inventory.toNonNullList());
         compound.putInt("mineCooldown", this.mineCooldown);
+        compound.putString("status", this.getStatus()); //For debugging
         return compound;
     }
 
@@ -109,44 +114,30 @@ public class MagicMinerTileEntity extends TileEntity implements ITickableTileEnt
         return new MagicMinerContainer(windowId, playerInv, this);
     }
 
+    // TODO: 5/14/2022 Fix client desync issues with the status variable
+    
     @Override
     public void tick() {
         boolean dirty = false;
-        if (this.status != Status.FINISHED) {
-            if (this.status == Status.INVENTORY_FULL && this.hasInventorySpace()) {
-                status = Status.RUNNING;
-            }
-            updateUpgrades();
+        MagicMod.LOGGER.info(this.getStatus());
+        if (this.status != Status.FINISHED && (this.status != Status.INVENTORY_FULL || this.hasInventorySpace())) {
+            this.updateStatus();
+            this.updateUpgrades();
             if (world != null && !world.isRemote() && this.status.isRunning() && mineCooldown <= 0) {
                 BlockPos minePos = this.findMineableBlock();
                 if (minePos != null) {
                     List<ItemStack> drops = Block.getDrops(world.getBlockState(minePos), (ServerWorld) world, minePos, world.getTileEntity(minePos));
                     for (ItemStack drop : drops) {
-                        if (!addItemToInventory(drop)) {
-                            status = Status.INVENTORY_FULL;
-                            return;
-                        }
+                        if (drop.isEmpty()) continue;
+                        this.addItemToInventory(drop);
+                        this.updateStatus(drop);
                     }
                     world.destroyBlock(minePos, false);
                     mineCooldown = ticksPerMine;
-                } else {
-                    this.status = Status.FINISHED;
-                    return;
+                    dirty = true;
                 }
             }
-            if (fuelSourceTileEntity != null) {
-                fuelSourceTileEntity.unregisterFuelConsumer(this);
-            }
-            findFuelSource();
-            if (fuelSourceTileEntity != null && fuelSourceTileEntity.fuel > 0) {
-                if (status == Status.NOT_ENOUGH_FUEL) status = Status.RUNNING;
-                if (this.status.isRunning()) fuelSourceTileEntity.registerFuelConsumer(this);
-            } else status = Status.NOT_ENOUGH_FUEL;
-            if (this.status.isRunning()) {
-                dirty = true;
-                if (mineCooldown > 0) mineCooldown--;
-            }
-
+            if (this.status.isRunning() && mineCooldown > 0) mineCooldown--;
             if (dirty) this.markDirty();
         }
     }
@@ -164,8 +155,8 @@ public class MagicMinerTileEntity extends TileEntity implements ITickableTileEnt
         return this.getName();
     }
 
-    public Status getStatus() {
-        return this.status;
+    public synchronized String getStatus() {
+        return this.status == null ? "Unknown" : this.status.message;
     }
 
     private void findFuelSource() {
@@ -184,13 +175,46 @@ public class MagicMinerTileEntity extends TileEntity implements ITickableTileEnt
         }
     }
 
-    private boolean addItemToInventory(ItemStack itemStack) {
-        if (!this.canPlaceItem(itemStack)) return false;
+    private void addItemToInventory(ItemStack itemStack) {
+        if (!this.canAddItem(itemStack)) return;
         for (int i = 0; i < 36; i++) {
             itemStack = this.inventory.insertItem(i, itemStack, false);
             if (itemStack.isEmpty()) break;
         }
-        return itemStack.isEmpty();
+    }
+
+    public synchronized void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void updateStatus() {
+        this.findFuelSource();
+        if (fullInventory && !this.hasInventorySpace()) {
+            this.setStatus(Status.INVENTORY_FULL);
+            if (fuelSourceTileEntity != null) this.fuelSourceTileEntity.unregisterFuelConsumer(this);
+        } else {
+            fullInventory = false;
+            if (this.fuelSourceTileEntity == null || this.fuelSourceTileEntity.fuel <= 0) {
+                this.setStatus(Status.NOT_ENOUGH_FUEL);
+                if (fuelSourceTileEntity != null) this.fuelSourceTileEntity.unregisterFuelConsumer(this);
+            } else if (this.findMineableBlock() == null) {
+                this.setStatus(Status.FINISHED);
+                this.fuelSourceTileEntity.unregisterFuelConsumer(this);
+            } else {
+                this.setStatus(Status.RUNNING);
+                this.fuelSourceTileEntity.registerFuelConsumer(this);
+            }
+        }
+    }
+
+    private void updateStatus(ItemStack stack) {
+        if (fullInventory || this.canAddItem(stack)) {
+            this.updateStatus();
+        } else {
+            this.setStatus(Status.INVENTORY_FULL);
+            this.fullInventory = true;
+            if (this.fuelSourceTileEntity != null) this.fuelSourceTileEntity.unregisterFuelConsumer(this);
+        }
     }
 
     @Nullable private BlockPos findMineableBlock() {
@@ -200,7 +224,7 @@ public class MagicMinerTileEntity extends TileEntity implements ITickableTileEnt
                 for (int z = -range; z <= range; z++) {
                     BlockPos pos = this.pos.add(x, -y, z);
                     IBlockReader reader = world.getBlockReader(world.getChunkAt(pos).getPos().x, world.getChunkAt(pos).getPos().z);
-                    if (reader != null && !this.world.getBlockState(pos).isAir() && this.world.getBlockState(pos).getBlockHardness(reader, pos) >= 0) {
+                    if (reader != null && !this.world.getBlockState(pos).isAir() && this.world.getBlockState(pos).getBlockHardness(reader, pos) >= 0 && this.world.getTileEntity(pos) == null && !MINE_BLACKLIST.contains(this.world.getBlockState(pos).getBlock())) {
                         return pos;
                     }
                 }
@@ -210,10 +234,15 @@ public class MagicMinerTileEntity extends TileEntity implements ITickableTileEnt
     }
 
     private boolean hasInventorySpace() {
-        return IntStream.range(0, 36).anyMatch(i -> this.inventory.getStackInSlot(i).isEmpty());
+        for (int i = 0; i < 36; i++) {
+            if (this.inventory.getStackInSlot(i).isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    private boolean canPlaceItem(ItemStack stack) {
+    private boolean canAddItem(ItemStack stack) {
         if (this.hasInventorySpace()) return true;
         int count = stack.getCount();
         for (int i = 0; i < 36; i++) {
@@ -231,7 +260,9 @@ public class MagicMinerTileEntity extends TileEntity implements ITickableTileEnt
         this.range = BASE_RANGE;
         for (int i = 36; i <= 37; i++) {
             if (this.inventory.getStackInSlot(i).getItem() == RegistryHandler.SPEED_UPGRADE.get()) this.ticksPerMine /= 2.0;
+            else if (this.inventory.getStackInSlot(i).getItem() == RegistryHandler.OBSIDIAN_PLATED_SPEED_UPGRADE.get()) this.ticksPerMine /= 3.8;
             else if (this.inventory.getStackInSlot(i).getItem() == RegistryHandler.RANGE_UPGRADE.get()) this.range++;
+            else if (this.inventory.getStackInSlot(i).getItem() == RegistryHandler.OBSIDIAN_PLATED_RANGE_UPGRADE.get()) this.range += 2;
         }
         if (this.ticksPerMine != oldMineSpeed) {
             this.mineCooldown *= (double) this.ticksPerMine / oldMineSpeed;
@@ -244,8 +275,8 @@ public class MagicMinerTileEntity extends TileEntity implements ITickableTileEnt
         NOT_ENOUGH_FUEL("Not Enough Fuel", false),
         INVENTORY_FULL("Inventory Full", false);
 
-        String message;
-        boolean running;
+        final String message;
+        final boolean running;
         Status(String message, boolean running) {
             this.message = message;
             this.running = running;
