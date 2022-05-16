@@ -57,6 +57,7 @@ public class RegistryHandler {
     //Upgrades
     public static final RegistryObject<Item> SPEED_UPGRADE = ITEMS.register("speed_upgrade", UpgradeItem::new);
     public static final RegistryObject<Item> RANGE_UPGRADE = ITEMS.register("range_upgrade", UpgradeItem::new);
+    public static final RegistryObject<Item> FILTER_UPGRADE = ITEMS.register("filter_upgrade", FilterUpgradeItem::new);
     public static final RegistryObject<Item> OBSIDIAN_PLATED_SPEED_UPGRADE = ITEMS.register("obsidian_plated_speed_upgrade", UpgradeItem::new);
     public static final RegistryObject<Item> OBSIDIAN_PLATED_RANGE_UPGRADE = ITEMS.register("obsidian_plated_range_upgrade", UpgradeItem::new);
 

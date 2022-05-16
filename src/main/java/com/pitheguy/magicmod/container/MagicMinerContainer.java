@@ -27,12 +27,12 @@ public class MagicMinerContainer extends Container {
     //Server constructor
     public MagicMinerContainer(final int windowID, final PlayerInventory playerInv, final MagicMinerTileEntity tile) {
         super(ModContainerTypes.MAGIC_MINER.get(), windowID);
+        this.tileEntity = tile;
 
         //Upgrade Slots
-        this.addSlot(new UpgradeSlotItemHandler(tile.getInventory(), 36, 177, 26));
-        this.addSlot(new UpgradeSlotItemHandler(tile.getInventory(), 37, 177, 44));
+        this.addSlot(new UpgradeSlotItemHandler(tile.getInventory(), 36, 177, 26, this.tileEntity));
+        this.addSlot(new UpgradeSlotItemHandler(tile.getInventory(), 37, 177, 44, this.tileEntity));
         this.canInteractWithCallable = IWorldPosCallable.of(tile.getWorld(), tile.getPos());
-        this.tileEntity = tile;
         final int slotSizePlus2 = 18;
         final int startX = 8;
         //Magic Miner Inventory

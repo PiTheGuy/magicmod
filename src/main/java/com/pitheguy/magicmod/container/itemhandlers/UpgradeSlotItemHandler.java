@@ -1,21 +1,26 @@
 package com.pitheguy.magicmod.container.itemhandlers;
 
 import com.pitheguy.magicmod.items.UpgradeItem;
+import com.pitheguy.magicmod.tileentity.MagicMinerTileEntity;
+import com.pitheguy.magicmod.util.RegistryHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
+import java.util.stream.IntStream;
 
 public class UpgradeSlotItemHandler extends SlotItemHandler {
-    public UpgradeSlotItemHandler(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+    private final MagicMinerTileEntity tileEntity;
+    public UpgradeSlotItemHandler(IItemHandler itemHandler, int index, int xPosition, int yPosition, MagicMinerTileEntity tileEntity) {
         super(itemHandler, index, xPosition, yPosition);
+        this.tileEntity = tileEntity;
     }
 
     @Override
     public boolean isItemValid(@Nonnull ItemStack stack) {
-        return super.isItemValid(stack) && stack.getItem() instanceof UpgradeItem;
+        return super.isItemValid(stack) && stack.getItem() instanceof UpgradeItem && (stack.getItem() != RegistryHandler.FILTER_UPGRADE.get() || IntStream.range(0, this.tileEntity.getInventory().getSlots()).noneMatch(i -> this.tileEntity.getInventory().getStackInSlot(i).getItem() == RegistryHandler.FILTER_UPGRADE.get()));
     }
 
     @Override

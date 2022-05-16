@@ -4,8 +4,11 @@ import com.pitheguy.magicmod.MagicMod;
 import net.minecraft.item.Item;
 
 public class UpgradeItem extends Item {
-
     public UpgradeItem() {
-        super(new Item.Properties().group(MagicMod.TAB));
+        this(new Item.Properties().group(MagicMod.TAB));
+    }
+
+    public UpgradeItem(Item.Properties properties) {
+        super(properties);
     }
 }

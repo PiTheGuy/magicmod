@@ -1,11 +1,11 @@
 package com.pitheguy.magicmod.tileentity;
 
-import com.pitheguy.magicmod.MagicMod;
 import com.pitheguy.magicmod.container.MagicMinerContainer;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.ModItemHandler;
 import com.pitheguy.magicmod.util.RegistryHandler;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -14,6 +14,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -34,6 +35,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class MagicMinerTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
     public static final List<Block> MINE_BLACKLIST = Arrays.asList(Blocks.LAVA, Blocks.WATER);
@@ -45,7 +47,7 @@ public class MagicMinerTileEntity extends TileEntity implements ITickableTileEnt
     public static final int BASE_RANGE = 5;
     public int ticksPerMine = BASE_TICKS_PER_MINE;
     public int range = BASE_RANGE;
-    private boolean fullInventory;
+    @Nullable private Block filterBlock;
 
     public MagicMinerTileEntity(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
@@ -113,8 +115,6 @@ public class MagicMinerTileEntity extends TileEntity implements ITickableTileEnt
     public Container createMenu(final int windowId, final PlayerInventory playerInv, final PlayerEntity playerIn) {
         return new MagicMinerContainer(windowId, playerInv, this);
     }
-
-    // TODO: 5/14/2022 Fix client desync issues with the status variable
     
     @Override
     public void tick() {
@@ -126,11 +126,7 @@ public class MagicMinerTileEntity extends TileEntity implements ITickableTileEnt
                 BlockPos minePos = this.findMineableBlock();
                 if (minePos != null) {
                     List<ItemStack> drops = Block.getDrops(world.getBlockState(minePos), (ServerWorld) world, minePos, world.getTileEntity(minePos));
-                    for (ItemStack drop : drops) {
-                        if (drop.isEmpty()) continue;
-                        this.addItemToInventory(drop);
-                        this.updateStatus(drop);
-                    }
+                    drops.stream().filter(drop -> !drop.isEmpty()).forEach(this::addItemToInventory);
                     world.destroyBlock(minePos, false);
                     mineCooldown = ticksPerMine;
                     dirty = true;
@@ -188,31 +184,18 @@ public class MagicMinerTileEntity extends TileEntity implements ITickableTileEnt
 
     public void updateStatus() {
         this.findFuelSource();
-        if (fullInventory && !this.hasInventorySpace()) {
-            this.setStatus(Status.INVENTORY_FULL);
+        if (this.fuelSourceTileEntity == null || this.fuelSourceTileEntity.fuel <= 0) {
+            this.setStatus(Status.NOT_ENOUGH_FUEL);
             if (fuelSourceTileEntity != null) this.fuelSourceTileEntity.unregisterFuelConsumer(this);
-        } else {
-            fullInventory = false;
-            if (this.fuelSourceTileEntity == null || this.fuelSourceTileEntity.fuel <= 0) {
-                this.setStatus(Status.NOT_ENOUGH_FUEL);
-                if (fuelSourceTileEntity != null) this.fuelSourceTileEntity.unregisterFuelConsumer(this);
-            } else if (this.findMineableBlock() == null) {
-                this.setStatus(Status.FINISHED);
-                this.fuelSourceTileEntity.unregisterFuelConsumer(this);
-            } else {
-                this.setStatus(Status.RUNNING);
-                this.fuelSourceTileEntity.registerFuelConsumer(this);
-            }
-        }
-    }
-
-    private void updateStatus(ItemStack stack) {
-        if (fullInventory || this.canAddItem(stack)) {
-            this.updateStatus();
-        } else {
+        } else if (!this.hasInventorySpace()) {
             this.setStatus(Status.INVENTORY_FULL);
-            this.fullInventory = true;
-            if (this.fuelSourceTileEntity != null) this.fuelSourceTileEntity.unregisterFuelConsumer(this);
+            this.fuelSourceTileEntity.unregisterFuelConsumer(this);
+        } else if (this.findMineableBlock() == null) {
+            this.setStatus(Status.FINISHED);
+            this.fuelSourceTileEntity.unregisterFuelConsumer(this);
+        } else {
+            this.setStatus(Status.RUNNING);
+            this.fuelSourceTileEntity.registerFuelConsumer(this);
         }
     }
 
@@ -222,8 +205,9 @@ public class MagicMinerTileEntity extends TileEntity implements ITickableTileEnt
             for (int x = -range; x <= range; x++) {
                 for (int z = -range; z <= range; z++) {
                     BlockPos pos = this.pos.add(x, -y, z);
-                    IBlockReader reader = world.getBlockReader(world.getChunkAt(pos).getPos().x, world.getChunkAt(pos).getPos().z);
-                    if (reader != null && !this.world.getBlockState(pos).isAir() && this.world.getBlockState(pos).getBlockHardness(reader, pos) >= 0 && this.world.getTileEntity(pos) == null && !MINE_BLACKLIST.contains(this.world.getBlockState(pos).getBlock())) {
+                    IBlockReader reader = this.world.getBlockReader(world.getChunkAt(pos).getPos().x, world.getChunkAt(pos).getPos().z);
+                    BlockState state = this.world.getBlockState(pos);
+                    if (reader != null && !state.isAir() && state.getBlockHardness(reader, pos) >= 0 && this.world.getTileEntity(pos) == null && !MINE_BLACKLIST.contains(state.getBlock()) && this.blockMatchesFilter(state.getBlock())) {
                         return pos;
                     }
                 }
@@ -232,13 +216,12 @@ public class MagicMinerTileEntity extends TileEntity implements ITickableTileEnt
         return null;
     }
 
+    private boolean blockMatchesFilter(Block block) {
+        return this.filterBlock == null || block == this.filterBlock;
+    }
+
     private boolean hasInventorySpace() {
-        for (int i = 0; i < 36; i++) {
-            if (this.inventory.getStackInSlot(i).isEmpty()) {
-                return true;
-            }
-        }
-        return false;
+        return IntStream.range(0, 36).anyMatch(i -> this.inventory.getStackInSlot(i).isEmpty());
     }
 
     private boolean canAddItem(ItemStack stack) {
@@ -263,6 +246,7 @@ public class MagicMinerTileEntity extends TileEntity implements ITickableTileEnt
             else if (this.inventory.getStackInSlot(i).getItem() == RegistryHandler.RANGE_UPGRADE.get()) this.range++;
             else if (this.inventory.getStackInSlot(i).getItem() == RegistryHandler.OBSIDIAN_PLATED_RANGE_UPGRADE.get()) this.range += 2;
         }
+        this.filterBlock = IntStream.rangeClosed(36, 37).mapToObj(this.inventory::getStackInSlot).filter(stack -> stack.getItem() == RegistryHandler.FILTER_UPGRADE.get() && stack.hasTag() && stack.getTag().contains("Filter")).findFirst().map(stack -> NBTUtil.readBlockState(stack.getTag().getCompound("Filter")).getBlock()).orElse(null);
         if (this.ticksPerMine != oldMineSpeed) {
             this.mineCooldown *= (double) this.ticksPerMine / oldMineSpeed;
         }
