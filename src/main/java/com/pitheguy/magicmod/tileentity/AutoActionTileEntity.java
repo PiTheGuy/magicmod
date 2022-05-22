@@ -21,6 +21,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.server.ServerWorld;
@@ -52,8 +53,8 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         NonNullList<ItemStack> inv = NonNullList.withSize(this.inventory.getSlots(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, inv);
         this.inventory.setNonNullList(inv);
@@ -61,8 +62,8 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         ItemStackHelper.saveAllItems(compound, this.inventory.toNonNullList());
         compound.putInt("mineCooldown", this.mineCooldown);
         compound.putString("status", this.getStatus()); //For debugging
@@ -77,25 +78,20 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
         CompoundNBT nbt = new CompoundNBT();
-        this.write(nbt);
-        return new SUpdateTileEntityPacket(this.pos, 0, nbt);
+        this.save(nbt);
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, nbt);
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(pkt.getNbtCompound());
+        this.load(this.level.getBlockState(pkt.getPos()), pkt.getTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
         CompoundNBT nbt = new CompoundNBT();
-        this.write(nbt);
+        this.save(nbt);
         return nbt;
-    }
-
-    @Override
-    public void handleUpdateTag(CompoundNBT nbt) {
-        this.read(nbt);
     }
 
     @Override
@@ -113,18 +109,18 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
         if (this.status != Status.FINISHED && (this.status != Status.INVENTORY_FULL || this.hasInventorySpace())) {
             this.updateStatus();
             this.updateUpgrades();
-            if (world != null && !world.isRemote() && this.status.isRunning() && mineCooldown <= 0) {
+            if (level != null && !level.isClientSide && this.status.isRunning() && mineCooldown <= 0) {
                 BlockPos minePos = this.findMineableBlock();
                 if (minePos != null) {
-                    List<ItemStack> drops = Block.getDrops(world.getBlockState(minePos), (ServerWorld) world, minePos, world.getTileEntity(minePos));
+                    List<ItemStack> drops = Block.getDrops(level.getBlockState(minePos), (ServerWorld) level, minePos, level.getBlockEntity(minePos));
                     drops.stream().filter(drop -> !drop.isEmpty()).forEach(this::addItemToInventory);
-                    world.destroyBlock(minePos, false);
+                    level.destroyBlock(minePos, false);
                     mineCooldown = ticksPerMine;
                     dirty = true;
                 }
             }
             if (this.status.isRunning() && mineCooldown > 0) mineCooldown--;
-            if (dirty) this.markDirty();
+            if (dirty) this.setChanged();
         }
     }
 
@@ -150,8 +146,8 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
             for (int y = -4; y <= 4; y++) {
                 for (int z = -4; z <= 4; z++) {
                     double distance = Math.sqrt(x * x + y * y + z * z);
-                    if (this.getWorld().getBlockState(pos.add(x, y, z)).getBlock() == RegistryHandler.MAGIC_ENERGIZER.get() && distance < minDistance) {
-                        this.fuelSourceTileEntity = (MagicEnergizerTileEntity) this.getWorld().getTileEntity(pos.add(x, y, z));
+                    if (this.getLevel().getBlockState(new BlockPos(Vector3d.atCenterOf(this.worldPosition).add(x, y, z))).getBlock() == RegistryHandler.MAGIC_ENERGIZER.get() && distance < minDistance) {
+                        this.fuelSourceTileEntity = (MagicEnergizerTileEntity) this.getLevel().getBlockEntity(new BlockPos(Vector3d.atCenterOf(this.worldPosition).add(x, y, z)));
                         minDistance = distance;
                     }
                 }
@@ -189,14 +185,14 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
     }
 
     @Nullable private BlockPos findMineableBlock() {
-        if (world == null) return null;
-        for (int y = 1; y <= this.pos.getY(); y++) {
+        if (this.level == null) return null;
+        for (int y = 1; y <= this.worldPosition.getY(); y++) {
             for (int x = -range; x <= range; x++) {
                 for (int z = -range; z <= range; z++) {
-                    BlockPos pos = this.pos.add(x, -y, z);
-                    IBlockReader reader = this.world.getBlockReader(world.getChunkAt(pos).getPos().x, world.getChunkAt(pos).getPos().z);
-                    BlockState state = this.world.getBlockState(pos);
-                    if (reader != null && !state.isAir() && state.getBlockHardness(reader, pos) >= 0 && this.world.getTileEntity(pos) == null && !MINE_BLACKLIST.contains(state.getBlock()) && this.blockMatchesFilter(state.getBlock()) && this.canMineBlock(state)) {
+                    BlockPos pos = new BlockPos(Vector3d.atCenterOf(this.worldPosition).add(x, y, z));
+                    IBlockReader reader = this.level.getChunkForCollisions(this.level.getChunkAt(pos).getPos().x, this.level.getChunkAt(pos).getPos().z);
+                    BlockState state = this.level.getBlockState(pos);
+                    if (reader != null && !state.isAir() && state.getDestroySpeed(reader, pos) >= 0 && this.level.getBlockEntity(pos) == null && !MINE_BLACKLIST.contains(state.getBlock()) && this.blockMatchesFilter(state.getBlock()) && this.canMineBlock(state)) {
                         return pos;
                     }
                 }

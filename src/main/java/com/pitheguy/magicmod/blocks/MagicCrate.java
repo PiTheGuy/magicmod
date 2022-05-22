@@ -2,6 +2,7 @@ package com.pitheguy.magicmod.blocks;
 
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.tileentity.MagicCrateTileEntity;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -28,8 +29,8 @@ import javax.annotation.Nullable;
 public class MagicCrate extends Block {
 
     public MagicCrate() {
-        super(Properties.create(Material.IRON)
-                .hardnessAndResistance(6.5f, 12.0f)
+        super(Properties.of(Material.METAL)
+                .strength(6.5f, 12.0f)
                 .sound(SoundType.METAL)
                 .harvestLevel(2)
                 .harvestTool(ToolType.PICKAXE)
@@ -47,18 +48,16 @@ public class MagicCrate extends Block {
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!worldIn.isRemote()) {
-            TileEntity tile = worldIn.getTileEntity(pos);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (!worldIn.isClientSide()) {
+            TileEntity tile = worldIn.getBlockEntity(pos);
             if(tile instanceof MagicCrateTileEntity) {
-                NetworkHooks.openGui((ServerPlayerEntity) player,(MagicCrateTileEntity) tile,pos);
-                worldIn.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, SoundEvents.BLOCK_BARREL_OPEN, SoundCategory.BLOCKS, 0.5f,
-                        worldIn.rand.nextFloat() * 0.1f + 0.9f);
+                NetworkHooks.openGui((ServerPlayerEntity) player, (MagicCrateTileEntity) tile, pos);
                 return ActionResultType.SUCCESS;
             }
         }
@@ -66,11 +65,11 @@ public class MagicCrate extends Block {
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            TileEntity te = worldIn.getTileEntity(pos);
+            TileEntity te = worldIn.getBlockEntity(pos);
             if (te instanceof MagicCrateTileEntity) {
-                InventoryHelper.dropItems(worldIn, pos, ((MagicCrateTileEntity) te).getItems());
+                InventoryHelper.dropContents(worldIn, pos, ((MagicCrateTileEntity) te).getItems());
             }
         }
     }

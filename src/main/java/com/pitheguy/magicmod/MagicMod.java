@@ -4,6 +4,8 @@ import com.pitheguy.magicmod.client.entity.render.FluffyMagicianBareRender;
 import com.pitheguy.magicmod.client.entity.render.FluffyMagicianRender;
 import com.pitheguy.magicmod.client.entity.render.MagicFriendRender;
 import com.pitheguy.magicmod.client.gui.*;
+import com.pitheguy.magicmod.entities.FluffyMagician;
+import com.pitheguy.magicmod.entities.MagicFriend;
 import com.pitheguy.magicmod.init.ModContainerTypes;
 import com.pitheguy.magicmod.init.ModEntityTypes;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
@@ -18,6 +20,8 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -50,6 +54,7 @@ public class MagicMod
         ModEntityTypes.ENTITY_TYPES.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, ModOreGen::generateOres);
 
     }
 
@@ -59,13 +64,13 @@ public class MagicMod
     }*/
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        ScreenManager.registerFactory(ModContainerTypes.MAGIC_INFUSER.get(), MagicInfuserScreen::new);
-        ScreenManager.registerFactory(ModContainerTypes.MAGIC_CRATE.get(), MagicCrateScreen::new);
-        ScreenManager.registerFactory(ModContainerTypes.MAGIC_PRESS.get(), MagicPressScreen::new);
-        ScreenManager.registerFactory(ModContainerTypes.MAGIC_ENERGIZER.get(), MagicEnergizerScreen::new);
-        ScreenManager.registerFactory(ModContainerTypes.MAGIC_MINER.get(), MagicMinerScreen::new);
-        RenderTypeLookup.setRenderLayer(RegistryHandler.MAGIC_VEIN.get(), RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(RegistryHandler.MAGIC_WEB.get(), RenderType.getCutout());
+        ScreenManager.register(ModContainerTypes.MAGIC_INFUSER.get(), MagicInfuserScreen::new);
+        ScreenManager.register(ModContainerTypes.MAGIC_CRATE.get(), MagicCrateScreen::new);
+        ScreenManager.register(ModContainerTypes.MAGIC_PRESS.get(), MagicPressScreen::new);
+        ScreenManager.register(ModContainerTypes.MAGIC_ENERGIZER.get(), MagicEnergizerScreen::new);
+        ScreenManager.register(ModContainerTypes.MAGIC_MINER.get(), MagicMinerScreen::new);
+        RenderTypeLookup.setRenderLayer(RegistryHandler.MAGIC_VEIN.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RegistryHandler.MAGIC_WEB.get(), RenderType.cutout());
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.MAGIC_FRIEND.get(), MagicFriendRender::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.FLUFFY_MAGICIAN.get(), FluffyMagicianRender::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.FLUFFY_MAGICIAN_BARE.get(), FluffyMagicianBareRender::new);
@@ -73,7 +78,6 @@ public class MagicMod
 
     @SubscribeEvent
     public static void loadCompleteEvent(FMLLoadCompleteEvent event) {
-        ModOreGen.generateOre();
     }
 
     @SubscribeEvent
@@ -81,9 +85,16 @@ public class MagicMod
         ModSpawnEggItem.initSpawnEggs();
     }
 
+    @SubscribeEvent
+    public static void onRegisterEntityAttributes(EntityAttributeCreationEvent event) {
+        event.put(ModEntityTypes.FLUFFY_MAGICIAN.get(), FluffyMagician.createAttributes());
+        event.put(ModEntityTypes.FLUFFY_MAGICIAN_BARE.get(), FluffyMagician.createAttributes());
+        event.put(ModEntityTypes.MAGIC_FRIEND.get(), MagicFriend.createAttributes());
+    }
+
     public static final ItemGroup TAB = new ItemGroup("magicTab") {
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             return new ItemStack(RegistryHandler.MAGIC_GEM.get());
         }
     };

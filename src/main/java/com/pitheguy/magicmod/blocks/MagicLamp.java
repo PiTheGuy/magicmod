@@ -6,11 +6,10 @@ import net.minecraft.block.material.Material;
 
 public class MagicLamp extends Block {
     public MagicLamp() {
-        super(Properties.create(Material.IRON)
-                .hardnessAndResistance(2.0f, 2.0f)
+        super(Properties.of(Material.METAL)
+                .strength(2.0f, 2.0f)
                 .sound(SoundType.GLASS)
-                .lightValue(15)
+                .lightLevel(state -> 15)
         );
     }
-
 }

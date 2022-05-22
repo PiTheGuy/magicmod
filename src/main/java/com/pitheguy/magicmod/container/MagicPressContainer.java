@@ -32,7 +32,7 @@ public class MagicPressContainer extends Container {
     //Server constructor
     public MagicPressContainer(final int windowID, final PlayerInventory playerInv, final MagicPressTileEntity tile) {
         super(ModContainerTypes.MAGIC_PRESS.get(), windowID);
-        this.canInteractWithCallable = IWorldPosCallable.of(tile.getWorld(), tile.getPos());
+        this.canInteractWithCallable = IWorldPosCallable.create(tile.getLevel(), tile.getBlockPos());
         this.tileEntity = tile;
         final int slotSizePlus2 = 18;
         final int startX = 8;
@@ -54,7 +54,7 @@ public class MagicPressContainer extends Container {
         this.addSlot(new MultiItemSlotItemHandler(tile.getInventory(), 2, 134,19, Arrays.asList(OBSIDIAN_PLATED_REINFORCED_MAGIC_HELMET.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_CHESTPLATE.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_LEGGINGS.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_BOOTS.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_PICKAXE.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_AXE.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_SHOVEL.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_SWORD.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_HOE.get())));
         this.addSlot(new MultiItemSlotItemHandler(tile.getInventory(), 3,15,53, Arrays.asList(MAGIC_GEM.get(), MAGIC_BLOCK_ITEM.get())));
 
-        this.trackInt(fuel = new FunctionalIntReferenceHolder(() -> this.tileEntity.fuel,
+        this.addDataSlot(fuel = new FunctionalIntReferenceHolder(() -> this.tileEntity.fuel,
                 value -> this.tileEntity.fuel = value));
 
     }
@@ -66,7 +66,7 @@ public class MagicPressContainer extends Container {
     private static MagicPressTileEntity getTileEntity(final PlayerInventory playerInv, final PacketBuffer data) {
         Objects.requireNonNull(playerInv, "playerInv cannot be null");
         Objects.requireNonNull(data, "data cannot be null");
-        final TileEntity tileAtPos = playerInv.player.world.getTileEntity(data.readBlockPos());
+        final TileEntity tileAtPos = playerInv.player.level.getBlockEntity(data.readBlockPos());
         if (tileAtPos instanceof MagicPressTileEntity) {
             return (MagicPressTileEntity) tileAtPos;
         }
@@ -74,31 +74,31 @@ public class MagicPressContainer extends Container {
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(canInteractWithCallable, playerIn, RegistryHandler.MAGIC_PRESS.get());
+    public boolean stillValid(PlayerEntity playerIn) {
+        return stillValid(canInteractWithCallable, playerIn, RegistryHandler.MAGIC_PRESS.get());
     }
 
     @Nonnull
     @Override
-    public ItemStack transferStackInSlot(final PlayerEntity player, final int index) {
+    public ItemStack quickMoveStack(final PlayerEntity player, final int index) {
         ItemStack returnStack = ItemStack.EMPTY;
-        final Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            final ItemStack slotStack = slot.getStack();
+        final Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            final ItemStack slotStack = slot.getItem();
             returnStack = slotStack.copy();
 
-            final int containerSlots = this.inventorySlots.size() - player.inventory.mainInventory.size();
+            final int containerSlots = this.slots.size() - player.inventory.items.size();
             if (index < containerSlots) {
-                if (!mergeItemStack(slotStack, containerSlots, this.inventorySlots.size(), true)) {
+                if (!moveItemStackTo(slotStack, containerSlots, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!mergeItemStack(slotStack, 0, containerSlots, false)) {
+            } else if (!moveItemStackTo(slotStack, 0, containerSlots, false)) {
                 return ItemStack.EMPTY;
             }
             if (slotStack.getCount() == 0) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
             if (slotStack.getCount() == returnStack.getCount()) {
                 return ItemStack.EMPTY;

@@ -12,7 +12,7 @@ public class ExcludeUpgradesSlotItemHandler extends SlotItemHandler {
     }
 
     @Override
-    public boolean isItemValid(@NotNull ItemStack stack) {
-        return !(stack.getItem() instanceof UpgradeItem) && super.isItemValid(stack);
+    public boolean mayPlace(@NotNull ItemStack stack) {
+        return !(stack.getItem() instanceof UpgradeItem) && super.mayPlace(stack);
     }
 }

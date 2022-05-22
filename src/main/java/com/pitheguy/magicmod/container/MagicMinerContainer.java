@@ -24,7 +24,7 @@ public class MagicMinerContainer extends AutoActionContainer<MagicMinerTileEntit
     private static MagicMinerTileEntity getTileEntity(final PlayerInventory playerInv, final PacketBuffer data) {
         Objects.requireNonNull(playerInv, "playerInv cannot be null");
         Objects.requireNonNull(data, "data cannot be null");
-        final TileEntity tileAtPos = playerInv.player.world.getTileEntity(data.readBlockPos());
+        final TileEntity tileAtPos = playerInv.player.level.getBlockEntity(data.readBlockPos());
         if (tileAtPos instanceof MagicMinerTileEntity) {
             return (MagicMinerTileEntity) tileAtPos;
         }
@@ -32,7 +32,7 @@ public class MagicMinerContainer extends AutoActionContainer<MagicMinerTileEntit
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(canInteractWithCallable, playerIn, RegistryHandler.MAGIC_MINER.get());
+    public boolean stillValid(PlayerEntity playerIn) {
+        return stillValid(canInteractWithCallable, playerIn, RegistryHandler.MAGIC_MINER.get());
     }
 }

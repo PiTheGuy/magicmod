@@ -16,11 +16,11 @@ import net.minecraftforge.common.ToolType;
 public class MagicSpike extends Block {
 
     public MagicSpike() {
-        super(Properties.create(Material.IRON)
-                .hardnessAndResistance(2.0f, 2.0f)
+        super(Properties.of(Material.METAL)
+                .strength(2.0f, 2.0f)
                 .sound(SoundType.METAL)
                 .harvestTool(ToolType.PICKAXE)
-                .notSolid()
+                .dynamicShape()
         );
     }
 
@@ -33,13 +33,13 @@ public class MagicSpike extends Block {
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         VoxelShape result = VoxelShapes.empty();
         for (int i = 0; i < 8; i++) {
-            result = VoxelShapes.or(result, Block.makeCuboidShape(i, i*2, i, 16 - i, i*2 + 2, 16 - i));
+            result = VoxelShapes.or(result, Block.box(i, i*2, i, 16 - i, i*2 + 2, 16 - i));
         }
         return result;
     }
 
     @Override
-    public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
-        super.onFallenUpon(worldIn, pos, entityIn, fallDistance * 10);
+    public void fallOn(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
+        super.fallOn(worldIn, pos, entityIn, fallDistance * 10);
     }
 }

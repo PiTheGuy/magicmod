@@ -24,7 +24,7 @@ public class MagicInfuserContainer extends Container {
     //Server constructor
     public MagicInfuserContainer(final int windowID, final PlayerInventory playerInv, final MagicInfuserTileEntity tile) {
         super(ModContainerTypes.MAGIC_INFUSER.get(), windowID);
-        this.canInteractWithCallable = IWorldPosCallable.of(tile.getWorld(), tile.getPos());
+        this.canInteractWithCallable = IWorldPosCallable.create(tile.getLevel(), tile.getBlockPos());
 
         final int slotSizePlus2 = 18;
         final int startX = 8;
@@ -58,7 +58,7 @@ public class MagicInfuserContainer extends Container {
     private static MagicInfuserTileEntity getTileEntity(final PlayerInventory playerInv, final PacketBuffer data) {
         Objects.requireNonNull(playerInv, "playerInv cannot be null");
         Objects.requireNonNull(data, "data cannot be null");
-        final TileEntity tileAtPos = playerInv.player.world.getTileEntity(data.readBlockPos());
+        final TileEntity tileAtPos = playerInv.player.level.getBlockEntity(data.readBlockPos());
         if (tileAtPos instanceof MagicInfuserTileEntity) {
             return (MagicInfuserTileEntity) tileAtPos;
         }
@@ -66,31 +66,31 @@ public class MagicInfuserContainer extends Container {
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(canInteractWithCallable, playerIn, RegistryHandler.MAGIC_INFUSER.get());
+    public boolean stillValid(PlayerEntity playerIn) {
+        return stillValid(canInteractWithCallable, playerIn, RegistryHandler.MAGIC_INFUSER.get());
     }
 
     @Nonnull
     @Override
-    public ItemStack transferStackInSlot(final PlayerEntity player, final int index) {
+    public ItemStack quickMoveStack(final PlayerEntity player, final int index) {
         ItemStack returnStack = ItemStack.EMPTY;
-        final Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            final ItemStack slotStack = slot.getStack();
+        final Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            final ItemStack slotStack = slot.getItem();
             returnStack = slotStack.copy();
 
-            final int containerSlots = this.inventorySlots.size() - player.inventory.mainInventory.size();
+            final int containerSlots = this.slots.size() - player.inventory.items.size();
             if (index < containerSlots) {
-                if (!mergeItemStack(slotStack, containerSlots, this.inventorySlots.size(), true)) {
+                if (!moveItemStackTo(slotStack, containerSlots, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!mergeItemStack(slotStack, 0, containerSlots, false)) {
+            } else if (!moveItemStackTo(slotStack, 0, containerSlots, false)) {
                 return ItemStack.EMPTY;
             }
             if (slotStack.getCount() == 0) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
             if (slotStack.getCount() == returnStack.getCount()) {
                 return ItemStack.EMPTY;

@@ -21,16 +21,16 @@ public class ObsidianPlatedReinforcedMagicAxe extends MagicAxe{
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
+    public boolean mineBlock(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
         if (WOOD_BLOCKS.contains(state.getBlock())) recursivelyMineTree(worldIn, pos, entityLiving, 0);
-        return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
+        return super.mineBlock(stack, worldIn, state, pos, entityLiving);
     }
 
     public void recursivelyMineTree(World worldIn, BlockPos pos, LivingEntity entity, int depth) {
         if (!WOOD_BLOCKS.contains(worldIn.getBlockState(pos).getBlock()) || depth > 1000) return;
         worldIn.destroyBlock(pos, true, entity);
         for (Direction direction : Direction.values()) {
-            this.recursivelyMineTree(worldIn, pos.offset(direction), entity, depth + 1);
+            this.recursivelyMineTree(worldIn, pos.relative(direction), entity, depth + 1);
         }
     }
 }

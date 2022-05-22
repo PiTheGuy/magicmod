@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.pitheguy.magicmod.container.MagicEnergizerContainer;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.ModItemHandler;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -50,8 +51,8 @@ public class MagicEnergizerTileEntity extends TileEntity implements ITickableTil
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         NonNullList<ItemStack> inv = NonNullList.withSize(this.inventory.getSlots(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, inv);
         this.inventory.setNonNullList(inv);
@@ -60,8 +61,8 @@ public class MagicEnergizerTileEntity extends TileEntity implements ITickableTil
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         ItemStackHelper.saveAllItems(compound, this.inventory.toNonNullList());
         compound.putInt("Fuel", this.fuel);
         compound.putInt("FuelConsumption", this.fuelConsumptionPerTick);
@@ -76,25 +77,20 @@ public class MagicEnergizerTileEntity extends TileEntity implements ITickableTil
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
         CompoundNBT nbt = new CompoundNBT();
-        this.write(nbt);
-        return new SUpdateTileEntityPacket(this.pos, 0, nbt);
+        this.save(nbt);
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, nbt);
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(pkt.getNbtCompound());
+        this.load(this.level.getBlockState(this.worldPosition),pkt.getTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
         CompoundNBT nbt = new CompoundNBT();
-        this.write(nbt);
+        this.save(nbt);
         return nbt;
-    }
-
-    @Override
-    public void handleUpdateTag(CompoundNBT nbt) {
-        this.read(nbt);
     }
 
     @Override
@@ -112,7 +108,7 @@ public class MagicEnergizerTileEntity extends TileEntity implements ITickableTil
     public void tick() {
         boolean dirty = false;
         this.fuelConsumptionPerTick = this.fuelConsumers.size();
-        if (world != null && !world.isRemote()) {
+        if (level != null && !level.isClientSide()) {
             while(ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(0).getItem()) != null && fuel <= MAX_FUEL - ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(0).getItem())) {
                 fuel += ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(0).getItem());
                 this.inventory.decrStackSize(0, 1);
@@ -120,7 +116,7 @@ public class MagicEnergizerTileEntity extends TileEntity implements ITickableTil
             }
         }
         fuel -= fuelConsumptionPerTick;
-        if(dirty) this.markDirty();
+        if(dirty) this.setChanged();
     }
 
     public ITextComponent getName() {

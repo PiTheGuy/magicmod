@@ -14,22 +14,21 @@ import net.minecraft.world.World;
 
 public class MagicPearl extends Item {
     public MagicPearl() {
-        super(new Properties().group(MagicMod.TAB));
+        super(new Properties().tab(MagicMod.TAB));
     }
-
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
-        worldIn.playSound(null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_ENDER_PEARL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-        playerIn.getCooldownTracker().setCooldown(this, 45);
-        if (!worldIn.isRemote) {
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack itemstack = playerIn.getItemInHand(handIn);
+        worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.ENDER_PEARL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+        playerIn.getCooldowns().addCooldown(this, 45);
+        if (!worldIn.isClientSide) {
             MagicPearlEntity magicPearlEntity = new MagicPearlEntity(worldIn, playerIn);
             magicPearlEntity.setItem(itemstack);
-            magicPearlEntity.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 2.0F, 0.5F);
-            worldIn.addEntity(magicPearlEntity);
+            magicPearlEntity.shootFromRotation(playerIn, playerIn.xRot, playerIn.yRot, 0.0F, 2.0F, 0.5F);
+            worldIn.addFreshEntity(magicPearlEntity);
         }
 
-        playerIn.addStat(Stats.ITEM_USED.get(this));
+        playerIn.awardStat(Stats.ITEM_USED.get(this));
 
-        return ActionResult.resultSuccess(itemstack);
+        return ActionResult.success(itemstack);
     }
 }

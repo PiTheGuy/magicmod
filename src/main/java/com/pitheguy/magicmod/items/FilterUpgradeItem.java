@@ -3,6 +3,7 @@ package com.pitheguy.magicmod.items;
 import com.pitheguy.magicmod.MagicMod;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Pose;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -20,32 +21,32 @@ import java.util.List;
 
 public class FilterUpgradeItem extends UpgradeItem {
     public FilterUpgradeItem() {
-        super(new Item.Properties().group(MagicMod.TAB).maxStackSize(1));
+        super(new Item.Properties().tab(MagicMod.TAB).stacksTo(1));
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        if (context.getPlayer().isSneaking()) {
-            ItemStack itemStack = context.getItem();
+    public ActionResultType useOn(ItemUseContext context) {
+        if (context.getPlayer().getPose() == Pose.CROUCHING) {
+            ItemStack itemStack = context.getItemInHand();
             CompoundNBT currentData = itemStack.hasTag() ? itemStack.getTag() : new CompoundNBT();
-            BlockState targetBlock = context.getWorld().getBlockState(context.getPos());
+            BlockState targetBlock = context.getLevel().getBlockState(context.getClickedPos());
             if (!currentData.contains("Filter") || NBTUtil.readBlockState(currentData.getCompound("Filter")) != targetBlock) {
                 currentData.put("Filter", NBTUtil.writeBlockState(targetBlock));
                 itemStack.setTag(currentData);
-                context.getPlayer().sendStatusMessage(new StringTextComponent("Filter block set!").applyTextStyle(TextFormatting.GREEN), true);
+                context.getPlayer().displayClientMessage(new StringTextComponent("Filter block set!").withStyle(TextFormatting.GREEN), true);
                 return ActionResultType.SUCCESS;
             } else if (NBTUtil.readBlockState(currentData.getCompound("Filter")) != targetBlock) {
-                context.getPlayer().sendStatusMessage(new StringTextComponent("Filter block already set to this!").applyTextStyle(TextFormatting.RED), true);
+                context.getPlayer().displayClientMessage(new StringTextComponent("Filter block already set to this!").withStyle(TextFormatting.RED), true);
             }
             return ActionResultType.PASS;
-        } else return super.onItemUse(context);
+        } else return super.useOn(context);
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-        String filterBlock = stack.hasTag() && stack.getTag().contains("Filter") ? new TranslationTextComponent(NBTUtil.readBlockState(stack.getTag().getCompound("Filter")).getBlock().getTranslationKey()).getUnformattedComponentText() : "None";
-        tooltip.add(new StringTextComponent("Current Filter: " + filterBlock).applyTextStyle(TextFormatting.GRAY));
-        tooltip.add(new StringTextComponent("Shift-click a block to change").applyTextStyle(TextFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        String filterBlock = stack.hasTag() && stack.getTag().contains("Filter") ? new TranslationTextComponent(NBTUtil.readBlockState(stack.getTag().getCompound("Filter")).getBlock().getDescriptionId()).getString() : "None";
+        tooltip.add(new StringTextComponent("Current Filter: " + filterBlock).withStyle(TextFormatting.GRAY));
+        tooltip.add(new StringTextComponent("Shift-click a block to change").withStyle(TextFormatting.GRAY));
     }
 }

@@ -27,7 +27,7 @@ public class MagicCrateContainer extends Container {
                                  final MagicCrateTileEntity tileEntity) {
         super(ModContainerTypes.MAGIC_CRATE.get(), windowId);
         this.tileEntity = tileEntity;
-        this.canInteractWithCallable = IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos());
+        this.canInteractWithCallable = IWorldPosCallable.create(tileEntity.getLevel(), tileEntity.getBlockPos());
 
         // Main Inventory
         int startX = 8;
@@ -61,7 +61,7 @@ public class MagicCrateContainer extends Container {
                                                         final PacketBuffer data) {
         Objects.requireNonNull(playerInventory, "playerInventory cannot be null");
         Objects.requireNonNull(data, "data cannot be null");
-        final TileEntity tileAtPos = playerInventory.player.world.getTileEntity(data.readBlockPos());
+        final TileEntity tileAtPos = playerInventory.player.level.getBlockEntity(data.readBlockPos());
         if (tileAtPos instanceof MagicCrateTileEntity) {
             return (MagicCrateTileEntity) tileAtPos;
         }
@@ -73,40 +73,31 @@ public class MagicCrateContainer extends Container {
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(canInteractWithCallable, playerIn, RegistryHandler.MAGIC_CRATE.get());
+    public boolean stillValid(PlayerEntity playerIn) {
+        return stillValid(canInteractWithCallable, playerIn, RegistryHandler.MAGIC_CRATE.get());
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (index < 88) {
-                if (!this.mergeItemStack(itemstack1, 88, this.inventorySlots.size(), true)) {
+                if (!this.moveItemStackTo(itemstack1, 88, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 0, 88, false)) {
+            } else if (!this.moveItemStackTo(itemstack1, 0, 88, false)) {
                 return ItemStack.EMPTY;
             }
 
             if (itemstack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
         }
         return itemstack;
-    }
-
-    @Override
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        World world = tileEntity.getWorld();
-        BlockPos pos = tileEntity.getPos();
-        world.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_BARREL_CLOSE, SoundCategory.BLOCKS, 0.5f,
-                world.rand.nextFloat() * 0.1f + 0.9f);
     }
 }

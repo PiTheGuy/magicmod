@@ -12,19 +12,19 @@ import net.minecraftforge.common.ToolType;
 
 public class MagicVein extends Block {
     public MagicVein() {
-        super(Properties.create(Material.IRON)
-                .hardnessAndResistance(5, 7)
+        super(Properties.of(Material.METAL)
+                .strength(5, 7)
                 .sound(SoundType.METAL)
                 .harvestLevel(2)
                 .harvestTool(ToolType.PICKAXE)
-                .doesNotBlockMovement()
-                .notSolid()
+                .dynamicShape()
+                .noCollission()
         );
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
+        return Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
     }
 
     @Override

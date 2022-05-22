@@ -14,16 +14,16 @@ public class ReinforcedMagicShovel extends MagicShovel {
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
+    public boolean mineBlock(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 for (int z = -1; z <= 1; z++) {
-                    if (worldIn.getBlockState(pos.add(x, y, z)).getBlock().getHarvestTool(null) == ToolType.SHOVEL) {
-                        worldIn.destroyBlock(pos.add(x, y, z), true);
+                    if (worldIn.getBlockState(pos.offset(x, y, z)).getBlock().getHarvestTool(null) == ToolType.SHOVEL) {
+                        worldIn.destroyBlock(pos.offset(x, y, z), true);
                     }
                 }
             }
         }
-        return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
+        return super.mineBlock(stack, worldIn, state, pos, entityLiving);
     }
 }

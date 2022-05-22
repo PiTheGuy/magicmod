@@ -20,12 +20,7 @@ public class ModItemHandler extends ItemStackHandler {
         }
     }
     public boolean isEmpty() {
-        for (ItemStack stack : this.stacks) {
-            if (stack.isEmpty() || stack.getItem() == Items.AIR) {
-                return true;
-            }
-        }
-        return false;
+        return this.stacks.stream().anyMatch(stack -> stack.isEmpty() || stack.getItem() == Items.AIR);
     }
 
     public void decrStackSize(int index, int count) {

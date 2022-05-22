@@ -28,7 +28,7 @@ public abstract class AutoActionContainer<T extends AutoActionTileEntity> extend
         //Upgrade Slots
         this.addSlot(new UpgradeSlotItemHandler(tile.getInventory(), 36, 177, 26, this.tileEntity));
         this.addSlot(new UpgradeSlotItemHandler(tile.getInventory(), 37, 177, 44, this.tileEntity));
-        this.canInteractWithCallable = IWorldPosCallable.of(tile.getWorld(), tile.getPos());
+        this.canInteractWithCallable = IWorldPosCallable.create(tile.getLevel(), tile.getBlockPos());
         final int slotSizePlus2 = 18;
         final int startX = 8;
         //Magic Miner Inventory
@@ -51,34 +51,34 @@ public abstract class AutoActionContainer<T extends AutoActionTileEntity> extend
                 this.addSlot(new Slot(playerInv, 9+(row*9)+col, startX + (col * slotSizePlus2), invStartY + (row * slotSizePlus2)));
             }
         }
-        this.trackInt(mineCooldown = new FunctionalIntReferenceHolder(() -> this.tileEntity.mineCooldown,
+        this.addDataSlot(mineCooldown = new FunctionalIntReferenceHolder(() -> this.tileEntity.mineCooldown,
                 value -> this.tileEntity.mineCooldown = value));
     }
 
     @Override
-    public abstract boolean canInteractWith(PlayerEntity playerIn);
+    public abstract boolean stillValid(PlayerEntity playerIn);
 
     @Nonnull
     @Override
-    public ItemStack transferStackInSlot(final PlayerEntity player, final int index) {
+    public ItemStack quickMoveStack(final PlayerEntity player, final int index) {
         ItemStack returnStack = ItemStack.EMPTY;
-        final Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            final ItemStack slotStack = slot.getStack();
+        final Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            final ItemStack slotStack = slot.getItem();
             returnStack = slotStack.copy();
 
-            final int containerSlots = this.inventorySlots.size() - player.inventory.mainInventory.size();
+            final int containerSlots = this.slots.size() - player.inventory.items.size();
             if (index < containerSlots) {
-                if (!mergeItemStack(slotStack, containerSlots, this.inventorySlots.size(), true)) {
+                if (!moveItemStackTo(slotStack, containerSlots, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!mergeItemStack(slotStack, 0, containerSlots, false)) {
+            } else if (!moveItemStackTo(slotStack, 0, containerSlots, false)) {
                 return ItemStack.EMPTY;
             }
             if (slotStack.getCount() == 0) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
             if (slotStack.getCount() == returnStack.getCount()) {
                 return ItemStack.EMPTY;

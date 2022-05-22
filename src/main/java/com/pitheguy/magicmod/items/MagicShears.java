@@ -6,6 +6,6 @@ import net.minecraft.item.ShearsItem;
 
 public class MagicShears extends ShearsItem {
     public MagicShears() {
-        super(new Item.Properties().maxDamage(2000).group(MagicMod.TAB));
+        super(new Item.Properties().durability(2000).tab(MagicMod.TAB));
     }
 }

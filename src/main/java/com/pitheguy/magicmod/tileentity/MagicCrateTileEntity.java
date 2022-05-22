@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 
 public class MagicCrateTileEntity extends LockableLootTileEntity {
     private NonNullList<ItemStack> crateContents = NonNullList.withSize(88, ItemStack.EMPTY);
-    protected int numPlayersUsing;
+    protected int openCount;
     private final IItemHandlerModifiable items = createHandler();
     private LazyOptional<IItemHandlerModifiable> itemHandler = LazyOptional.of(() -> items);
 
@@ -42,7 +42,7 @@ public class MagicCrateTileEntity extends LockableLootTileEntity {
     }
 
     @Override
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return 88;
     }
 
@@ -67,75 +67,77 @@ public class MagicCrateTileEntity extends LockableLootTileEntity {
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
-        if (!this.checkLootAndWrite(compound)) {
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
+        if (!this.trySaveLootTable(compound)) {
             ItemStackHelper.saveAllItems(compound, this.crateContents);
         }
         return compound;
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
-        this.crateContents = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        if (!this.checkLootAndRead(compound)) {
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
+        this.crateContents = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        if (!this.tryLoadLootTable(compound)) {
             ItemStackHelper.loadAllItems(compound, this.crateContents);
         }
     }
 
     private void playSound(SoundEvent sound) {
-        double dx = (double) this.pos.getX() + 0.5D;
-        double dy = (double) this.pos.getY() + 0.5D;
-        double dz = (double) this.pos.getZ() + 0.5D;
-        this.world.playSound(null, dx, dy, dz, sound, SoundCategory.BLOCKS, 0.5f,
-                this.world.rand.nextFloat() * 0.1f + 0.9f);
+        double dx = (double) this.worldPosition.getX() + 0.5D;
+        double dy = (double) this.worldPosition.getY() + 0.5D;
+        double dz = (double) this.worldPosition.getZ() + 0.5D;
+        this.level.playSound(null, dx, dy, dz, sound, SoundCategory.BLOCKS, 0.5f,
+                this.level.getRandom().nextFloat() * 0.1f + 0.9f);
     }
 
     @Override
-    public boolean receiveClientEvent(int id, int type) {
+    public boolean triggerEvent(int id, int type) {
         if (id == 1) {
-            this.numPlayersUsing = type;
+            this.openCount = type;
             return true;
         } else {
-            return super.receiveClientEvent(id, type);
+            return super.triggerEvent(id, type);
         }
     }
 
     @Override
-    public void openInventory(PlayerEntity player) {
+    public void startOpen(PlayerEntity player) {
         if (!player.isSpectator()) {
-            if (this.numPlayersUsing < 0) {
-                this.numPlayersUsing = 0;
+            if (this.openCount < 0) {
+                this.openCount = 0;
             }
 
-            ++this.numPlayersUsing;
-            this.onOpenOrClose();
+            ++this.openCount;
+            this.signalOpenCount();
         }
+        playSound(SoundEvents.BARREL_OPEN);
     }
 
     @Override
-    public void closeInventory(PlayerEntity player) {
+    public void stopOpen(PlayerEntity player) {
         if (!player.isSpectator()) {
-            --this.numPlayersUsing;
-            this.onOpenOrClose();
+            --this.openCount;
+            this.signalOpenCount();
         }
+        playSound(SoundEvents.BARREL_CLOSE);
     }
 
-    protected void onOpenOrClose() {
+    protected void signalOpenCount() {
         Block block = this.getBlockState().getBlock();
         if (block instanceof MagicCrate) {
-            this.world.addBlockEvent(this.pos, block, 1, this.numPlayersUsing);
-            this.world.notifyNeighborsOfStateChange(this.pos, block);
+            this.level.blockEvent(this.worldPosition, block, 1, this.openCount);
+            this.level.updateNeighborsAt(this.worldPosition, block);
         }
     }
 
-    public static int getPlayersUsing(IBlockReader reader, BlockPos pos) {
+    public static int getOpenCount(IBlockReader reader, BlockPos pos) {
         BlockState blockstate = reader.getBlockState(pos);
         if (blockstate.hasTileEntity()) {
-            TileEntity tileentity = reader.getTileEntity(pos);
+            TileEntity tileentity = reader.getBlockEntity(pos);
             if (tileentity instanceof MagicCrateTileEntity) {
-                return ((MagicCrateTileEntity) tileentity).numPlayersUsing;
+                return ((MagicCrateTileEntity) tileentity).openCount;
             }
         }
         return 0;
@@ -148,8 +150,8 @@ public class MagicCrateTileEntity extends LockableLootTileEntity {
     }
 
     @Override
-    public void updateContainingBlockInfo() {
-        super.updateContainingBlockInfo();
+    public void invalidateCaps() {
+        super.invalidateCaps();
         if (this.itemHandler != null) {
             this.itemHandler.invalidate();
             this.itemHandler = null;
@@ -169,8 +171,8 @@ public class MagicCrateTileEntity extends LockableLootTileEntity {
     }
 
     @Override
-    public void remove() {
-        super.remove();
+    public void setRemoved() {
+        super.setRemoved();
         if(itemHandler != null) {
             itemHandler.invalidate();
         }

@@ -9,6 +9,7 @@ import com.pitheguy.magicmod.enchantments.VeinminerEnchantment;
 import com.pitheguy.magicmod.init.ModEntityTypes;
 import com.pitheguy.magicmod.items.*;
 import com.pitheguy.magicmod.tools.*;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.SoundType;
@@ -28,9 +29,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 @SuppressWarnings("unused")
 public class RegistryHandler {
-    public static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, MagicMod.MOD_ID);
-    public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, MagicMod.MOD_ID);
-    public static final DeferredRegister<Enchantment> ENCHANTMENTS = new DeferredRegister<>(ForgeRegistries.ENCHANTMENTS, MagicMod.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MagicMod.MOD_ID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MagicMod.MOD_ID);
+    public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, MagicMod.MOD_ID);
 
     public static void init() {
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -50,7 +51,7 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_NUGGET = ITEMS.register("magic_nugget", ItemBase::new);
     public static final RegistryObject<Item> MAGIC_PEARL = ITEMS.register("magic_pearl", MagicPearl::new);
     public static final RegistryObject<Item> POPULARITY_ORB = ITEMS.register("popularity_orb", PopularityOrb::new);
-    public static final RegistryObject<Item> MAGIC_CARROT = ITEMS.register("magic_carrot", () -> new Item(new Item.Properties().group(MagicMod.TAB).food(new Food.Builder().hunger(12).saturation(1.8F).effect(new EffectInstance(Effects.REGENERATION, 100, 2), 1).effect(() -> new EffectInstance(Effects.RESISTANCE, 2400, 2), 1).setAlwaysEdible().build())));
+    public static final RegistryObject<Item> MAGIC_CARROT = ITEMS.register("magic_carrot", () -> new Item(new Item.Properties().tab(MagicMod.TAB).food(new Food.Builder().nutrition(12).saturationMod(1.8F).effect(() -> new EffectInstance(Effects.REGENERATION, 100, 2), 1).effect(() -> new EffectInstance(Effects.DAMAGE_RESISTANCE, 2400, 2), 1).alwaysEat().build())));
     public static final RegistryObject<Item> MAGIC_SHELTER = ITEMS.register("magic_shelter", MagicShelter::new);
     public static final RegistryObject<Item> MAGIC_FUEL = ITEMS.register("magic_fuel", ItemBase::new);
 
@@ -87,83 +88,83 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_ORB_WHITE = ITEMS.register("magic_orb_white", ItemBase::new);
 
     //Spawn Eggs
-    public static final RegistryObject<ModSpawnEggItem> MAGIC_FRIEND_SPAWN_EGG = ITEMS.register("magic_friend_spawn_egg", () -> new ModSpawnEggItem(ModEntityTypes.MAGIC_FRIEND, 0xFF0000, 0x00FF00, new Item.Properties().group(MagicMod.TAB)));
+    public static final RegistryObject<ModSpawnEggItem> MAGIC_FRIEND_SPAWN_EGG = ITEMS.register("magic_friend_spawn_egg", () -> new ModSpawnEggItem(ModEntityTypes.MAGIC_FRIEND, 0xFF0000, 0x00FF00, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<Item> FLUFF_BALL = ITEMS.register("fluff_ball", FluffBall::new);
 
     //Magic Tools
     public static final RegistryObject<SwordItem> MAGIC_SWORD = ITEMS.register("magic_sword", () ->
-            new MagicSword(ModItemTiers.MAGIC, 70, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicSword(ModItemTiers.MAGIC, 70, 0.0f, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<PickaxeItem> MAGIC_PICKAXE = ITEMS.register("magic_pickaxe", () ->
-            new MagicPickaxe(ModItemTiers.MAGIC, 50, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicPickaxe(ModItemTiers.MAGIC, 50, 0.0f, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<AxeItem> MAGIC_AXE = ITEMS.register("magic_axe", () ->
-            new MagicAxe(ModItemTiers.MAGIC, 80, -1.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicAxe(ModItemTiers.MAGIC, 80, -1.0f, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<ShovelItem> MAGIC_SHOVEL = ITEMS.register("magic_shovel", () ->
-            new MagicShovel(ModItemTiers.MAGIC, 55, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicShovel(ModItemTiers.MAGIC, 55, 0.0f, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<HoeItem> MAGIC_HOE = ITEMS.register("magic_hoe", () ->
-            new MagicHoe(ModItemTiers.MAGIC, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicHoe(ModItemTiers.MAGIC, 50, 0.0f, new Item.Properties().tab(MagicMod.TAB)));
 
     //Reinforced Magic Tools
     public static final RegistryObject<SwordItem> REINFORCED_MAGIC_SWORD = ITEMS.register("reinforced_magic_sword", () ->
-            new MagicSword(ModItemTiers.REINFORCED_MAGIC, 200, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicSword(ModItemTiers.REINFORCED_MAGIC, 200, 0.0f, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<PickaxeItem> REINFORCED_MAGIC_PICKAXE = ITEMS.register("reinforced_magic_pickaxe", () ->
-            new MagicPickaxe(ModItemTiers.REINFORCED_MAGIC, 150, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicPickaxe(ModItemTiers.REINFORCED_MAGIC, 150, 0.0f, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<AxeItem> REINFORCED_MAGIC_AXE = ITEMS.register("reinforced_magic_axe", () ->
-            new MagicAxe(ModItemTiers.REINFORCED_MAGIC, 225, -1.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicAxe(ModItemTiers.REINFORCED_MAGIC, 225, -1.0f, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<ShovelItem> REINFORCED_MAGIC_SHOVEL = ITEMS.register("reinforced_magic_shovel", () ->
-            new ReinforcedMagicShovel(ModItemTiers.REINFORCED_MAGIC, 160, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new ReinforcedMagicShovel(ModItemTiers.REINFORCED_MAGIC, 160, 0.0f, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<HoeItem> REINFORCED_MAGIC_HOE = ITEMS.register("reinforced_magic_hoe", () ->
-            new ReinforcedMagicHoe(ModItemTiers.REINFORCED_MAGIC, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new ReinforcedMagicHoe(ModItemTiers.REINFORCED_MAGIC, 150, 0.0f, new Item.Properties().tab(MagicMod.TAB)));
 
     //Obsidian Plated Reinforced Magic Tools
     public static final RegistryObject<SwordItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_SWORD = ITEMS.register("obsidian_plated_reinforced_magic_sword", () ->
-            new MagicSword(ModItemTiers.OBSIDIAN_PLATED_REINFORCED_MAGIC, 450, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicSword(ModItemTiers.OBSIDIAN_PLATED_REINFORCED_MAGIC, 450, 0.0f, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<PickaxeItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_PICKAXE = ITEMS.register("obsidian_plated_reinforced_magic_pickaxe", () ->
-            new MagicPickaxe(ModItemTiers.OBSIDIAN_PLATED_REINFORCED_MAGIC, 350, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new MagicPickaxe(ModItemTiers.OBSIDIAN_PLATED_REINFORCED_MAGIC, 350, 0.0f, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<AxeItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_AXE = ITEMS.register("obsidian_plated_reinforced_magic_axe", () ->
-            new ObsidianPlatedReinforcedMagicAxe(ModItemTiers.OBSIDIAN_PLATED_REINFORCED_MAGIC, 480, -0.5f, new Item.Properties().group(MagicMod.TAB)));
+            new ObsidianPlatedReinforcedMagicAxe(ModItemTiers.OBSIDIAN_PLATED_REINFORCED_MAGIC, 480, -0.5f, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<ShovelItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_SHOVEL = ITEMS.register("obsidian_plated_reinforced_magic_shovel", () ->
-            new ObsidianPlatedReinforcedMagicShovel(ModItemTiers.OBSIDIAN_PLATED_REINFORCED_MAGIC, 350, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new ObsidianPlatedReinforcedMagicShovel(ModItemTiers.OBSIDIAN_PLATED_REINFORCED_MAGIC, 350, 0.0f, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<HoeItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_HOE = ITEMS.register("obsidian_plated_reinforced_magic_hoe", () ->
-            new ObsidianPlatedReinforcedMagicHoe(ModItemTiers.OBSIDIAN_PLATED_REINFORCED_MAGIC, 0.0f, new Item.Properties().group(MagicMod.TAB)));
+            new ObsidianPlatedReinforcedMagicHoe(ModItemTiers.OBSIDIAN_PLATED_REINFORCED_MAGIC, 350, 0.0f, new Item.Properties().tab(MagicMod.TAB)));
 
     //Magic Armor
     public static final RegistryObject<ArmorItem> MAGIC_HELMET = ITEMS.register("magic_helmet", () ->
-            new CustomArmorMagic(ModArmorMaterials.MAGIC, EquipmentSlotType.HEAD, new Item.Properties().group(MagicMod.TAB)));
+            new CustomArmorMagic(ModArmorMaterials.MAGIC, EquipmentSlotType.HEAD, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<ArmorItem> MAGIC_CHESTPLATE = ITEMS.register("magic_chestplate", () ->
-            new CustomArmorMagic(ModArmorMaterials.MAGIC, EquipmentSlotType.CHEST, new Item.Properties().group(MagicMod.TAB)));
+            new CustomArmorMagic(ModArmorMaterials.MAGIC, EquipmentSlotType.CHEST, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<ArmorItem> MAGIC_LEGGINGS = ITEMS.register("magic_leggings", () ->
-            new CustomArmorMagic(ModArmorMaterials.MAGIC, EquipmentSlotType.LEGS, new Item.Properties().group(MagicMod.TAB)));
+            new CustomArmorMagic(ModArmorMaterials.MAGIC, EquipmentSlotType.LEGS, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<ArmorItem> MAGIC_BOOTS = ITEMS.register("magic_boots", () ->
-            new CustomArmorMagic(ModArmorMaterials.MAGIC, EquipmentSlotType.FEET, new Item.Properties().group(MagicMod.TAB)));
+            new CustomArmorMagic(ModArmorMaterials.MAGIC, EquipmentSlotType.FEET, new Item.Properties().tab(MagicMod.TAB)));
 
     //Reinforced Magic Armor
     public static final RegistryObject<ArmorItem> REINFORCED_MAGIC_HELMET = ITEMS.register("reinforced_magic_helmet", () ->
-            new CustomArmorMagic(ModArmorMaterials.REINFORCED_MAGIC, EquipmentSlotType.HEAD, new Item.Properties().group(MagicMod.TAB)));
+            new CustomArmorMagic(ModArmorMaterials.REINFORCED_MAGIC, EquipmentSlotType.HEAD, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<ArmorItem> REINFORCED_MAGIC_CHESTPLATE = ITEMS.register("reinforced_magic_chestplate", () ->
-            new CustomArmorMagic(ModArmorMaterials.REINFORCED_MAGIC, EquipmentSlotType.CHEST, new Item.Properties().group(MagicMod.TAB)));
+            new CustomArmorMagic(ModArmorMaterials.REINFORCED_MAGIC, EquipmentSlotType.CHEST, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<ArmorItem> REINFORCED_MAGIC_LEGGINGS = ITEMS.register("reinforced_magic_leggings", () ->
-            new CustomArmorMagic(ModArmorMaterials.REINFORCED_MAGIC, EquipmentSlotType.LEGS, new Item.Properties().group(MagicMod.TAB)));
+            new CustomArmorMagic(ModArmorMaterials.REINFORCED_MAGIC, EquipmentSlotType.LEGS, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<ArmorItem> REINFORCED_MAGIC_BOOTS = ITEMS.register("reinforced_magic_boots", () ->
-            new CustomArmorMagic(ModArmorMaterials.REINFORCED_MAGIC, EquipmentSlotType.FEET, new Item.Properties().group(MagicMod.TAB)));
+            new CustomArmorMagic(ModArmorMaterials.REINFORCED_MAGIC, EquipmentSlotType.FEET, new Item.Properties().tab(MagicMod.TAB)));
 
     //Obsidian Plated Reinforced Magic Armor
     public static final RegistryObject<ArmorItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_HELMET = ITEMS.register("obsidian_plated_reinforced_magic_helmet", () ->
-            new CustomArmorMagic(ModArmorMaterials.OBSIDIAN_PLATED_REINFORCED_MAGIC, EquipmentSlotType.HEAD, new Item.Properties().group(MagicMod.TAB)));
+            new CustomArmorMagic(ModArmorMaterials.OBSIDIAN_PLATED_REINFORCED_MAGIC, EquipmentSlotType.HEAD, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<ArmorItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_CHESTPLATE = ITEMS.register("obsidian_plated_reinforced_magic_chestplate", () ->
-            new CustomArmorMagic(ModArmorMaterials.OBSIDIAN_PLATED_REINFORCED_MAGIC, EquipmentSlotType.CHEST, new Item.Properties().group(MagicMod.TAB)));
+            new CustomArmorMagic(ModArmorMaterials.OBSIDIAN_PLATED_REINFORCED_MAGIC, EquipmentSlotType.CHEST, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<ArmorItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_LEGGINGS = ITEMS.register("obsidian_plated_reinforced_magic_leggings", () ->
-            new CustomArmorMagic(ModArmorMaterials.OBSIDIAN_PLATED_REINFORCED_MAGIC, EquipmentSlotType.LEGS, new Item.Properties().group(MagicMod.TAB)));
+            new CustomArmorMagic(ModArmorMaterials.OBSIDIAN_PLATED_REINFORCED_MAGIC, EquipmentSlotType.LEGS, new Item.Properties().tab(MagicMod.TAB)));
     public static final RegistryObject<ArmorItem> OBSIDIAN_PLATED_REINFORCED_MAGIC_BOOTS = ITEMS.register("obsidian_plated_reinforced_magic_boots", () ->
-            new CustomArmorMagic(ModArmorMaterials.OBSIDIAN_PLATED_REINFORCED_MAGIC, EquipmentSlotType.FEET, new Item.Properties().group(MagicMod.TAB)));
+            new CustomArmorMagic(ModArmorMaterials.OBSIDIAN_PLATED_REINFORCED_MAGIC, EquipmentSlotType.FEET, new Item.Properties().tab(MagicMod.TAB)));
 
     //Blocks
-    public static final RegistryObject<Block> MAGIC_ORE = BLOCKS.register("magic_ore", () -> new Block(Block.Properties.create(Material.IRON).hardnessAndResistance(4.0f,5.0f).sound(SoundType.STONE).harvestLevel(3).harvestTool(ToolType.PICKAXE)));
-    public static final RegistryObject<Block> MAGIC_OBSIDIAN = BLOCKS.register("magic_obsidian", () -> new Block(Block.Properties.create(Material.IRON).hardnessAndResistance(110.0f,2500.0f).sound(SoundType.METAL).harvestLevel(5).harvestTool(ToolType.PICKAXE)));
-    public static final RegistryObject<Block> MAGIC_BLOCK = BLOCKS.register("magic_block", () -> new Block (Block.Properties.create(Material.IRON).hardnessAndResistance(6.5f, 8.0f).sound(SoundType.METAL).harvestLevel(4).harvestTool(ToolType.PICKAXE)));
-    public static final RegistryObject<Block> MAGIC_SLAB = BLOCKS.register("magic_slab", () -> new SlabBlock(Block.Properties.create(Material.IRON).hardnessAndResistance(6.5f,8.0f).sound(SoundType.METAL).harvestLevel(4).harvestTool(ToolType.PICKAXE)));
-    public static final RegistryObject<Block> MAGIC_GLUE_BLOCK = BLOCKS.register("magic_glue_block", () -> new Block(Block.Properties.create(Material.IRON).hardnessAndResistance(4.5f, 6.5f).sound(SoundType.SLIME).harvestLevel(3).harvestTool(ToolType.PICKAXE).jumpFactor(0.0f).speedFactor(0.1f)));
+    public static final RegistryObject<Block> MAGIC_ORE = BLOCKS.register("magic_ore", () -> new Block(Block.Properties.of(Material.METAL).strength(4.0f,5.0f).sound(SoundType.STONE).harvestLevel(3).harvestTool(ToolType.PICKAXE)));
+    public static final RegistryObject<Block> MAGIC_OBSIDIAN = BLOCKS.register("magic_obsidian", () -> new Block(Block.Properties.of(Material.METAL).strength(110.0f,2500.0f).sound(SoundType.METAL).harvestLevel(5).harvestTool(ToolType.PICKAXE)));
+    public static final RegistryObject<Block> MAGIC_BLOCK = BLOCKS.register("magic_block", () -> new Block (Block.Properties.of(Material.METAL).strength(6.5f, 8.0f).sound(SoundType.METAL).harvestLevel(4).harvestTool(ToolType.PICKAXE)));
+    public static final RegistryObject<Block> MAGIC_SLAB = BLOCKS.register("magic_slab", () -> new SlabBlock(Block.Properties.of(Material.METAL).strength(6.5f,8.0f).sound(SoundType.METAL).harvestLevel(4).harvestTool(ToolType.PICKAXE)));
+    public static final RegistryObject<Block> MAGIC_GLUE_BLOCK = BLOCKS.register("magic_glue_block", () -> new Block(Block.Properties.of(Material.METAL).strength(4.5f, 6.5f).sound(SoundType.SLIME_BLOCK).harvestLevel(3).harvestTool(ToolType.PICKAXE).jumpFactor(0.0f).speedFactor(0.1f)));
     public static final RegistryObject<Block> MAGIC_VEIN = BLOCKS.register("magic_vein", MagicVein::new);
-    public static final RegistryObject<Block> MAGIC_INFUSED_STONE = BLOCKS.register("magic_infused_stone", () -> new Block(Block.Properties.create(Material.IRON).hardnessAndResistance(2.0f, 8.0f).sound(SoundType.STONE).harvestLevel(1).harvestTool(ToolType.PICKAXE)));
+    public static final RegistryObject<Block> MAGIC_INFUSED_STONE = BLOCKS.register("magic_infused_stone", () -> new Block(Block.Properties.of(Material.METAL).strength(2.0f, 8.0f).sound(SoundType.STONE).harvestLevel(1).harvestTool(ToolType.PICKAXE)));
     public static final RegistryObject<Block> MAGIC_WEB = BLOCKS.register("magic_web", MagicWeb::new);
     public static final RegistryObject<Block> MAGIC_SPIKE = BLOCKS.register("magic_spike", MagicSpike::new);
     public static final RegistryObject<Block> MAGIC_INFUSER = BLOCKS.register("magic_infuser", MagicInfuser::new);

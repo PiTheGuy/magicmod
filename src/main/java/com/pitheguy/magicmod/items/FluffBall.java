@@ -24,25 +24,18 @@ import java.util.Objects;
 
 public class FluffBall extends Item {
     public FluffBall() {
-        super(new Properties().group(MagicMod.TAB));
+        super(new Properties().tab(MagicMod.TAB));
     }
 
-    public ActionResultType onItemUse(ItemUseContext context) {
-        World world = context.getWorld();
-        if (!world.isRemote) {
-            ItemStack itemstack = context.getItem();
-            BlockPos blockpos = context.getPos();
-            Direction direction = context.getFace();
-            BlockState blockstate = world.getBlockState(blockpos);
-
-            BlockPos blockpos1;
-            if (blockstate.getCollisionShape(world, blockpos).isEmpty()) {
-                blockpos1 = blockpos;
-            } else {
-                blockpos1 = blockpos.offset(direction);
-            }
-
-            if (ModEntityTypes.FLUFFY_MAGICIAN.get().spawn(world, itemstack, context.getPlayer(), blockpos1, SpawnReason.SPAWN_EGG, true, !Objects.equals(blockpos, blockpos1) && direction == Direction.UP) != null) {
+    public ActionResultType useOn(ItemUseContext context) {
+        World level = context.getLevel();
+        if (!level.isClientSide) {
+            ItemStack itemstack = context.getItemInHand();
+            BlockPos blockpos = context.getClickedPos();
+            Direction direction = context.getClickedFace();
+            BlockState blockstate = level.getBlockState(blockpos);
+            BlockPos blockpos1 = blockstate.getCollisionShape(level, blockpos).isEmpty() ? blockpos : blockpos.relative(direction);
+            if (ModEntityTypes.FLUFFY_MAGICIAN.get().spawn(level.getServer().overworld(), itemstack, context.getPlayer(), blockpos1, SpawnReason.SPAWN_EGG, true, !Objects.equals(blockpos, blockpos1) && direction == Direction.UP) != null) {
                 itemstack.shrink(1);
             }
 
@@ -50,30 +43,29 @@ public class FluffBall extends Item {
         return ActionResultType.SUCCESS;
     }
 
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
-        RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack itemstack = playerIn.getItemInHand(handIn);
+        BlockRayTraceResult raytraceresult = getPlayerPOVHitResult(worldIn, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);
         if (raytraceresult.getType() != RayTraceResult.Type.BLOCK) {
-            return ActionResult.resultPass(itemstack);
-        } else if (worldIn.isRemote) {
-            return ActionResult.resultSuccess(itemstack);
+            return ActionResult.pass(itemstack);
+        } else if (worldIn.isClientSide) {
+            return ActionResult.success(itemstack);
         } else {
-            BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)raytraceresult;
-            BlockPos blockpos = blockraytraceresult.getPos();
+            BlockPos blockpos = raytraceresult.getBlockPos();
             if (!(worldIn.getBlockState(blockpos).getBlock() instanceof FlowingFluidBlock)) {
-                return ActionResult.resultPass(itemstack);
-            } else if (worldIn.isBlockModifiable(playerIn, blockpos) && playerIn.canPlayerEdit(blockpos, blockraytraceresult.getFace(), itemstack)) {
-                if (ModEntityTypes.FLUFFY_MAGICIAN.get().spawn(worldIn, itemstack, playerIn, blockpos, SpawnReason.SPAWN_EGG, false, false) == null) {
-                    return ActionResult.resultPass(itemstack);
+                return ActionResult.pass(itemstack);
+            } else if (worldIn.mayInteract(playerIn, blockpos) && playerIn.mayUseItemAt(blockpos, raytraceresult.getDirection(), itemstack)) {
+                if (ModEntityTypes.FLUFFY_MAGICIAN.get().spawn(worldIn.getServer().overworld(), itemstack, playerIn, blockpos, SpawnReason.SPAWN_EGG, false, false) == null) {
+                    return ActionResult.pass(itemstack);
                 } else {
-                    if (!playerIn.abilities.isCreativeMode) {
+                    if (!playerIn.abilities.instabuild) {
                         itemstack.shrink(1);
                     }
-                    playerIn.addStat(Stats.ITEM_USED.get(this));
-                    return ActionResult.resultSuccess(itemstack);
+                    playerIn.awardStat(Stats.ITEM_USED.get(this));
+                    return ActionResult.success(itemstack);
                 }
             } else {
-                return ActionResult.resultFail(itemstack);
+                return ActionResult.fail(itemstack);
             }
         }
     }

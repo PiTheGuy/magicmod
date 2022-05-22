@@ -19,17 +19,17 @@ public class UpgradeSlotItemHandler extends SlotItemHandler {
     }
 
     @Override
-    public boolean isItemValid(@Nonnull ItemStack stack) {
-        return super.isItemValid(stack) && stack.getItem() instanceof UpgradeItem && (stack.getItem() != RegistryHandler.FILTER_UPGRADE.get() || IntStream.range(0, this.tileEntity.getInventory().getSlots()).noneMatch(i -> this.tileEntity.getInventory().getStackInSlot(i).getItem() == RegistryHandler.FILTER_UPGRADE.get()));
+    public boolean mayPlace(@Nonnull ItemStack stack) {
+        return super.mayPlace(stack) && stack.getItem() instanceof UpgradeItem && (stack.getItem() != RegistryHandler.FILTER_UPGRADE.get() || IntStream.range(0, this.tileEntity.getInventory().getSlots()).noneMatch(i -> this.tileEntity.getInventory().getStackInSlot(i).getItem() == RegistryHandler.FILTER_UPGRADE.get()));
     }
 
     @Override
-    public int getSlotStackLimit() {
+    public int getMaxStackSize() {
         return 1;
     }
 
     @Override
-    public int getItemStackLimit(@Nonnull ItemStack stack) {
+    public int getMaxStackSize(@Nonnull ItemStack stack) {
         ItemStack maxAdd = stack.copy();
         int maxInput = 1;
         maxAdd.setCount(maxInput);

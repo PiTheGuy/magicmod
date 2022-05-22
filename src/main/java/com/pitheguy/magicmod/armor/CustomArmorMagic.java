@@ -18,16 +18,16 @@ public class CustomArmorMagic extends ArmorItem {
     @Override
     public void onArmorTick(ItemStack itemstack, World world, PlayerEntity player) {
         if (ArmorHandler.isWearingObsidianPlatedReinforcedMagicArmor(player)) {
-            player.addPotionEffect(new EffectInstance(Effects.REGENERATION, 2, 3, true, false));
-            player.addPotionEffect(new EffectInstance(Effects.SATURATION, 1, 0, true, false));
-            player.addPotionEffect(new EffectInstance(Effects.SPEED, 1, 1, true, false));
-            player.abilities.allowFlying = true;
+            player.addEffect(new EffectInstance(Effects.REGENERATION, 2, 3, true, false));
+            player.addEffect(new EffectInstance(Effects.SATURATION, 1, 0, true, false));
+            player.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 1, 1, true, false));
+            player.abilities.mayfly = true;
         } else {
             if (ArmorHandler.isWearingReinforcedMagicArmor(player))
-                player.addPotionEffect(new EffectInstance(Effects.REGENERATION, 2, 1, true, false));
-            if (!player.abilities.isCreativeMode && player.abilities.allowFlying) {
-                player.abilities.allowFlying = false;
-                player.abilities.isFlying = false;
+                player.addEffect(new EffectInstance(Effects.REGENERATION, 2, 1, true, false));
+            if (!player.abilities.instabuild && player.abilities.mayfly) {
+                player.abilities.mayfly = false;
+                player.abilities.flying = false;
             }
         }
     }

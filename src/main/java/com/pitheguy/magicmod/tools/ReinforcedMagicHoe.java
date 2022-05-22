@@ -16,43 +16,41 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class ReinforcedMagicHoe extends HoeItem {
-    public ReinforcedMagicHoe(IItemTier tier, float attackSpeedIn, Properties builder) {
-        super(tier, attackSpeedIn, builder);
+public class ReinforcedMagicHoe extends MagicHoe {
+    public ReinforcedMagicHoe(IItemTier tier, int attackDamage, float attackSpeedIn, Properties builder) {
+        super(tier, attackDamage, attackSpeedIn, builder);
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        World world = context.getWorld();
-        BlockPos blockpos = context.getPos();
-        int hook = net.minecraftforge.event.ForgeEventFactory.onHoeUse(context);
+    public ActionResultType useOn(ItemUseContext context) {
+        World world = context.getLevel();
+        BlockPos blockpos = context.getClickedPos();
+        int hook = ForgeEventFactory.onHoeUse(context);
         if (hook != 0) return hook > 0 ? ActionResultType.SUCCESS : ActionResultType.FAIL;
-        BlockState blockstate = HOE_LOOKUP.get(world.getBlockState(blockpos).getBlock());
-        if (context.getFace() != Direction.DOWN && blockstate != null && world.isAirBlock(blockpos.up())) {
+        BlockState blockstate = TILLABLES.get(world.getBlockState(blockpos).getBlock());
+        if (context.getClickedFace() != Direction.DOWN && blockstate != null && world.getBlockState(blockpos.above()).isAir()) {
             int tillX = -3;
             int blocksTilled = 0;
-            int tillZ;
             while (tillX <= 3) {
-                tillZ = -3;
-                while (tillZ <= 3) {
-                    BlockPos tillpos = blockpos.add(tillX,0,tillZ);
-                    blockstate = HOE_LOOKUP.get(world.getBlockState(tillpos).getBlock());
-                    if (blockstate != null && world.isAirBlock(tillpos.up())) {
+                for (int tillZ = -3; tillZ <= 3; tillZ++) {
+                    BlockPos tillpos = blockpos.offset(tillX,0,tillZ);
+                    blockstate = TILLABLES.get(world.getBlockState(tillpos).getBlock());
+                    if (blockstate != null && world.getBlockState(tillpos.above()).isAir()) {
                         PlayerEntity playerentity = context.getPlayer();
-                        world.playSound(playerentity, tillpos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                        if (!world.isRemote) {
-                            world.setBlockState(tillpos, blockstate, 11);
+                        world.playSound(playerentity, tillpos, SoundEvents.HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                        if (!world.isClientSide) {
+                            world.setBlock(tillpos, blockstate, 11);
                             blocksTilled++;
                             if (playerentity != null && blocksTilled == 1) {
-                                context.getItem().damageItem(1, playerentity, (p_220043_1_) -> p_220043_1_.sendBreakAnimation(context.getHand()));
+                                context.getItemInHand().hurtAndBreak(1, playerentity, (p_220043_1_) -> p_220043_1_.broadcastBreakEvent(context.getHand()));
                             }
                         }
                     }
-                    tillZ++;
                 }
                 tillX++;
             }
@@ -67,15 +65,15 @@ public class ReinforcedMagicHoe extends HoeItem {
     private static final List<Block> CROP_BLOCKS_AGE_3 = Arrays.asList(Blocks.BEETROOTS, Blocks.NETHER_WART);
 
     @Override
-    public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
+    public boolean mineBlock(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
         for (int x = -2; x <= 2; x++) {
             for (int z = -2; z <= 2; z++) {
-                BlockState currBlock = worldIn.getBlockState(pos.add(x, 0, z));
-                if((CROP_BLOCKS_AGE_7.contains(currBlock.getBlock()) && currBlock.get(BlockStateProperties.AGE_0_7) == 7) || (CROP_BLOCKS_AGE_3.contains(currBlock.getBlock()) && currBlock.get(BlockStateProperties.AGE_0_3) == 3)) {
-                    worldIn.destroyBlock(pos.add(x, 0, z), true);
+                BlockState currBlock = worldIn.getBlockState(pos.offset(x, 0, z));
+                if((CROP_BLOCKS_AGE_7.contains(currBlock.getBlock()) && currBlock.getValue(BlockStateProperties.AGE_7) == 7) || (CROP_BLOCKS_AGE_3.contains(currBlock.getBlock()) && currBlock.getValue(BlockStateProperties.AGE_3) == 3)) {
+                    worldIn.destroyBlock(pos.offset(x, 0, z), true);
                 }
             }
         }
-        return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
+        return super.mineBlock(stack, worldIn, state, pos, entityLiving);
     }
 }

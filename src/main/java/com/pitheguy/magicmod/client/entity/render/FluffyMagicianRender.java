@@ -13,7 +13,7 @@ public class FluffyMagicianRender extends MobRenderer<FluffyMagician, FluffyMagi
     }
 
     @Override
-    public ResourceLocation getEntityTexture(FluffyMagician entity) {
+    public ResourceLocation getTextureLocation(FluffyMagician entity) {
         return new ResourceLocation("magicmod","textures/entities/fluffy_magician.png");
     }
 }

@@ -15,7 +15,7 @@ public class MagicFriendRender extends MobRenderer<MagicFriend, MagicFriendModel
     }
 
     @Override
-    public ResourceLocation getEntityTexture(MagicFriend entity) {
+    public ResourceLocation getTextureLocation(MagicFriend entity) {
         return TEXTURE;
     }
 }

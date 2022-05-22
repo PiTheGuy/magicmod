@@ -4,6 +4,7 @@ import com.pitheguy.magicmod.container.MagicInfuserContainer;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.ModItemHandler;
 import com.pitheguy.magicmod.util.RegistryHandler;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -40,16 +41,16 @@ public class MagicInfuserTileEntity extends TileEntity implements ITickableTileE
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         NonNullList<ItemStack> inv = NonNullList.withSize(this.inventory.getSlots(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, inv);
         this.inventory.setNonNullList(inv);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         ItemStackHelper.saveAllItems(compound, this.inventory.toNonNullList());
         return compound;
     }
@@ -62,25 +63,20 @@ public class MagicInfuserTileEntity extends TileEntity implements ITickableTileE
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
         CompoundNBT nbt = new CompoundNBT();
-        this.write(nbt);
-        return new SUpdateTileEntityPacket(this.pos, 0, nbt);
+        this.save(nbt);
+        return new SUpdateTileEntityPacket(this.worldPosition, 0, nbt);
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(pkt.getNbtCompound());
+        this.load(this.level.getBlockState(this.worldPosition), pkt.getTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
         CompoundNBT nbt = new CompoundNBT();
-        this.write(nbt);
+        this.save(nbt);
         return nbt;
-    }
-
-    @Override
-    public void handleUpdateTag(CompoundNBT nbt) {
-        this.read(nbt);
     }
 
     @Override
@@ -97,7 +93,7 @@ public class MagicInfuserTileEntity extends TileEntity implements ITickableTileE
     @Override
     public void tick() {
         boolean dirty = false;
-        if (world != null && !world.isRemote()) {
+        if (level != null && !level.isClientSide) {
             while(this.inventory.getStackInSlot(0).getItem() == RegistryHandler.MAGIC_ORB_RED.get() &&
                     this.inventory.getStackInSlot(1).getItem() == RegistryHandler.MAGIC_ORB_ORANGE.get() &&
                     this.inventory.getStackInSlot(2).getItem() == RegistryHandler.MAGIC_ORB_YELLOW.get() &&
@@ -115,7 +111,7 @@ public class MagicInfuserTileEntity extends TileEntity implements ITickableTileE
                 }
             }
         }
-        if(dirty) this.markDirty();
+        if(dirty) this.setChanged();
     }
 
     public ITextComponent getName() {

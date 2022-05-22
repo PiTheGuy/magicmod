@@ -29,8 +29,8 @@ import javax.annotation.Nullable;
 public class MagicMiner extends Block {
 
     public MagicMiner() {
-        super(Properties.create(Material.IRON)
-                .hardnessAndResistance(4.5f, 8.0f)
+        super(Properties.of(Material.METAL)
+                .strength(4.5f, 8.0f)
                 .sound(SoundType.METAL)
                 .harvestLevel(2)
                 .harvestTool(ToolType.PICKAXE)
@@ -48,14 +48,14 @@ public class MagicMiner extends Block {
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, @Nonnull World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!worldIn.isRemote()) {
-            TileEntity tile = worldIn.getTileEntity(pos);
+    public ActionResultType use(BlockState state, @Nonnull World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (!worldIn.isClientSide()) {
+            TileEntity tile = worldIn.getBlockEntity(pos);
             if(tile instanceof MagicMinerTileEntity) {
                 NetworkHooks.openGui((ServerPlayerEntity) player,(INamedContainerProvider) tile,pos);
                 return ActionResultType.SUCCESS;
@@ -65,20 +65,20 @@ public class MagicMiner extends Block {
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        TileEntity tile = worldIn.getTileEntity(pos);
+    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        TileEntity tile = worldIn.getBlockEntity(pos);
         if(tile instanceof MagicMinerTileEntity) {
             MagicMinerTileEntity miner = (MagicMinerTileEntity) tile;
             ((ModItemHandler)miner.getInventory()).toNonNullList().forEach(item -> {
                 ItemEntity itemEntity = new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), item);
-                worldIn.addEntity(itemEntity);
+                worldIn.addFreshEntity(itemEntity);
             });
             if (miner.fuelSourceTileEntity != null) {
                 miner.fuelSourceTileEntity.unregisterFuelConsumer(miner);
             }
         }
         if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
-            worldIn.removeTileEntity(pos);
+            worldIn.removeBlockEntity(pos);
         }
     }
 }

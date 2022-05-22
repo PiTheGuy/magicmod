@@ -16,7 +16,7 @@ public class MultiItemSlotItemHandler extends SlotItemHandler {
     }
 
     @Override
-    public boolean isItemValid(@NotNull ItemStack stack) {
-        return validItem.contains(stack.getItem()) && super.isItemValid(stack);
+    public boolean mayPlace(@NotNull ItemStack stack) {
+        return validItem.contains(stack.getItem()) && super.mayPlace(stack);
     }
 }

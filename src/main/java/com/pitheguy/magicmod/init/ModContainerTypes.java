@@ -8,7 +8,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class ModContainerTypes {
-    public static final DeferredRegister<ContainerType<?>> CONTAINER_TYPES = new DeferredRegister<>(
+    public static final DeferredRegister<ContainerType<?>> CONTAINER_TYPES = DeferredRegister.create(
             ForgeRegistries.CONTAINERS, "magicmod");
     public static final RegistryObject<ContainerType<MagicInfuserContainer>> MAGIC_INFUSER = CONTAINER_TYPES
             .register("magic_infuser", () -> IForgeContainerType.create(MagicInfuserContainer::new));

@@ -1,5 +1,6 @@
 package com.pitheguy.magicmod.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.pitheguy.magicmod.container.MagicMinerContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -12,33 +13,26 @@ public class MagicMinerScreen extends ContainerScreen<MagicMinerContainer> {
     public MagicMinerScreen(MagicMinerContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(screenContainer, inv, titleIn);
 
-        this.guiLeft = 0;
-        this.guiTop = 0;
-        this.xSize = 201;
-        this.ySize = 186;
+        this.leftPos = 0;
+        this.topPos = 0;
+        this.imageWidth = 201;
+        this.imageHeight = 186;
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
-        this.container.tileEntity.updateStatus();
-        this.minecraft.getTextureManager().bindTexture(TEXTURE);
-        this.blit(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-        this.blit(this.guiLeft + 116, this.guiTop + 93, 0, 188, this.container.getMineCooldownScaled(), 16);
+        this.menu.tileEntity.updateStatus();
+        this.minecraft.getTextureManager().bind(TEXTURE);
+        this.blit(stack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+        this.blit(stack, this.leftPos + 116, this.topPos + 93, 0, 188, this.menu.getMineCooldownScaled(), 16);
 
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        this.font.drawString(String.format("%s (Status: %s)", this.title.getFormattedText(), this.container.tileEntity.getStatus()), 8, 8, 0x404040);
-        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8, 94, 0x404040);
-    }
-
-    @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground();
-        super.render(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(stack);
+        super.render(stack, mouseX, mouseY, partialTicks);
+        this.renderTooltip(stack, mouseX, mouseY);
     }
 }
