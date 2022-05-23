@@ -17,6 +17,7 @@ public class MagicPressScreen extends ContainerScreen<MagicPressContainer> {
         this.topPos = 0;
         this.imageWidth = 176;
         this.imageHeight = 162;
+        this.inventoryLabelY = 70;
     }
 
     @Override

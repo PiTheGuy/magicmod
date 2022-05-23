@@ -16,6 +16,7 @@ public class MagicEnergizerScreen extends ContainerScreen<MagicEnergizerContaine
         this.topPos = 0;
         this.imageWidth = 176;
         this.imageHeight = 134;
+        this.inventoryLabelY = 39;
     }
 
     @Override

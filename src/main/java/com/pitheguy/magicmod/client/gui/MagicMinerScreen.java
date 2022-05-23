@@ -17,6 +17,7 @@ public class MagicMinerScreen extends ContainerScreen<MagicMinerContainer> {
         this.topPos = 0;
         this.imageWidth = 201;
         this.imageHeight = 186;
+        this.inventoryLabelY = 94;
     }
 
     @Override
@@ -34,5 +35,11 @@ public class MagicMinerScreen extends ContainerScreen<MagicMinerContainer> {
         this.renderBackground(stack);
         super.render(stack, mouseX, mouseY, partialTicks);
         this.renderTooltip(stack, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
+        this.font.draw(stack, this.title.plainCopy().append(this.menu.tileEntity.status.getMessage()), (float) this.titleLabelX, (float) this.titleLabelY, 0x404040);
+        this.font.draw(stack, this.inventory.getDisplayName(), (float) this.inventoryLabelX, (float) this.inventoryLabelY, 0x404040);
     }
 }

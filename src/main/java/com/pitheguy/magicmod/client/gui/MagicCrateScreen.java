@@ -17,6 +17,7 @@ public class MagicCrateScreen extends ContainerScreen<MagicCrateContainer> {
         this.topPos = 0;
         this.imageWidth = 212;
         this.imageHeight = 255;
+        this.inventoryLabelY = 163;
     }
 
     @Override

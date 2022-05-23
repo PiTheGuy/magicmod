@@ -106,7 +106,7 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
     @Override
     public void tick() {
         boolean dirty = false;
-        if (this.status != Status.FINISHED && (this.status != Status.INVENTORY_FULL || this.hasInventorySpace())) {
+        if (this.status != Status.INVENTORY_FULL || this.hasInventorySpace()) {
             this.updateStatus();
             this.updateUpgrades();
             if (level != null && !level.isClientSide && this.status.isRunning() && mineCooldown <= 0) {
