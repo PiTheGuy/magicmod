@@ -1,5 +1,7 @@
 package com.pitheguy.magicmod.tileentity;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.pitheguy.magicmod.MagicMod;
 import com.pitheguy.magicmod.util.ModItemHandler;
 import com.pitheguy.magicmod.util.RegistryHandler;
 import net.minecraft.block.Block;
@@ -189,9 +191,11 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
         for (int y = 1; y <= this.worldPosition.getY(); y++) {
             for (int x = -range; x <= range; x++) {
                 for (int z = -range; z <= range; z++) {
-                    BlockPos pos = new BlockPos(Vector3d.atCenterOf(this.worldPosition).add(x, y, z));
+                    BlockPos pos = this.worldPosition.offset(x, -y, z);
                     IBlockReader reader = this.level.getChunkForCollisions(this.level.getChunkAt(pos).getPos().x, this.level.getChunkAt(pos).getPos().z);
                     BlockState state = this.level.getBlockState(pos);
+                    //printNullReasons(pos, reader, state);
+
                     if (reader != null && !state.isAir() && state.getDestroySpeed(reader, pos) >= 0 && this.level.getBlockEntity(pos) == null && !MINE_BLACKLIST.contains(state.getBlock()) && this.blockMatchesFilter(state.getBlock()) && this.canMineBlock(state)) {
                         return pos;
                     }
@@ -199,6 +203,15 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
             }
         }
         return null;
+    }
+
+    @VisibleForTesting
+    private void printNullReasons(BlockPos pos, IBlockReader reader, BlockState state) {
+        if (state.getDestroySpeed(reader, pos) < 0) MagicMod.LOGGER.info("Block at {} is not breakable", pos);
+        if (this.level.getBlockEntity(pos) != null) MagicMod.LOGGER.info("Tile entity found at {}", pos);
+        if (MINE_BLACKLIST.contains(state.getBlock())) MagicMod.LOGGER.info("Block at {} is blacklisted", pos);
+        if (!this.blockMatchesFilter(state.getBlock())) MagicMod.LOGGER.info("Block at {} doesn't match filter", pos);
+        if (!this.canMineBlock(state)) MagicMod.LOGGER.info("Block at {} can't be mined by current auto-miner", pos);
     }
 
     protected abstract boolean canMineBlock(BlockState blockState);

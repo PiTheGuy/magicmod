@@ -39,7 +39,7 @@ public class MagicMinerScreen extends ContainerScreen<MagicMinerContainer> {
 
     @Override
     protected void renderLabels(MatrixStack stack, int mouseX, int mouseY) {
-        this.font.draw(stack, this.title.plainCopy().append(this.menu.tileEntity.status.getMessage()), (float) this.titleLabelX, (float) this.titleLabelY, 0x404040);
+        this.font.draw(stack, this.title.plainCopy().append(String.format(" (Status: %s)", this.menu.tileEntity.status.getMessage())), (float) this.titleLabelX, (float) this.titleLabelY, 0x404040);
         this.font.draw(stack, this.inventory.getDisplayName(), (float) this.inventoryLabelX, (float) this.inventoryLabelY, 0x404040);
     }
 }

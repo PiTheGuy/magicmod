@@ -1,5 +1,6 @@
 package com.pitheguy.magicmod.tileentity;
 
+import com.pitheguy.magicmod.MagicMod;
 import com.pitheguy.magicmod.container.MagicMinerContainer;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import net.minecraft.block.BlockState;
@@ -37,6 +38,7 @@ public class MagicMinerTileEntity extends AutoActionTileEntity implements ITicka
 
     @Override
     protected boolean canMineBlock(BlockState blockState) {
+        //if(!blockState.isAir()) MagicMod.LOGGER.info("Block {} has tool type of {}", blockState.getBlock(), blockState.getHarvestTool().getName());
         return blockState.getHarvestTool() == ToolType.PICKAXE || blockState.getHarvestTool() == ToolType.SHOVEL;
     }
 }
