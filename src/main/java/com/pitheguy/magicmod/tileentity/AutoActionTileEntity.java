@@ -44,14 +44,24 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
     @Nullable public MagicEnergizerTileEntity fuelSourceTileEntity = null;
     public int mineCooldown = 60;
     public static final int BASE_TICKS_PER_MINE = 60;
-    public static final int BASE_RANGE = 5;
+    public final int baseRange;
+    public final int rangeIncreaseWithUpgrade;
+    public final int rangeIncreaseWithObsidianPlatedUpgrade;
     public int ticksPerMine = BASE_TICKS_PER_MINE;
-    public int range = BASE_RANGE;
+    public int range;
+    protected final int direction;
+    protected final boolean invertedDirection;
     @Nullable protected Block filterBlock;
 
-    public AutoActionTileEntity(TileEntityType<?> tileEntityTypeIn) {
+    public AutoActionTileEntity(TileEntityType<?> tileEntityTypeIn, int baseRange, int rangeIncreaseWithUpgrade, int rangeIncreaseWithObsidianPlatedUpgrade, MineableArea mineableArea) {
         super(tileEntityTypeIn);
+        this.baseRange = baseRange;
+        this.range = this.baseRange;
+        this.rangeIncreaseWithUpgrade = rangeIncreaseWithUpgrade;
+        this.rangeIncreaseWithObsidianPlatedUpgrade = rangeIncreaseWithObsidianPlatedUpgrade;
         this.inventory = new ModItemHandler(38);
+        this.direction = mineableArea.getDirection();
+        this.invertedDirection = direction >= 0;
     }
 
     @Override
@@ -188,10 +198,10 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
 
     @Nullable private BlockPos findMineableBlock() {
         if (this.level == null) return null;
-        for (int y = 1; y <= this.worldPosition.getY(); y++) {
+        for (int y = invertedDirection ? 0 : 1; y <= (invertedDirection ? this.level.getMaxBuildHeight() - this.worldPosition.getY() : this.worldPosition.getY()); y++) {
             for (int x = -range; x <= range; x++) {
                 for (int z = -range; z <= range; z++) {
-                    BlockPos pos = this.worldPosition.offset(x, -y, z);
+                    BlockPos pos = this.worldPosition.offset(x, y * direction, z);
                     IBlockReader reader = this.level.getChunkForCollisions(this.level.getChunkAt(pos).getPos().x, this.level.getChunkAt(pos).getPos().z);
                     BlockState state = this.level.getBlockState(pos);
                     //printNullReasons(pos, reader, state);
@@ -239,12 +249,12 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
     public void updateUpgrades() {
         int oldMineSpeed = this.ticksPerMine;
         this.ticksPerMine = BASE_TICKS_PER_MINE;
-        this.range = BASE_RANGE;
+        this.range = baseRange;
         for (int i = 36; i <= 37; i++) {
             if (this.inventory.getStackInSlot(i).getItem() == RegistryHandler.SPEED_UPGRADE.get()) this.ticksPerMine /= 2.0;
             else if (this.inventory.getStackInSlot(i).getItem() == RegistryHandler.OBSIDIAN_PLATED_SPEED_UPGRADE.get()) this.ticksPerMine /= 3.8;
-            else if (this.inventory.getStackInSlot(i).getItem() == RegistryHandler.RANGE_UPGRADE.get()) this.range++;
-            else if (this.inventory.getStackInSlot(i).getItem() == RegistryHandler.OBSIDIAN_PLATED_RANGE_UPGRADE.get()) this.range += 2;
+            else if (this.inventory.getStackInSlot(i).getItem() == RegistryHandler.RANGE_UPGRADE.get()) this.range += this.rangeIncreaseWithUpgrade;
+            else if (this.inventory.getStackInSlot(i).getItem() == RegistryHandler.OBSIDIAN_PLATED_RANGE_UPGRADE.get()) this.range += this.rangeIncreaseWithObsidianPlatedUpgrade;
         }
         this.filterBlock = IntStream.rangeClosed(36, 37).mapToObj(this.inventory::getStackInSlot).filter(stack -> stack.getItem() == RegistryHandler.FILTER_UPGRADE.get() && stack.hasTag() && stack.getTag().contains("Filter")).findFirst().map(stack -> NBTUtil.readBlockState(stack.getTag().getCompound("Filter")).getBlock()).orElse(null);
         if (this.ticksPerMine != oldMineSpeed) {
@@ -269,6 +279,21 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
         }
         public boolean isRunning() {
             return this.running;
+        }
+    }
+
+    public enum MineableArea {
+        ABOVE(1),
+        BELOW(-1);
+
+        final int direction;
+
+        MineableArea(int direction) {
+            this.direction = direction;
+        }
+
+        public int getDirection() {
+            return this.direction;
         }
     }
 }

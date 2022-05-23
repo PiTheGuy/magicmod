@@ -1,43 +1,42 @@
 package com.pitheguy.magicmod.tileentity;
 
-import com.pitheguy.magicmod.container.MagicMinerContainer;
+import com.pitheguy.magicmod.container.MagicLoggerContainer;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
 
-public class MagicMinerTileEntity extends AutoActionTileEntity implements ITickableTileEntity, INamedContainerProvider {
+public class MagicLoggerTileEntity extends AutoActionTileEntity implements ITickableTileEntity, INamedContainerProvider {
 
-    public MagicMinerTileEntity(TileEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn, 5, 1, 2, MineableArea.BELOW);
+    public MagicLoggerTileEntity(TileEntityType<?> tileEntityTypeIn) {
+        super(tileEntityTypeIn, 15, 2, 4, MineableArea.ABOVE);
     }
 
-    public MagicMinerTileEntity() {
-        this(ModTileEntityTypes.MAGIC_MINER.get());
+    public MagicLoggerTileEntity() {
+        this(ModTileEntityTypes.MAGIC_LOGGER.get());
     }
 
     @Nullable
     @Override
     public Container createMenu(final int windowId, final PlayerInventory playerInv, final PlayerEntity playerIn) {
-        return new MagicMinerContainer(windowId, playerInv, this);
+        return new MagicLoggerContainer(windowId, playerInv, this);
     }
 
     protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent("container.magicmod.magic_miner");
+        return new TranslationTextComponent("container.magicmod.magic_logger");
     }
 
     @Override
     protected boolean canMineBlock(BlockState blockState) {
-        //if(!blockState.isAir()) MagicMod.LOGGER.info("Block {} has tool type of {}", blockState.getBlock(), blockState.getHarvestTool().getName());
-        return blockState.getHarvestTool() == ToolType.PICKAXE || blockState.getHarvestTool() == ToolType.SHOVEL;
+        return blockState.getBlock().is(BlockTags.LOGS);
     }
 }

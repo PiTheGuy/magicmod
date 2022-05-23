@@ -69,6 +69,7 @@ public class MagicMod
         ScreenManager.register(ModContainerTypes.MAGIC_PRESS.get(), MagicPressScreen::new);
         ScreenManager.register(ModContainerTypes.MAGIC_ENERGIZER.get(), MagicEnergizerScreen::new);
         ScreenManager.register(ModContainerTypes.MAGIC_MINER.get(), MagicMinerScreen::new);
+        ScreenManager.register(ModContainerTypes.MAGIC_LOGGER.get(), MagicLoggerScreen::new);
         RenderTypeLookup.setRenderLayer(RegistryHandler.MAGIC_VEIN.get(), RenderType.cutout());
         RenderTypeLookup.setRenderLayer(RegistryHandler.MAGIC_WEB.get(), RenderType.cutout());
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.MAGIC_FRIEND.get(), MagicFriendRender::new);

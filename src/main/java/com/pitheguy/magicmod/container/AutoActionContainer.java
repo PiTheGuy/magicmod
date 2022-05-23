@@ -8,6 +8,7 @@ import com.pitheguy.magicmod.util.FunctionalIntReferenceHolder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
@@ -21,8 +22,8 @@ public abstract class AutoActionContainer<T extends AutoActionTileEntity> extend
     public FunctionalIntReferenceHolder mineCooldown;
 
     //Server constructor
-    public AutoActionContainer(final int windowID, final PlayerInventory playerInv, final T tile) {
-        super(ModContainerTypes.MAGIC_MINER.get(), windowID);
+    public AutoActionContainer(final int windowID, final PlayerInventory playerInv, final T tile, ContainerType<?> containerType) {
+        super(containerType, windowID);
         this.tileEntity = tile;
 
         //Upgrade Slots
@@ -31,7 +32,7 @@ public abstract class AutoActionContainer<T extends AutoActionTileEntity> extend
         this.canInteractWithCallable = IWorldPosCallable.create(tile.getLevel(), tile.getBlockPos());
         final int slotSizePlus2 = 18;
         final int startX = 8;
-        //Magic Miner Inventory
+        //Inventory
         int startY = 18;
         for (int row = 0; row < 4; row++) {
             for (int column = 0; column < 9; column++) {

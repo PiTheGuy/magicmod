@@ -172,6 +172,7 @@ public class RegistryHandler {
     public static final RegistryObject<Block> MAGIC_PRESS = BLOCKS.register("magic_press", MagicPress::new);
     public static final RegistryObject<Block> MAGIC_ENERGIZER = BLOCKS.register("magic_energizer", MagicEnergizer::new);
     public static final RegistryObject<Block> MAGIC_MINER = BLOCKS.register("magic_miner", MagicMiner::new);
+    public static final RegistryObject<Block> MAGIC_LOGGER = BLOCKS.register("magic_logger", MagicLogger::new);
 
     //Magic Lamps
     public static final RegistryObject<Block> MAGIC_LAMP_RED = BLOCKS.register("magic_lamp_red", MagicLamp::new);
@@ -200,6 +201,7 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_PRESS_ITEM = ITEMS.register("magic_press", () -> new BlockItemBase(MAGIC_PRESS.get()));
     public static final RegistryObject<Item> MAGIC_ENERGIZER_ITEM = ITEMS.register("magic_energizer", () -> new BlockItemBase(MAGIC_ENERGIZER.get()));
     public static final RegistryObject<Item> MAGIC_MINER_ITEM = ITEMS.register("magic_miner", () -> new BlockItemBase(MAGIC_MINER.get()));
+    public static final RegistryObject<Item> MAGIC_LOGGER_ITEM = ITEMS.register("magic_logger", () -> new BlockItemBase(MAGIC_LOGGER.get()));
 
     //Magic Lamps
     public static final RegistryObject<Item> MAGIC_LAMP_RED_ITEM = ITEMS.register("magic_lamp_red", () -> new BlockItemBase(MAGIC_LAMP_RED.get()));
