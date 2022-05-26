@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "magicmod:magic_ore",
+    "magicmod:magic_obsidian",
+    "magicmod:magic_block",
+    "magicmod:magic_slab",
+    "magicmod:magic_glue_block",
+    "magicmod:magic_vein",
+    "magicmod:magic_spike",
+    "magicmod:magic_infuser",
+    "magicmod:magic_crate",
+    "magicmod:magic_press",
+    "magicmod:magic_energizer",
+    "magicmod:magic_miner",
+    "magicmod:magic_logger"
+  ]
+
+}

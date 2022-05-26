@@ -22,7 +22,9 @@
       "conditions": {
         "items": [
           {
-            "item": "magicmod:magic_orb_red"
+            "items": [
+              "magicmod:magic_orb_red"
+            ]
           }
         ]
       }
@@ -32,7 +34,9 @@
       "conditions": {
         "items": [
           {
-            "item": "magicmod:magic_orb_orange"
+            "items": [
+              "magicmod:magic_orb_orange"
+            ]
           }
         ]
       }
@@ -42,7 +46,9 @@
       "conditions": {
         "items": [
           {
-            "item": "magicmod:magic_orb_yellow"
+            "items": [
+              "magicmod:magic_orb_yellow"
+            ]
           }
         ]
       }
@@ -52,7 +58,9 @@
       "conditions": {
         "items": [
           {
-            "item": "magicmod:magic_orb_green"
+            "items": [
+              "magicmod:magic_orb_green"
+            ]
           }
         ]
       }
@@ -62,7 +70,9 @@
       "conditions": {
         "items": [
           {
-            "item": "magicmod:magic_orb_blue"
+            "items": [
+              "magicmod:magic_orb_blue"
+            ]
           }
         ]
       }
@@ -72,7 +82,9 @@
       "conditions": {
         "items": [
           {
-            "item": "magicmod:magic_orb_purple"
+            "items": [
+              "magicmod:magic_orb_purple"
+            ]
           }
         ]
       }
@@ -82,7 +94,9 @@
       "conditions": {
         "items": [
           {
-            "item": "magicmod:magic_orb_magenta"
+            "items": [
+              "magicmod:magic_orb_magenta"
+            ]
           }
         ]
       }
@@ -92,7 +106,9 @@
       "conditions": {
         "items": [
           {
-            "item": "magicmod:magic_orb_black"
+            "items": [
+              "magicmod:magic_orb_black"
+            ]
           }
         ]
       }
@@ -102,7 +118,9 @@
       "conditions": {
         "items": [
           {
-            "item": "magicmod:magic_orb_white"
+            "item": [
+              "magicmod:magic_orb_white"
+            ]
           }
         ]
       }

@@ -1,24 +1,28 @@
-package com.pitheguy.magicmod.tileentity;
+package com.pitheguy.magicmod.blockentity;
 
 import com.pitheguy.magicmod.blocks.MagicCrate;
 import com.pitheguy.magicmod.container.MagicCrateContainer;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.LockableLootTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -27,18 +31,18 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 
 import javax.annotation.Nonnull;
 
-public class MagicCrateTileEntity extends LockableLootTileEntity {
+public class MagicCrateBlockEntity extends RandomizableContainerBlockEntity {
     private NonNullList<ItemStack> crateContents = NonNullList.withSize(88, ItemStack.EMPTY);
     protected int openCount;
     private final IItemHandlerModifiable items = createHandler();
     private LazyOptional<IItemHandlerModifiable> itemHandler = LazyOptional.of(() -> items);
 
-    public MagicCrateTileEntity(TileEntityType<?> typeIn) {
-        super(typeIn);
+    public MagicCrateBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+        super(typeIn, pos, state);
     }
 
-    public MagicCrateTileEntity() {
-        this(ModTileEntityTypes.MAGIC_CRATE.get());
+    public MagicCrateBlockEntity(BlockPos pos, BlockState state) {
+        this(ModTileEntityTypes.MAGIC_CRATE.get(), pos, state);
     }
 
     @Override
@@ -57,30 +61,30 @@ public class MagicCrateTileEntity extends LockableLootTileEntity {
     }
 
     @Override
-    protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent("container.magicmod.magic_crate");
+    protected Component getDefaultName() {
+        return new TranslatableComponent("container.magicmod.magic_crate");
     }
 
     @Override
-    protected Container createMenu(int id, PlayerInventory player) {
+    protected AbstractContainerMenu createMenu(int id, Inventory player) {
         return new MagicCrateContainer(id, player, this);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
         if (!this.trySaveLootTable(compound)) {
-            ItemStackHelper.saveAllItems(compound, this.crateContents);
+            ContainerHelper.saveAllItems(compound, this.crateContents);
         }
         return compound;
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         this.crateContents = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         if (!this.tryLoadLootTable(compound)) {
-            ItemStackHelper.loadAllItems(compound, this.crateContents);
+            ContainerHelper.loadAllItems(compound, this.crateContents);
         }
     }
 
@@ -88,7 +92,7 @@ public class MagicCrateTileEntity extends LockableLootTileEntity {
         double dx = (double) this.worldPosition.getX() + 0.5D;
         double dy = (double) this.worldPosition.getY() + 0.5D;
         double dz = (double) this.worldPosition.getZ() + 0.5D;
-        this.level.playSound(null, dx, dy, dz, sound, SoundCategory.BLOCKS, 0.5f,
+        this.level.playSound(null, dx, dy, dz, sound, SoundSource.BLOCKS, 0.5f,
                 this.level.getRandom().nextFloat() * 0.1f + 0.9f);
     }
 
@@ -103,7 +107,7 @@ public class MagicCrateTileEntity extends LockableLootTileEntity {
     }
 
     @Override
-    public void startOpen(PlayerEntity player) {
+    public void startOpen(Player player) {
         if (!player.isSpectator()) {
             if (this.openCount < 0) {
                 this.openCount = 0;
@@ -116,7 +120,7 @@ public class MagicCrateTileEntity extends LockableLootTileEntity {
     }
 
     @Override
-    public void stopOpen(PlayerEntity player) {
+    public void stopOpen(Player player) {
         if (!player.isSpectator()) {
             --this.openCount;
             this.signalOpenCount();
@@ -132,18 +136,18 @@ public class MagicCrateTileEntity extends LockableLootTileEntity {
         }
     }
 
-    public static int getOpenCount(IBlockReader reader, BlockPos pos) {
+    public static int getOpenCount(BlockGetter reader, BlockPos pos) {
         BlockState blockstate = reader.getBlockState(pos);
-        if (blockstate.hasTileEntity()) {
-            TileEntity tileentity = reader.getBlockEntity(pos);
-            if (tileentity instanceof MagicCrateTileEntity) {
-                return ((MagicCrateTileEntity) tileentity).openCount;
+        if (blockstate.hasBlockEntity()) {
+            BlockEntity blockEntity = reader.getBlockEntity(pos);
+            if (blockEntity instanceof MagicCrateBlockEntity) {
+                return ((MagicCrateBlockEntity) blockEntity).openCount;
             }
         }
         return 0;
     }
 
-    public static void swapContents(MagicCrateTileEntity te, MagicCrateTileEntity otherTe) {
+    public static void swapContents(MagicCrateBlockEntity te, MagicCrateBlockEntity otherTe) {
         NonNullList<ItemStack> list = te.getItems();
         te.setItems(otherTe.getItems());
         otherTe.setItems(list);
@@ -177,5 +181,4 @@ public class MagicCrateTileEntity extends LockableLootTileEntity {
             itemHandler.invalidate();
         }
     }
-
 }

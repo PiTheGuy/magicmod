@@ -1,9 +1,9 @@
 package com.pitheguy.magicmod.container.itemhandlers;
 
 import com.pitheguy.magicmod.items.UpgradeItem;
-import com.pitheguy.magicmod.tileentity.AutoActionTileEntity;
+import com.pitheguy.magicmod.blockentity.AutoActionBlockEntity;
 import com.pitheguy.magicmod.util.RegistryHandler;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.SlotItemHandler;
@@ -12,8 +12,8 @@ import javax.annotation.Nonnull;
 import java.util.stream.IntStream;
 
 public class UpgradeSlotItemHandler extends SlotItemHandler {
-    private final AutoActionTileEntity tileEntity;
-    public UpgradeSlotItemHandler(IItemHandler itemHandler, int index, int xPosition, int yPosition, AutoActionTileEntity tileEntity) {
+    private final AutoActionBlockEntity tileEntity;
+    public UpgradeSlotItemHandler(IItemHandler itemHandler, int index, int xPosition, int yPosition, AutoActionBlockEntity tileEntity) {
         super(itemHandler, index, xPosition, yPosition);
         this.tileEntity = tileEntity;
     }

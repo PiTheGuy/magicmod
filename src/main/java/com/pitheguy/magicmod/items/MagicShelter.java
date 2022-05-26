@@ -2,23 +2,25 @@ package com.pitheguy.magicmod.items;
 
 import com.google.common.collect.ImmutableMap;
 import com.pitheguy.magicmod.MagicMod;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.tileentity.LockableLootTileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import org.lwjgl.system.CallbackI;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.chunk.LevelChunk;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,16 +59,16 @@ public class MagicShelter extends Item {
     }
 
     @Override
-    public ActionResultType useOn(ItemUseContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         boolean placedBlock = false;
         BlockPos pos = new BlockPos(context.getPlayer().getPosition(0).add(0,-1,0));
         if (!hasEnoughSpace(context.getPlayer(), context.getLevel())) {
-            context.getPlayer().displayClientMessage(new StringTextComponent("Not enough space!").withStyle(TextFormatting.RED), true);
-            return ActionResultType.FAIL;
+            context.getPlayer().displayClientMessage(new TextComponent("Not enough space!").withStyle(ChatFormatting.RED), true);
+            return InteractionResult.FAIL;
         }
         if (!hasGroundUnderneath(context.getPlayer(), context.getLevel())) {
-            context.getPlayer().displayClientMessage(new StringTextComponent("Not enough ground to place!").withStyle(TextFormatting.RED), true);
-            return ActionResultType.FAIL;
+            context.getPlayer().displayClientMessage(new TextComponent("Not enough ground to place!").withStyle(ChatFormatting.RED), true);
+            return InteractionResult.FAIL;
         }
         for (int x = -2; x <= 2; x++) {
             for (int y = 0; y < STRUCTURE_1.length; y++) {
@@ -74,12 +76,12 @@ public class MagicShelter extends Item {
                     String key = STRUCTURE_1[y][z + 2].substring(x + 2, x + 3);
                     if (key.equals("M")) rerollRandomBlocks();
                     BlockState blockState = BLOCK_KEY.get(key);
-                    BlockPos placePos = new BlockPos(Vector3d.atCenterOf(pos).add(x, y + 1, z));
+                    BlockPos placePos = pos.offset(x, y + 1, z);
                     if (blockState != null && context.getLevel().getBlockState(placePos).isAir()) {
                         context.getLevel().setBlock(placePos, blockState, 0);
                         if (key.equals("C")) {
-                            Chunk chunk = context.getLevel().getChunkAt(placePos);
-                            LockableLootTileEntity.setLootTable(context.getLevel().getChunkForCollisions(chunk.getPos().x, chunk.getPos().z), new Random(), placePos, new ResourceLocation("magicmod", "chests/magic_shelter_chest"));
+                            LevelChunk chunk = context.getLevel().getChunkAt(placePos);
+                            RandomizableContainerBlockEntity.setLootTable(context.getLevel().getChunkForCollisions(chunk.getPos().x, chunk.getPos().z), new Random(), placePos, new ResourceLocation("magicmod", "chests/magic_shelter_chest"));
                         }
                         placedBlock = true;
                     }
@@ -87,20 +89,20 @@ public class MagicShelter extends Item {
             }
         }
         if (placedBlock) {
-            context.getLevel().playSound(context.getPlayer(), pos.getX(), pos.getY(), pos.getZ(), SoundEvents.STONE_PLACE, SoundCategory.BLOCKS, 1, context.getLevel().getRandom().nextFloat() * 0.1f + 0.9f);
-            if (!context.getPlayer().abilities.instabuild) {
+            context.getLevel().playSound(context.getPlayer(), pos.getX(), pos.getY(), pos.getZ(), SoundEvents.STONE_PLACE, SoundSource.BLOCKS, 1, context.getLevel().getRandom().nextFloat() * 0.1f + 0.9f);
+            if (!context.getPlayer().getAbilities().instabuild) {
                 context.getPlayer().getItemInHand(context.getHand()).shrink(1);
             }
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
-    private boolean hasGroundUnderneath(PlayerEntity player, World world) {
+    private boolean hasGroundUnderneath(Player player, Level world) {
         return IntStream.rangeClosed(-1, 1).noneMatch(x -> IntStream.rangeClosed(-1, 1).anyMatch(z -> world.getBlockState(new BlockPos(player.getPosition(0).add(x, -2, z))).isAir()));
     }
 
-    private boolean hasEnoughSpace(PlayerEntity player, World world) {
+    private boolean hasEnoughSpace(Player player, Level world) {
         for (int x = -2; x <= 2; x++) {
             for (int y = 0; y < STRUCTURE_1.length; y++) {
                 for (int z = -2; z <= 2; z++) {

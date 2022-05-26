@@ -1,69 +1,28 @@
 package com.pitheguy.magicmod.tools;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.HoeItem;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class ObsidianPlatedReinforcedMagicHoe extends HoeItem {
-    public ObsidianPlatedReinforcedMagicHoe(IItemTier tier, int attackDamage, float attackSpeedIn, Properties builder) {
-        super(tier, attackDamage, attackSpeedIn, builder);
+public class ObsidianPlatedReinforcedMagicHoe extends ReinforcedMagicHoe {
+    public ObsidianPlatedReinforcedMagicHoe(Tier tier, int attackDamage, float attackSpeedIn, Properties builder, int abilityRange) {
+        super(tier, attackDamage, attackSpeedIn, builder, abilityRange);
     }
 
-    @Override
-    public ActionResultType useOn(ItemUseContext context) {
-        World world = context.getLevel();
-        BlockPos blockpos = context.getClickedPos();
-        int hook = ForgeEventFactory.onHoeUse(context);
-        if (hook != 0) return hook > 0 ? ActionResultType.SUCCESS : ActionResultType.FAIL;
-        BlockState blockstate = TILLABLES.get(world.getBlockState(blockpos).getBlock());
-        if (context.getClickedFace() != Direction.DOWN && blockstate != null && world.getBlockState(blockpos.above()).isAir()) {
-            int blocksTilled = 0;
-            for (int tillX = -5; tillX <= 5; tillX++) {
-                for (int tillZ = -5; tillZ <= 5; tillZ++) {
-                    BlockPos tillpos = blockpos.offset(tillX,0,tillZ);
-                    blockstate = TILLABLES.get(world.getBlockState(tillpos).getBlock());
-                    if (blockstate != null && world.getBlockState(tillpos.above()).isAir()) {
-                        PlayerEntity playerentity = context.getPlayer();
-                        world.playSound(playerentity, tillpos, SoundEvents.HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                        if (!world.isClientSide) {
-                            world.setBlock(tillpos, blockstate, 11);
-                            blocksTilled++;
-                            if (playerentity != null && blocksTilled == 1) {
-                                context.getItemInHand().hurtAndBreak(1, playerentity, (p_220043_1_) -> p_220043_1_.broadcastBreakEvent(context.getHand()));
-                            }
-                        }
-                    }
-                }
-            }
-            if (blocksTilled > 0) {
-                return ActionResultType.SUCCESS;
-            }
-        }
-
-        return ActionResultType.PASS;
-    }
     private static final List<Block> CROP_BLOCKS_AGE_7 = Arrays.asList(Blocks.WHEAT, Blocks.CARROTS, Blocks.POTATOES);
     private static final List<Block> CROP_BLOCKS_AGE_3 = Arrays.asList(Blocks.BEETROOTS, Blocks.NETHER_WART);
 
     @Override
-    public boolean mineBlock(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
+    public boolean mineBlock(ItemStack stack, Level worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
         for (int x = -3; x <= 3; x++) {
             for (int z = -3; z <= 3; z++) {
                 BlockState currBlock = worldIn.getBlockState(pos.offset(x, 0, z));

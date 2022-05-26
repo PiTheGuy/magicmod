@@ -1,17 +1,17 @@
 package com.pitheguy.magicmod.armor;
 
 import com.pitheguy.magicmod.util.RegistryHandler;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.Supplier;
 
-public enum ModArmorMaterials implements IArmorMaterial {
+public enum ModArmorMaterials implements ArmorMaterial {
 
     MAGIC("magicmod:magic", 1200, new int[] {50,105,125,50}, 40, SoundEvents.ARMOR_EQUIP_DIAMOND, 20, 0, () -> Ingredient.of(RegistryHandler.MAGIC_GEM.get())),
     REINFORCED_MAGIC("magicmod:reinforced_magic", 7500, new int[] {120,225,275,120}, 60, SoundEvents.ARMOR_EQUIP_DIAMOND, 75, 0, () -> Ingredient.of(RegistryHandler.MAGIC_GEM.get())),
@@ -39,12 +39,12 @@ public enum ModArmorMaterials implements IArmorMaterial {
     }
 
     @Override
-    public int getDurabilityForSlot(EquipmentSlotType slotIn) {
+    public int getDurabilityForSlot(EquipmentSlot slotIn) {
         return MAX_DAMAGE_ARRAY[slotIn.getIndex()] * maxDamageFactor;
     }
 
     @Override
-    public int getDefenseForSlot(EquipmentSlotType slotIn) {
+    public int getDefenseForSlot(EquipmentSlot slotIn) {
         return damageReductionAmountArray[slotIn.getIndex()];
     }
 

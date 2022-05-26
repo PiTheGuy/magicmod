@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "item": "magicmod:reinforced_magic_helmet"
+            "items": [
+              "magicmod:reinforced_magic_helmet"
+            ]
           }
         ]
       }
@@ -27,7 +29,9 @@
       "conditions": {
         "items": [
           {
-            "item": "magicmod:reinforced_magic_chestplate"
+            "items": [
+              "magicmod:reinforced_magic_chestplate"
+            ]
           }
         ]
       }
@@ -37,7 +41,9 @@
       "conditions": {
         "items": [
           {
-            "item": "magicmod:reinforced_magic_leggings"
+            "items": [
+              "magicmod:reinforced_magic_leggings"
+            ]
           }
         ]
       }
@@ -47,7 +53,9 @@
       "conditions": {
         "items": [
           {
-            "item": "magicmod:reinforced_magic_boots"
+            "items": [
+              "magicmod:reinforced_magic_boots"
+            ]
           }
         ]
       }

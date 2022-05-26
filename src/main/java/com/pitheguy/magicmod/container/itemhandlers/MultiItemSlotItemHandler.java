@@ -1,11 +1,11 @@
 package com.pitheguy.magicmod.container.itemhandlers;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class MultiItemSlotItemHandler extends SlotItemHandler {
@@ -16,7 +16,7 @@ public class MultiItemSlotItemHandler extends SlotItemHandler {
     }
 
     @Override
-    public boolean mayPlace(@NotNull ItemStack stack) {
+    public boolean mayPlace(@Nonnull ItemStack stack) {
         return validItem.contains(stack.getItem()) && super.mayPlace(stack);
     }
 }

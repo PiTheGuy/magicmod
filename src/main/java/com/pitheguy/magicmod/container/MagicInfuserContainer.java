@@ -2,29 +2,29 @@ package com.pitheguy.magicmod.container;
 
 import com.pitheguy.magicmod.container.itemhandlers.SingleItemSlotItemHandler;
 import com.pitheguy.magicmod.init.ModContainerTypes;
-import com.pitheguy.magicmod.tileentity.MagicInfuserTileEntity;
+import com.pitheguy.magicmod.blockentity.MagicInfuserBlockEntity;
 import com.pitheguy.magicmod.util.RegistryHandler;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class MagicInfuserContainer extends Container {
+public class MagicInfuserContainer extends AbstractContainerMenu {
 
-    private final IWorldPosCallable canInteractWithCallable;
+    private final ContainerLevelAccess canInteractWithCallable;
 
     //Server constructor
-    public MagicInfuserContainer(final int windowID, final PlayerInventory playerInv, final MagicInfuserTileEntity tile) {
+    public MagicInfuserContainer(final int windowID, final Inventory playerInv, final MagicInfuserBlockEntity tile) {
         super(ModContainerTypes.MAGIC_INFUSER.get(), windowID);
-        this.canInteractWithCallable = IWorldPosCallable.create(tile.getLevel(), tile.getBlockPos());
+        this.canInteractWithCallable = ContainerLevelAccess.create(tile.getLevel(), tile.getBlockPos());
 
         final int slotSizePlus2 = 18;
         final int startX = 8;
@@ -51,35 +51,35 @@ public class MagicInfuserContainer extends Container {
 
     }
     //Client constructor
-    public MagicInfuserContainer(final int windowID, final PlayerInventory playerInv, final PacketBuffer data) {
+    public MagicInfuserContainer(final int windowID, final Inventory playerInv, final FriendlyByteBuf data) {
         this(windowID, playerInv, getTileEntity(playerInv, data));
     }
 
-    private static MagicInfuserTileEntity getTileEntity(final PlayerInventory playerInv, final PacketBuffer data) {
+    private static MagicInfuserBlockEntity getTileEntity(final Inventory playerInv, final FriendlyByteBuf data) {
         Objects.requireNonNull(playerInv, "playerInv cannot be null");
         Objects.requireNonNull(data, "data cannot be null");
-        final TileEntity tileAtPos = playerInv.player.level.getBlockEntity(data.readBlockPos());
-        if (tileAtPos instanceof MagicInfuserTileEntity) {
-            return (MagicInfuserTileEntity) tileAtPos;
+        final BlockEntity tileAtPos = playerInv.player.level.getBlockEntity(data.readBlockPos());
+        if (tileAtPos instanceof MagicInfuserBlockEntity) {
+            return (MagicInfuserBlockEntity) tileAtPos;
         }
         throw new IllegalStateException("TileEntity is not correct " + tileAtPos);
     }
 
     @Override
-    public boolean stillValid(PlayerEntity playerIn) {
+    public boolean stillValid(Player playerIn) {
         return stillValid(canInteractWithCallable, playerIn, RegistryHandler.MAGIC_INFUSER.get());
     }
 
     @Nonnull
     @Override
-    public ItemStack quickMoveStack(final PlayerEntity player, final int index) {
+    public ItemStack quickMoveStack(final Player player, final int index) {
         ItemStack returnStack = ItemStack.EMPTY;
         final Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {
             final ItemStack slotStack = slot.getItem();
             returnStack = slotStack.copy();
 
-            final int containerSlots = this.slots.size() - player.inventory.items.size();
+            final int containerSlots = this.slots.size() - player.getInventory().items.size();
             if (index < containerSlots) {
                 if (!moveItemStackTo(slotStack, containerSlots, this.slots.size(), true)) {
                     return ItemStack.EMPTY;

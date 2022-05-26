@@ -1,32 +1,31 @@
-package com.pitheguy.magicmod.tileentity;
+package com.pitheguy.magicmod.blockentity;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.pitheguy.magicmod.MagicMod;
 import com.pitheguy.magicmod.util.ModItemHandler;
 import com.pitheguy.magicmod.util.RegistryHandler;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.Connection;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -37,11 +36,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public abstract class AutoActionTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
+public abstract class AutoActionBlockEntity extends BlockEntity implements MenuProvider {
     public static final List<Block> MINE_BLACKLIST = Arrays.asList(Blocks.LAVA, Blocks.WATER);
     protected final ModItemHandler inventory;
     public volatile Status status;
-    @Nullable public MagicEnergizerTileEntity fuelSourceTileEntity = null;
+    @Nullable public MagicEnergizerBlockEntity fuelSourceTileEntity = null;
     public int mineCooldown = 60;
     public static final int BASE_TICKS_PER_MINE = 60;
     public final int baseRange;
@@ -53,8 +52,8 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
     protected final boolean invertedDirection;
     @Nullable protected Block filterBlock;
 
-    public AutoActionTileEntity(TileEntityType<?> tileEntityTypeIn, int baseRange, int rangeIncreaseWithUpgrade, int rangeIncreaseWithObsidianPlatedUpgrade, MineableArea mineableArea) {
-        super(tileEntityTypeIn);
+    public AutoActionBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state, int baseRange, int rangeIncreaseWithUpgrade, int rangeIncreaseWithObsidianPlatedUpgrade, MineableArea mineableArea) {
+        super(tileEntityTypeIn, pos, state);
         this.baseRange = baseRange;
         this.range = this.baseRange;
         this.rangeIncreaseWithUpgrade = rangeIncreaseWithUpgrade;
@@ -65,18 +64,18 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         NonNullList<ItemStack> inv = NonNullList.withSize(this.inventory.getSlots(), ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(compound, inv);
+        ContainerHelper.loadAllItems(compound, inv);
         this.inventory.setNonNullList(inv);
         this.mineCooldown = compound.getInt("mineCooldown");
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         super.save(compound);
-        ItemStackHelper.saveAllItems(compound, this.inventory.toNonNullList());
+        ContainerHelper.saveAllItems(compound, this.inventory.toNonNullList());
         compound.putInt("mineCooldown", this.mineCooldown);
         compound.putString("status", this.getStatus()); //For debugging
         return compound;
@@ -88,22 +87,27 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
 
     @Nullable
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        CompoundNBT nbt = new CompoundNBT();
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        CompoundTag nbt = new CompoundTag();
         this.save(nbt);
-        return new SUpdateTileEntityPacket(this.worldPosition, 0, nbt);
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, nbt);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.load(this.level.getBlockState(pkt.getPos()), pkt.getTag());
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        this.load(pkt.getTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT nbt = new CompoundNBT();
+    public CompoundTag getUpdateTag() {
+        CompoundTag nbt = new CompoundTag();
         this.save(nbt);
         return nbt;
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag) {
+        this.load(tag);
     }
 
     @Override
@@ -112,38 +116,36 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
     }
 
     @Nullable
-    @Override
-    public abstract Container createMenu(final int windowId, final PlayerInventory playerInv, final PlayerEntity playerIn);
-    
-    @Override
-    public void tick() {
+    public abstract AbstractContainerMenu createMenu(final int windowId, final Inventory playerInv, final Player playerIn);
+
+    public static void serverTick(Level level, BlockPos pos, BlockState state, AutoActionBlockEntity tile) {
         boolean dirty = false;
-        if (this.status != Status.INVENTORY_FULL || this.hasInventorySpace()) {
-            this.updateStatus();
-            this.updateUpgrades();
-            if (level != null && !level.isClientSide && this.status.isRunning() && mineCooldown <= 0) {
-                BlockPos minePos = this.findMineableBlock();
+        if (tile.status != Status.INVENTORY_FULL || tile.hasInventorySpace()) {
+            tile.updateStatus();
+            tile.updateUpgrades();
+            if (level != null && !level.isClientSide && tile.status.isRunning() && tile.mineCooldown <= 0) {
+                BlockPos minePos = tile.findMineableBlock();
                 if (minePos != null) {
-                    List<ItemStack> drops = Block.getDrops(level.getBlockState(minePos), (ServerWorld) level, minePos, level.getBlockEntity(minePos));
-                    drops.stream().filter(drop -> !drop.isEmpty()).forEach(this::addItemToInventory);
+                    List<ItemStack> drops = Block.getDrops(level.getBlockState(minePos), (ServerLevel) level, minePos, level.getBlockEntity(minePos));
+                    drops.stream().filter(drop -> !drop.isEmpty()).forEach(tile::addItemToInventory);
                     level.destroyBlock(minePos, false);
-                    mineCooldown = ticksPerMine;
+                    tile.mineCooldown = tile.ticksPerMine;
                     dirty = true;
                 }
             }
-            if (this.status.isRunning() && mineCooldown > 0) mineCooldown--;
-            if (dirty) this.setChanged();
+            if (tile.status.isRunning() && tile.mineCooldown > 0) tile.mineCooldown--;
+            if (dirty) tile.setChanged();
         }
     }
 
-    public ITextComponent getName() {
+    public Component getName() {
         return this.getDefaultName();
     }
 
-    protected abstract ITextComponent getDefaultName();
+    protected abstract Component getDefaultName();
 
     @Override
-    public ITextComponent getDisplayName() {
+    public Component getDisplayName() {
         return this.getName();
     }
 
@@ -158,8 +160,8 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
             for (int y = -4; y <= 4; y++) {
                 for (int z = -4; z <= 4; z++) {
                     double distance = Math.sqrt(x * x + y * y + z * z);
-                    if (this.getLevel().getBlockState(new BlockPos(Vector3d.atCenterOf(this.worldPosition).add(x, y, z))).getBlock() == RegistryHandler.MAGIC_ENERGIZER.get() && distance < minDistance) {
-                        this.fuelSourceTileEntity = (MagicEnergizerTileEntity) this.getLevel().getBlockEntity(new BlockPos(Vector3d.atCenterOf(this.worldPosition).add(x, y, z)));
+                    if (this.getLevel().getBlockState(this.worldPosition.offset(x, y, z)).getBlock() == RegistryHandler.MAGIC_ENERGIZER.get() && distance < minDistance) {
+                        this.fuelSourceTileEntity = (MagicEnergizerBlockEntity) this.getLevel().getBlockEntity(this.worldPosition.offset(x, y, z));
                         minDistance = distance;
                     }
                 }
@@ -202,7 +204,7 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
             for (int x = -range; x <= range; x++) {
                 for (int z = -range; z <= range; z++) {
                     BlockPos pos = this.worldPosition.offset(x, y * direction, z);
-                    IBlockReader reader = this.level.getChunkForCollisions(this.level.getChunkAt(pos).getPos().x, this.level.getChunkAt(pos).getPos().z);
+                    BlockGetter reader = this.level.getChunkForCollisions(this.level.getChunkAt(pos).getPos().x, this.level.getChunkAt(pos).getPos().z);
                     BlockState state = this.level.getBlockState(pos);
                     //printNullReasons(pos, reader, state);
 
@@ -216,7 +218,7 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
     }
 
     @VisibleForTesting
-    private void printNullReasons(BlockPos pos, IBlockReader reader, BlockState state) {
+    private void printNullReasons(BlockPos pos, BlockGetter reader, BlockState state) {
         if (state.getDestroySpeed(reader, pos) < 0) MagicMod.LOGGER.info("Block at {} is not breakable", pos);
         if (this.level.getBlockEntity(pos) != null) MagicMod.LOGGER.info("Tile entity found at {}", pos);
         if (MINE_BLACKLIST.contains(state.getBlock())) MagicMod.LOGGER.info("Block at {} is blacklisted", pos);
@@ -256,7 +258,7 @@ public abstract class AutoActionTileEntity extends TileEntity implements ITickab
             else if (this.inventory.getStackInSlot(i).getItem() == RegistryHandler.RANGE_UPGRADE.get()) this.range += this.rangeIncreaseWithUpgrade;
             else if (this.inventory.getStackInSlot(i).getItem() == RegistryHandler.OBSIDIAN_PLATED_RANGE_UPGRADE.get()) this.range += this.rangeIncreaseWithObsidianPlatedUpgrade;
         }
-        this.filterBlock = IntStream.rangeClosed(36, 37).mapToObj(this.inventory::getStackInSlot).filter(stack -> stack.getItem() == RegistryHandler.FILTER_UPGRADE.get() && stack.hasTag() && stack.getTag().contains("Filter")).findFirst().map(stack -> NBTUtil.readBlockState(stack.getTag().getCompound("Filter")).getBlock()).orElse(null);
+        this.filterBlock = IntStream.rangeClosed(36, 37).mapToObj(this.inventory::getStackInSlot).filter(stack -> stack.getItem() == RegistryHandler.FILTER_UPGRADE.get() && stack.hasTag() && stack.getTag().contains("Filter")).findFirst().map(stack -> NbtUtils.readBlockState(stack.getTag().getCompound("Filter")).getBlock()).orElse(null);
         if (this.ticksPerMine != oldMineSpeed) {
             this.mineCooldown *= (double) this.ticksPerMine / oldMineSpeed;
         }

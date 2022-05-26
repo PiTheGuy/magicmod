@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "magicmod:magic_block",
+    "magicmod:magic_slab",
+    "magicmod:magic_infuser",
+    "magicmod:magic_ore",
+    "magicmod:magic_press",
+    "magicmod:magic_energizer"
+  ]
+}

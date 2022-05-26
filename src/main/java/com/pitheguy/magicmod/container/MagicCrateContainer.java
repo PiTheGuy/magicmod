@@ -1,33 +1,29 @@
 package com.pitheguy.magicmod.container;
 
 import com.pitheguy.magicmod.init.ModContainerTypes;
-import com.pitheguy.magicmod.tileentity.MagicCrateTileEntity;
+import com.pitheguy.magicmod.blockentity.MagicCrateBlockEntity;
 import com.pitheguy.magicmod.util.RegistryHandler;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.Objects;
 
-public class MagicCrateContainer extends Container {
+public class MagicCrateContainer extends AbstractContainerMenu {
 
-    public final MagicCrateTileEntity tileEntity;
-    private final IWorldPosCallable canInteractWithCallable;
+    public final MagicCrateBlockEntity tileEntity;
+    private final ContainerLevelAccess canInteractWithCallable;
 
-    public MagicCrateContainer(final int windowId, final PlayerInventory playerInventory,
-                                 final MagicCrateTileEntity tileEntity) {
+    public MagicCrateContainer(final int windowId, final Inventory playerInventory,
+                                 final MagicCrateBlockEntity tileEntity) {
         super(ModContainerTypes.MAGIC_CRATE.get(), windowId);
         this.tileEntity = tileEntity;
-        this.canInteractWithCallable = IWorldPosCallable.create(tileEntity.getLevel(), tileEntity.getBlockPos());
+        this.canInteractWithCallable = ContainerLevelAccess.create(tileEntity.getLevel(), tileEntity.getBlockPos());
 
         // Main Inventory
         int startX = 8;
@@ -57,28 +53,28 @@ public class MagicCrateContainer extends Container {
         }
     }
 
-    private static MagicCrateTileEntity getTileEntity(final PlayerInventory playerInventory,
-                                                        final PacketBuffer data) {
+    private static MagicCrateBlockEntity getTileEntity(final Inventory playerInventory,
+                                                       final FriendlyByteBuf data) {
         Objects.requireNonNull(playerInventory, "playerInventory cannot be null");
         Objects.requireNonNull(data, "data cannot be null");
-        final TileEntity tileAtPos = playerInventory.player.level.getBlockEntity(data.readBlockPos());
-        if (tileAtPos instanceof MagicCrateTileEntity) {
-            return (MagicCrateTileEntity) tileAtPos;
+        final BlockEntity tileAtPos = playerInventory.player.level.getBlockEntity(data.readBlockPos());
+        if (tileAtPos instanceof MagicCrateBlockEntity) {
+            return (MagicCrateBlockEntity) tileAtPos;
         }
         throw new IllegalStateException("Tile entity is not correct! " + tileAtPos);
     }
 
-    public MagicCrateContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
+    public MagicCrateContainer(final int windowId, final Inventory playerInventory, final FriendlyByteBuf data) {
         this(windowId, playerInventory, getTileEntity(playerInventory, data));
     }
 
     @Override
-    public boolean stillValid(PlayerEntity playerIn) {
+    public boolean stillValid(Player playerIn) {
         return stillValid(canInteractWithCallable, playerIn, RegistryHandler.MAGIC_CRATE.get());
     }
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {

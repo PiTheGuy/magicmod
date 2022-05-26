@@ -1,10 +1,11 @@
 package com.pitheguy.magicmod.container.itemhandlers;
 
 import com.pitheguy.magicmod.items.UpgradeItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 public class ExcludeUpgradesSlotItemHandler extends SlotItemHandler {
     public ExcludeUpgradesSlotItemHandler(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
@@ -12,7 +13,7 @@ public class ExcludeUpgradesSlotItemHandler extends SlotItemHandler {
     }
 
     @Override
-    public boolean mayPlace(@NotNull ItemStack stack) {
+    public boolean mayPlace(@Nonnull ItemStack stack) {
         return !(stack.getItem() instanceof UpgradeItem) && super.mayPlace(stack);
     }
 }

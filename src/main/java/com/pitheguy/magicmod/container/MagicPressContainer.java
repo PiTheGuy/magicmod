@@ -3,17 +3,17 @@ package com.pitheguy.magicmod.container;
 import com.pitheguy.magicmod.container.itemhandlers.MultiItemSlotItemHandler;
 import com.pitheguy.magicmod.container.itemhandlers.SingleItemSlotItemHandler;
 import com.pitheguy.magicmod.init.ModContainerTypes;
-import com.pitheguy.magicmod.tileentity.MagicPressTileEntity;
-import com.pitheguy.magicmod.util.FunctionalIntReferenceHolder;
+import com.pitheguy.magicmod.blockentity.MagicPressBlockEntity;
+import com.pitheguy.magicmod.util.FunctionalIntDataSlot;
 import com.pitheguy.magicmod.util.RegistryHandler;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -23,16 +23,16 @@ import java.util.Objects;
 
 import static com.pitheguy.magicmod.util.RegistryHandler.*;
 
-public class MagicPressContainer extends Container {
+public class MagicPressContainer extends AbstractContainerMenu {
 
-    public MagicPressTileEntity tileEntity;
-    private final IWorldPosCallable canInteractWithCallable;
-    public FunctionalIntReferenceHolder fuel;
+    public MagicPressBlockEntity tileEntity;
+    private final ContainerLevelAccess canInteractWithCallable;
+    public FunctionalIntDataSlot fuel;
 
     //Server constructor
-    public MagicPressContainer(final int windowID, final PlayerInventory playerInv, final MagicPressTileEntity tile) {
+    public MagicPressContainer(final int windowID, final Inventory playerInv, final MagicPressBlockEntity tile) {
         super(ModContainerTypes.MAGIC_PRESS.get(), windowID);
-        this.canInteractWithCallable = IWorldPosCallable.create(tile.getLevel(), tile.getBlockPos());
+        this.canInteractWithCallable = ContainerLevelAccess.create(tile.getLevel(), tile.getBlockPos());
         this.tileEntity = tile;
         final int slotSizePlus2 = 18;
         final int startX = 8;
@@ -54,40 +54,40 @@ public class MagicPressContainer extends Container {
         this.addSlot(new MultiItemSlotItemHandler(tile.getInventory(), 2, 134,19, Arrays.asList(OBSIDIAN_PLATED_REINFORCED_MAGIC_HELMET.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_CHESTPLATE.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_LEGGINGS.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_BOOTS.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_PICKAXE.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_AXE.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_SHOVEL.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_SWORD.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_HOE.get())));
         this.addSlot(new MultiItemSlotItemHandler(tile.getInventory(), 3,15,53, Arrays.asList(MAGIC_GEM.get(), MAGIC_BLOCK_ITEM.get())));
 
-        this.addDataSlot(fuel = new FunctionalIntReferenceHolder(() -> this.tileEntity.fuel,
+        this.addDataSlot(fuel = new FunctionalIntDataSlot(() -> this.tileEntity.fuel,
                 value -> this.tileEntity.fuel = value));
 
     }
     //Client constructor
-    public MagicPressContainer(final int windowID, final PlayerInventory playerInv, final PacketBuffer data) {
+    public MagicPressContainer(final int windowID, final Inventory playerInv, final FriendlyByteBuf data) {
         this(windowID, playerInv, getTileEntity(playerInv, data));
     }
 
-    private static MagicPressTileEntity getTileEntity(final PlayerInventory playerInv, final PacketBuffer data) {
+    private static MagicPressBlockEntity getTileEntity(final Inventory playerInv, final FriendlyByteBuf data) {
         Objects.requireNonNull(playerInv, "playerInv cannot be null");
         Objects.requireNonNull(data, "data cannot be null");
-        final TileEntity tileAtPos = playerInv.player.level.getBlockEntity(data.readBlockPos());
-        if (tileAtPos instanceof MagicPressTileEntity) {
-            return (MagicPressTileEntity) tileAtPos;
+        final BlockEntity tileAtPos = playerInv.player.level.getBlockEntity(data.readBlockPos());
+        if (tileAtPos instanceof MagicPressBlockEntity) {
+            return (MagicPressBlockEntity) tileAtPos;
         }
         throw new IllegalStateException("TileEntity is not correct " + tileAtPos);
     }
 
     @Override
-    public boolean stillValid(PlayerEntity playerIn) {
+    public boolean stillValid(Player playerIn) {
         return stillValid(canInteractWithCallable, playerIn, RegistryHandler.MAGIC_PRESS.get());
     }
 
     @Nonnull
     @Override
-    public ItemStack quickMoveStack(final PlayerEntity player, final int index) {
+    public ItemStack quickMoveStack(final Player player, final int index) {
         ItemStack returnStack = ItemStack.EMPTY;
         final Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {
             final ItemStack slotStack = slot.getItem();
             returnStack = slotStack.copy();
 
-            final int containerSlots = this.slots.size() - player.inventory.items.size();
+            final int containerSlots = this.slots.size() - player.getInventory().items.size();
             if (index < containerSlots) {
                 if (!moveItemStackTo(slotStack, containerSlots, this.slots.size(), true)) {
                     return ItemStack.EMPTY;

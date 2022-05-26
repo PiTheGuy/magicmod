@@ -1,75 +1,65 @@
 package com.pitheguy.magicmod.blocks;
 
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
-import com.pitheguy.magicmod.tileentity.MagicCrateTileEntity;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ToolType;
-import net.minecraftforge.fml.network.NetworkHooks;
+import com.pitheguy.magicmod.blockentity.MagicCrateBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class MagicCrate extends Block {
+public class MagicCrate extends Block implements EntityBlock {
 
     public MagicCrate() {
         super(Properties.of(Material.METAL)
                 .strength(6.5f, 12.0f)
                 .sound(SoundType.METAL)
-                .harvestLevel(2)
-                .harvestTool(ToolType.PICKAXE)
+                .requiresCorrectToolForDrops()
         );
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return ModTileEntityTypes.MAGIC_CRATE.get().create(pos, state);
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return ModTileEntityTypes.MAGIC_CRATE.get().create();
-    }
-
-    @Override
-    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!worldIn.isClientSide()) {
-            TileEntity tile = worldIn.getBlockEntity(pos);
-            if(tile instanceof MagicCrateTileEntity) {
-                NetworkHooks.openGui((ServerPlayerEntity) player, (MagicCrateTileEntity) tile, pos);
-                return ActionResultType.SUCCESS;
+            BlockEntity tile = worldIn.getBlockEntity(pos);
+            if(tile instanceof MagicCrateBlockEntity) {
+                NetworkHooks.openGui((ServerPlayer) player, (MagicCrateBlockEntity) tile, pos);
+                return InteractionResult.SUCCESS;
             }
         }
-        return ActionResultType.FAIL;
+        return InteractionResult.FAIL;
     }
 
     @Override
-    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            TileEntity te = worldIn.getBlockEntity(pos);
-            if (te instanceof MagicCrateTileEntity) {
-                InventoryHelper.dropContents(worldIn, pos, ((MagicCrateTileEntity) te).getItems());
+            BlockEntity te = worldIn.getBlockEntity(pos);
+            if (te instanceof MagicCrateBlockEntity magicCrateBlockEntity) {
+                Containers.dropContents(worldIn, pos, magicCrateBlockEntity.getItems());
             }
         }
     }

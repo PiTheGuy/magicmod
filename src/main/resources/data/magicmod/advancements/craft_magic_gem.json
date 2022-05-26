@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "item": "magicmod:magic_gem"
+            "items": [
+              "magicmod:magic_gem"
+            ]
           }
         ]
       }

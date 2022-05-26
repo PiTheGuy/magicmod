@@ -2,60 +2,61 @@ package com.pitheguy.magicmod.entities;
 
 import com.pitheguy.magicmod.init.ModEntityTypes;
 import com.pitheguy.magicmod.util.RegistryHandler;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.TemptGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
 
-public class FluffyMagician extends AnimalEntity {
+import javax.annotation.Nullable;
+
+public class FluffyMagician extends Animal {
 
     public boolean hasPowder = true;
     public int powderRegrowTime = 2400;
 
-    public FluffyMagician(EntityType<? extends AnimalEntity> type, World worldIn) {
+    public FluffyMagician(EntityType<? extends Animal> type, Level worldIn) {
         super(type, worldIn);
     }
 
     @Nullable
     @Override
-    public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity ageable) {
+    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob ageable) {
         FluffyMagician entity = new FluffyMagician(ModEntityTypes.FLUFFY_MAGICIAN.get(), this.level);
-        entity.finalizeSpawn(world, this.level.getCurrentDifficultyAt(new BlockPos(entity.getPosition(0))), SpawnReason.BREEDING, null, null);
+        entity.finalizeSpawn(world, this.level.getCurrentDifficultyAt(new BlockPos(entity.getPosition(0))), MobSpawnType.BREEDING, null, null);
         return entity;
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new TemptGoal(this, 1.2, Ingredient.of(RegistryHandler.MAGIC_GEM.get()), false));
-        this.goalSelector.addGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0));
+        this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0));
     }
 
-    public static AttributeModifierMap createAttributes() {
-        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 20).add(Attributes.MOVEMENT_SPEED, 0.23).build();
+    public static AttributeSupplier createAttributes() {
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20).add(Attributes.MOVEMENT_SPEED, 0.23).build();
     }
 
     @Override
-    public ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (itemstack.getItem() == RegistryHandler.MAGIC_SHEARS.get() && this.hasPowder) {
             if (!this.level.isClientSide) {
@@ -73,14 +74,14 @@ public class FluffyMagician extends AnimalEntity {
             }
             this.playSound(SoundEvents.SHEEP_SHEAR, 1.0F, 1.0F);
             this.recreate();
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         return super.mobInteract(player, hand);
     }
 
     //TODO Test powder regrow
     @Override
-    public CompoundNBT saveWithoutId(CompoundNBT compound) {
+    public CompoundTag saveWithoutId(CompoundTag compound) {
         super.saveWithoutId(compound);
         compound.putBoolean("Powder", hasPowder);
         compound.putInt("PowderRegrowCooldown", powderRegrowTime);
@@ -88,7 +89,7 @@ public class FluffyMagician extends AnimalEntity {
     }
 
     @Override
-    public void load(CompoundNBT compound) {
+    public void load(CompoundTag compound) {
         super.load(compound);
         this.hasPowder = compound.getBoolean("Powder");
         this.powderRegrowTime = compound.getInt("PowderRegrowCooldown");
@@ -97,9 +98,9 @@ public class FluffyMagician extends AnimalEntity {
     public void recreate() {
         if (!this.level.isClientSide && !hasPowder) {
             //LOGGER.info("Converting to Bare Fluffy Magician");
-            FluffyMagicianBare newEntity = ModEntityTypes.FLUFFY_MAGICIAN_BARE.get().spawn(this.getServer().overworld(), null, null, null, new BlockPos(this.getPosition(0)), SpawnReason.CONVERSION, true, true);
+            FluffyMagicianBare newEntity = ModEntityTypes.FLUFFY_MAGICIAN_BARE.get().spawn(this.getServer().overworld(), null, null, null, new BlockPos(this.getPosition(0)), MobSpawnType.CONVERSION, true, true);
             newEntity.restoreFrom(this);
-            this.remove();
+            this.discard();
         }
     }
 }

@@ -2,34 +2,33 @@ package com.pitheguy.magicmod.container;
 
 import com.pitheguy.magicmod.container.itemhandlers.ExcludeUpgradesSlotItemHandler;
 import com.pitheguy.magicmod.container.itemhandlers.UpgradeSlotItemHandler;
-import com.pitheguy.magicmod.init.ModContainerTypes;
-import com.pitheguy.magicmod.tileentity.AutoActionTileEntity;
-import com.pitheguy.magicmod.util.FunctionalIntReferenceHolder;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IWorldPosCallable;
+import com.pitheguy.magicmod.blockentity.AutoActionBlockEntity;
+import com.pitheguy.magicmod.util.FunctionalIntDataSlot;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public abstract class AutoActionContainer<T extends AutoActionTileEntity> extends Container {
+public abstract class AutoActionContainer<T extends AutoActionBlockEntity> extends AbstractContainerMenu {
 
     public T tileEntity;
-    protected final IWorldPosCallable canInteractWithCallable;
-    public FunctionalIntReferenceHolder mineCooldown;
+    protected final ContainerLevelAccess canInteractWithCallable;
+    public FunctionalIntDataSlot mineCooldown;
 
     //Server constructor
-    public AutoActionContainer(final int windowID, final PlayerInventory playerInv, final T tile, ContainerType<?> containerType) {
+    public AutoActionContainer(final int windowID, final Inventory playerInv, final T tile, MenuType<?> containerType) {
         super(containerType, windowID);
         this.tileEntity = tile;
 
         //Upgrade Slots
         this.addSlot(new UpgradeSlotItemHandler(tile.getInventory(), 36, 177, 26, this.tileEntity));
         this.addSlot(new UpgradeSlotItemHandler(tile.getInventory(), 37, 177, 44, this.tileEntity));
-        this.canInteractWithCallable = IWorldPosCallable.create(tile.getLevel(), tile.getBlockPos());
+        this.canInteractWithCallable = ContainerLevelAccess.create(tile.getLevel(), tile.getBlockPos());
         final int slotSizePlus2 = 18;
         final int startX = 8;
         //Inventory
@@ -52,23 +51,23 @@ public abstract class AutoActionContainer<T extends AutoActionTileEntity> extend
                 this.addSlot(new Slot(playerInv, 9+(row*9)+col, startX + (col * slotSizePlus2), invStartY + (row * slotSizePlus2)));
             }
         }
-        this.addDataSlot(mineCooldown = new FunctionalIntReferenceHolder(() -> this.tileEntity.mineCooldown,
+        this.addDataSlot(mineCooldown = new FunctionalIntDataSlot(() -> this.tileEntity.mineCooldown,
                 value -> this.tileEntity.mineCooldown = value));
     }
 
     @Override
-    public abstract boolean stillValid(PlayerEntity playerIn);
+    public abstract boolean stillValid(Player playerIn);
 
     @Nonnull
     @Override
-    public ItemStack quickMoveStack(final PlayerEntity player, final int index) {
+    public ItemStack quickMoveStack(final Player player, final int index) {
         ItemStack returnStack = ItemStack.EMPTY;
         final Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {
             final ItemStack slotStack = slot.getItem();
             returnStack = slotStack.copy();
 
-            final int containerSlots = this.slots.size() - player.inventory.items.size();
+            final int containerSlots = this.slots.size() - player.getInventory().items.size();
             if (index < containerSlots) {
                 if (!moveItemStackTo(slotStack, containerSlots, this.slots.size(), true)) {
                     return ItemStack.EMPTY;

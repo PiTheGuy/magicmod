@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "item": "magicmod:magic_core"
+            "items": [
+              "magicmod:magic_core"
+            ]
           }
         ]
       }

@@ -1,13 +1,13 @@
 package com.pitheguy.magicmod.tools;
 
 import com.pitheguy.magicmod.util.RegistryHandler;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.crafting.Ingredient;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.crafting.Ingredient;
 
+import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
-public enum ModItemTiers implements IItemTier {
+public enum ModItemTiers implements Tier {
     MAGIC(() -> Ingredient.of(RegistryHandler.MAGIC_GEM.get()), 5, 75000, 42, 0, 40),
     REINFORCED_MAGIC(() -> Ingredient.of(RegistryHandler.MAGIC_GEM.get()), 6, 2000, 75, 0, 60),
     OBSIDIAN_PLATED_REINFORCED_MAGIC(() -> Ingredient.of(RegistryHandler.MAGIC_GEM.get()), 7, 550000, 135, 0, 80);
@@ -53,7 +53,7 @@ public enum ModItemTiers implements IItemTier {
         return enchantmentValue;
     }
 
-    public @NotNull Ingredient getRepairIngredient() {
+    public @Nonnull Ingredient getRepairIngredient() {
         return repairIngredient.get();
     }
 }
