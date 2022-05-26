@@ -153,7 +153,7 @@ public class RegistryHandler {
 
     //Blocks
     public static final RegistryObject<Block> MAGIC_ORE = BLOCKS.register("magic_ore", () -> new Block(Block.Properties.of(Material.METAL).strength(4.0f,5.0f).sound(SoundType.STONE).requiresCorrectToolForDrops()));
-    public static final RegistryObject<Block> DEEPSLATE_MAGIC_ORE = BLOCKS.register("deepslate_magic_ore", () -> new Block(Block.Properties.of(Material.METAL).strength(8.0f,10.0f).sound(SoundType.STONE).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> DEEPSLATE_MAGIC_ORE = BLOCKS.register("deepslate_magic_ore", () -> new Block(Block.Properties.of(Material.METAL).strength(8.0f,10.0f).sound(SoundType.STONE).requiresCorrectToolForDrops().lootFrom(RegistryHandler.MAGIC_ORE)));
     public static final RegistryObject<Block> MAGIC_OBSIDIAN = BLOCKS.register("magic_obsidian", () -> new Block(Block.Properties.of(Material.METAL).strength(110.0f,2500.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> MAGIC_BLOCK = BLOCKS.register("magic_block", () -> new Block (Block.Properties.of(Material.METAL).strength(6.5f, 8.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> MAGIC_SLAB = BLOCKS.register("magic_slab", () -> new SlabBlock(Block.Properties.of(Material.METAL).strength(6.5f,8.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
@@ -183,6 +183,7 @@ public class RegistryHandler {
 
     //Block Items
     public static final RegistryObject<Item> MAGIC_ORE_ITEM = ITEMS.register("magic_ore", () -> new BlockItemBase(MAGIC_ORE.get()));
+    public static final RegistryObject<Item> DEEPSLATE_MAGIC_ORE_ITEM = ITEMS.register("deepslate_magic_ore", () -> new BlockItemBase(DEEPSLATE_MAGIC_ORE.get()));
     public static final RegistryObject<Item> MAGIC_OBSIDIAN_ITEM = ITEMS.register("magic_obsidian", () -> new BlockItemBase(MAGIC_OBSIDIAN.get()));
     public static final RegistryObject<Item> MAGIC_BLOCK_ITEM = ITEMS.register("magic_block", () -> new BlockItemBase(MAGIC_BLOCK.get()));
     public static final RegistryObject<Item> MAGIC_SLAB_ITEM = ITEMS.register("magic_slab", () -> new BlockItemBase(MAGIC_SLAB.get()));

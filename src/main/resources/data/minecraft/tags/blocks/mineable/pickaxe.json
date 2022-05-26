@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "magicmod:magic_ore",
+    "magicmod:deepslate_magic_ore",
     "magicmod:magic_obsidian",
     "magicmod:magic_block",
     "magicmod:magic_slab",
