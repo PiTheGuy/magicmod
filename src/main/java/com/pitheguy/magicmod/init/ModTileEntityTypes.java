@@ -3,9 +3,7 @@ package com.pitheguy.magicmod.init;
 import com.pitheguy.magicmod.blockentity.*;
 import com.pitheguy.magicmod.util.RegistryHandler;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.fmllegacy.RegistryObject;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.*;
 
 public class ModTileEntityTypes {
     public static final DeferredRegister<BlockEntityType<?>> TILE_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, "magicmod");

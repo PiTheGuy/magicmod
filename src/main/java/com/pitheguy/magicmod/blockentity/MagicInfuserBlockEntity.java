@@ -50,10 +50,9 @@ public class MagicInfuserBlockEntity extends BlockEntity implements MenuProvider
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
         ContainerHelper.saveAllItems(compound, this.inventory.toNonNullList());
-        return compound;
     }
 
     public final IItemHandlerModifiable getInventory() {
@@ -64,8 +63,8 @@ public class MagicInfuserBlockEntity extends BlockEntity implements MenuProvider
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         CompoundTag nbt = new CompoundTag();
-        this.save(nbt);
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, nbt);
+        this.saveAdditional(nbt);
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
@@ -76,7 +75,7 @@ public class MagicInfuserBlockEntity extends BlockEntity implements MenuProvider
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag nbt = new CompoundTag();
-        this.save(nbt);
+        this.saveAdditional(nbt);
         return nbt;
     }
 

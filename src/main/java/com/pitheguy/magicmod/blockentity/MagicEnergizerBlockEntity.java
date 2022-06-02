@@ -62,12 +62,11 @@ public class MagicEnergizerBlockEntity extends BlockEntity implements MenuProvid
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
         ContainerHelper.saveAllItems(compound, this.inventory.toNonNullList());
         compound.putInt("Fuel", this.fuel);
         compound.putInt("FuelConsumption", this.fuelConsumptionPerTick);
-        return compound;
     }
 
     public final IItemHandlerModifiable getInventory() {
@@ -78,8 +77,8 @@ public class MagicEnergizerBlockEntity extends BlockEntity implements MenuProvid
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         CompoundTag nbt = new CompoundTag();
-        this.save(nbt);
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, nbt);
+        this.saveAdditional(nbt);
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
@@ -90,7 +89,7 @@ public class MagicEnergizerBlockEntity extends BlockEntity implements MenuProvid
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag nbt = new CompoundTag();
-        this.save(nbt);
+        this.saveAdditional(nbt);
         return nbt;
     }
 

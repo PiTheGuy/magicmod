@@ -1,15 +1,10 @@
 package com.pitheguy.magicmod.init;
 
-import com.pitheguy.magicmod.entities.FluffyMagician;
-import com.pitheguy.magicmod.entities.FluffyMagicianBare;
-import com.pitheguy.magicmod.entities.MagicFriend;
-import com.pitheguy.magicmod.entities.MagicPearlEntity;
+import com.pitheguy.magicmod.entities.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraftforge.fmllegacy.RegistryObject;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.*;
 
 public class ModEntityTypes {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES,

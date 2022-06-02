@@ -71,12 +71,11 @@ public class MagicCrateBlockEntity extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
         if (!this.trySaveLootTable(compound)) {
             ContainerHelper.saveAllItems(compound, this.crateContents);
         }
-        return compound;
     }
 
     @Override

@@ -7,7 +7,6 @@ import com.pitheguy.magicmod.entities.FluffyMagician;
 import com.pitheguy.magicmod.entities.MagicFriend;
 import com.pitheguy.magicmod.init.*;
 import com.pitheguy.magicmod.util.RegistryHandler;
-import com.pitheguy.magicmod.world.gen.ModOreGen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -49,7 +48,6 @@ public class MagicMod {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(ModOreGen::registerOres);
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {

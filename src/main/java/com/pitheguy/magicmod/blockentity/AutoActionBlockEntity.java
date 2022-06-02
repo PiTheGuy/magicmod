@@ -73,12 +73,11 @@ public abstract class AutoActionBlockEntity extends BlockEntity implements MenuP
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
         ContainerHelper.saveAllItems(compound, this.inventory.toNonNullList());
         compound.putInt("mineCooldown", this.mineCooldown);
         compound.putString("status", this.getStatus()); //For debugging
-        return compound;
     }
 
     public final IItemHandlerModifiable getInventory() {
@@ -89,8 +88,8 @@ public abstract class AutoActionBlockEntity extends BlockEntity implements MenuP
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         CompoundTag nbt = new CompoundTag();
-        this.save(nbt);
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, nbt);
+        this.saveAdditional(nbt);
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
@@ -101,7 +100,7 @@ public abstract class AutoActionBlockEntity extends BlockEntity implements MenuP
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag nbt = new CompoundTag();
-        this.save(nbt);
+        this.saveAdditional(nbt);
         return nbt;
     }
 
