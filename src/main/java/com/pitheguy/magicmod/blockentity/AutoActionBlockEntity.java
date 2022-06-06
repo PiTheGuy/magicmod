@@ -117,23 +117,23 @@ public abstract class AutoActionBlockEntity extends BlockEntity implements MenuP
     @Nullable
     public abstract AbstractContainerMenu createMenu(final int windowId, final Inventory playerInv, final Player playerIn);
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, AutoActionBlockEntity tile) {
+    public void serverTick(Level level, BlockPos pos, BlockState state, AutoActionBlockEntity tile) {
         boolean dirty = false;
-        if (tile.status != Status.INVENTORY_FULL || tile.hasInventorySpace()) {
-            tile.updateStatus();
-            tile.updateUpgrades();
-            if (level != null && !level.isClientSide && tile.status.isRunning() && tile.mineCooldown <= 0) {
-                BlockPos minePos = tile.findMineableBlock();
+        if (this.status != Status.INVENTORY_FULL || this.hasInventorySpace()) {
+            this.updateStatus();
+            this.updateUpgrades();
+            if (level != null && !level.isClientSide && this.status.isRunning() && this.mineCooldown <= 0) {
+                BlockPos minePos = this.findMineableBlock();
                 if (minePos != null) {
                     List<ItemStack> drops = Block.getDrops(level.getBlockState(minePos), (ServerLevel) level, minePos, level.getBlockEntity(minePos));
-                    drops.stream().filter(drop -> !drop.isEmpty()).forEach(tile::addItemToInventory);
+                    drops.stream().filter(drop -> !drop.isEmpty()).forEach(this::addItemToInventory);
                     level.destroyBlock(minePos, false);
-                    tile.mineCooldown = tile.ticksPerMine;
+                    this.mineCooldown = this.ticksPerMine;
                     dirty = true;
                 }
             }
-            if (tile.status.isRunning() && tile.mineCooldown > 0) tile.mineCooldown--;
-            if (dirty) tile.setChanged();
+            if (this.status.isRunning() && this.mineCooldown > 0) this.mineCooldown--;
+            if (dirty) this.setChanged();
         }
     }
 

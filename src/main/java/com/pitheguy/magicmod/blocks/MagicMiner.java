@@ -1,6 +1,7 @@
 package com.pitheguy.magicmod.blocks;
 
 import com.pitheguy.magicmod.blockentity.*;
+import com.pitheguy.magicmod.blocks.state.ModBlockStateProperties;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.ModItemHandler;
 import net.minecraft.core.BlockPos;
@@ -14,6 +15,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
@@ -22,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class MagicMiner extends BaseEntityBlock implements EntityBlock {
+    public static final BooleanProperty RUNNING = ModBlockStateProperties.RUNNING;
 
     public MagicMiner() {
         super(Properties.of(Material.METAL)
@@ -29,6 +33,7 @@ public class MagicMiner extends BaseEntityBlock implements EntityBlock {
                 .sound(SoundType.METAL)
                 .requiresCorrectToolForDrops()
         );
+        this.registerDefaultState(this.getStateDefinition().any().setValue(RUNNING, false));
     }
 
     @Override
@@ -39,12 +44,7 @@ public class MagicMiner extends BaseEntityBlock implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createMinerTicker(level, type, ModTileEntityTypes.MAGIC_LOGGER.get());
-    }
-
-    @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> createMinerTicker(Level p_151988_, BlockEntityType<T> p_151989_, BlockEntityType<? extends MagicLoggerBlockEntity> p_151990_) {
-        return p_151988_.isClientSide ? null : createTickerHelper(p_151989_, p_151990_, AutoActionBlockEntity::serverTick);
+        return createTickerHelper(type, (BlockEntityType<? extends MagicMinerBlockEntity>) ModTileEntityTypes.MAGIC_MINER.get(), (level1, pos, state1, tile) -> tile.serverTick(level1, pos, state1, tile));
     }
 
     @Override
@@ -80,5 +80,10 @@ public class MagicMiner extends BaseEntityBlock implements EntityBlock {
         if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
             worldIn.removeBlockEntity(pos);
         }
+    }
+
+    @Override
+    protected void createBlockStateDefinition(@Nonnull StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(RUNNING);
     }
 }

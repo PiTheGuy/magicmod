@@ -1,6 +1,5 @@
 package com.pitheguy.magicmod.blocks;
 
-import com.pitheguy.magicmod.blockentity.AutoActionBlockEntity;
 import com.pitheguy.magicmod.blockentity.MagicLoggerBlockEntity;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.ModItemHandler;
@@ -40,12 +39,7 @@ public class MagicLogger extends BaseEntityBlock implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createLoggerTicker(level, type, ModTileEntityTypes.MAGIC_LOGGER.get());
-    }
-
-    @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> createLoggerTicker(Level p_151988_, BlockEntityType<T> p_151989_, BlockEntityType<? extends MagicLoggerBlockEntity> p_151990_) {
-        return p_151988_.isClientSide ? null : createTickerHelper(p_151989_, p_151990_, AutoActionBlockEntity::serverTick);
+        return createTickerHelper(type, (BlockEntityType<? extends MagicLoggerBlockEntity>) ModTileEntityTypes.MAGIC_LOGGER.get(), (level1, pos, state1, tile) -> tile.serverTick(level1, pos, state1, tile));
     }
 
     @Override
