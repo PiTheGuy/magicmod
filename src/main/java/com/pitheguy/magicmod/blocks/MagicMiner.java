@@ -37,14 +37,19 @@ public class MagicMiner extends BaseEntityBlock implements EntityBlock {
     }
 
     @Override
+    public RenderShape getRenderShape(BlockState p_49232_) {
+        return RenderShape.MODEL;
+    }
+
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return ModTileEntityTypes.MAGIC_MINER.get().create(pos, state);
+        return new MagicMinerBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, (BlockEntityType<? extends MagicMinerBlockEntity>) ModTileEntityTypes.MAGIC_MINER.get(), (level1, pos, state1, tile) -> tile.serverTick(level1, pos, state1, tile));
+        return level.isClientSide ? null : createTickerHelper(type, (BlockEntityType<? extends MagicMinerBlockEntity>) ModTileEntityTypes.MAGIC_MINER.get(), (level1, pos, state1, tile) -> tile.serverTick(level1, pos, state1, tile));
     }
 
     @Override

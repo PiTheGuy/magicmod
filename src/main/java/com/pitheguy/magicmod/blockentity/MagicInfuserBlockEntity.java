@@ -4,9 +4,7 @@ import com.pitheguy.magicmod.container.MagicInfuserContainer;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.ModItemHandler;
 import com.pitheguy.magicmod.util.RegistryHandler;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
+import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -18,7 +16,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -74,9 +71,13 @@ public class MagicInfuserBlockEntity extends BlockEntity implements MenuProvider
 
     @Override
     public CompoundTag getUpdateTag() {
-        CompoundTag nbt = new CompoundTag();
-        this.saveAdditional(nbt);
-        return nbt;
+        return this.serializeNBT();
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag) {
+        super.handleUpdateTag(tag);
+        this.load(tag);
     }
 
     @Override
@@ -90,27 +91,35 @@ public class MagicInfuserBlockEntity extends BlockEntity implements MenuProvider
         return new MagicInfuserContainer(windowId, playerInv, this);
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, MagicInfuserBlockEntity tile) {
+    public void serverTick() {
         boolean dirty = false;
         if (level != null && !level.isClientSide) {
-            while(tile.inventory.getStackInSlot(0).getItem() == RegistryHandler.MAGIC_ORB_RED.get() &&
-                    tile.inventory.getStackInSlot(1).getItem() == RegistryHandler.MAGIC_ORB_ORANGE.get() &&
-                    tile.inventory.getStackInSlot(2).getItem() == RegistryHandler.MAGIC_ORB_YELLOW.get() &&
-                    tile.inventory.getStackInSlot(3).getItem() == RegistryHandler.MAGIC_ORB_GREEN.get() &&
-                    tile.inventory.getStackInSlot(4).getItem() == RegistryHandler.MAGIC_ORB_BLUE.get() &&
-                    tile.inventory.getStackInSlot(5).getItem() == RegistryHandler.MAGIC_ORB_PURPLE.get() &&
-                    tile.inventory.getStackInSlot(6).getItem() == RegistryHandler.MAGIC_ORB_MAGENTA.get() &&
-                    tile.inventory.getStackInSlot(7).getItem() == RegistryHandler.MAGIC_ORB_BLACK.get() &&
-                    tile.inventory.getStackInSlot(8).getItem() == RegistryHandler.MAGIC_ORB_WHITE.get() &&
-                    tile.inventory.getStackInSlot(9).getCount() < 63) {
-                tile.inventory.insertItem(9, new ItemStack(RegistryHandler.MAGIC_CORE.get(), 2), false);
+            while(this.inventory.getStackInSlot(0).getItem() == RegistryHandler.MAGIC_ORB_RED.get() &&
+                    this.inventory.getStackInSlot(1).getItem() == RegistryHandler.MAGIC_ORB_ORANGE.get() &&
+                    this.inventory.getStackInSlot(2).getItem() == RegistryHandler.MAGIC_ORB_YELLOW.get() &&
+                    this.inventory.getStackInSlot(3).getItem() == RegistryHandler.MAGIC_ORB_GREEN.get() &&
+                    this.inventory.getStackInSlot(4).getItem() == RegistryHandler.MAGIC_ORB_BLUE.get() &&
+                    this.inventory.getStackInSlot(5).getItem() == RegistryHandler.MAGIC_ORB_PURPLE.get() &&
+                    this.inventory.getStackInSlot(6).getItem() == RegistryHandler.MAGIC_ORB_MAGENTA.get() &&
+                    this.inventory.getStackInSlot(7).getItem() == RegistryHandler.MAGIC_ORB_BLACK.get() &&
+                    this.inventory.getStackInSlot(8).getItem() == RegistryHandler.MAGIC_ORB_WHITE.get() &&
+                    this.inventory.getStackInSlot(9).getCount() < 63) {
+                this.inventory.insertItem(9, new ItemStack(RegistryHandler.MAGIC_CORE.get(), 2), false);
                 for (int i = 0; i < 9; i++) {
-                    tile.inventory.decrStackSize(i, 1);
+                    this.inventory.decrStackSize(i, 1);
                     dirty = true;
                 }
             }
         }
-        if(dirty) tile.setChanged();
+        if(dirty) this.update();
+    }
+
+    public void update() {
+        requestModelDataUpdate();
+        setChanged();
+        if (this.level != null) {
+            this.level.setBlockAndUpdate(this.worldPosition, getBlockState());
+        }
     }
 
     public Component getName() {

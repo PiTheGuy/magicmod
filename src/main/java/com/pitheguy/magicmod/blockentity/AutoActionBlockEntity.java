@@ -99,13 +99,12 @@ public abstract class AutoActionBlockEntity extends BlockEntity implements MenuP
 
     @Override
     public CompoundTag getUpdateTag() {
-        CompoundTag nbt = new CompoundTag();
-        this.saveAdditional(nbt);
-        return nbt;
+        return this.serializeNBT();
     }
 
     @Override
     public void handleUpdateTag(CompoundTag tag) {
+        super.handleUpdateTag(tag);
         this.load(tag);
     }
 

@@ -20,7 +20,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -95,9 +94,13 @@ public class MagicPressBlockEntity extends BlockEntity implements MenuProvider {
 
     @Override
     public CompoundTag getUpdateTag() {
-        CompoundTag nbt = new CompoundTag();
-        this.saveAdditional(nbt);
-        return nbt;
+        return this.serializeNBT();
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag) {
+        super.handleUpdateTag(tag);
+        this.load(tag);
     }
 
     @Override
@@ -111,23 +114,31 @@ public class MagicPressBlockEntity extends BlockEntity implements MenuProvider {
         return new MagicPressContainer(windowId, playerInv, this);
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, MagicPressBlockEntity tile) {
+    public void serverTick() {
         boolean dirty = false;
         if (level != null && !level.isClientSide) {
-            while(ITEM_FUEL_AMOUNT.get(tile.inventory.getStackInSlot(3).getItem()) != null && tile.fuel <= tile.maxFuel - ITEM_FUEL_AMOUNT.get(tile.inventory.getStackInSlot(3).getItem())) {
-                tile.fuel += ITEM_FUEL_AMOUNT.get(tile.inventory.getStackInSlot(3).getItem());
-                tile.inventory.decrStackSize(3, 1);
+            while(ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(3).getItem()) != null && this.fuel <= this.maxFuel - ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(3).getItem())) {
+                this.fuel += ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(3).getItem());
+                this.inventory.decrStackSize(3, 1);
                 dirty = true;
             }
-            if (RECIPES.get(tile.inventory.getStackInSlot(0).getItem()) != null && tile.inventory.getStackInSlot(1).getItem() == OBSIDIAN_PLATE.get() && tile.inventory.getStackInSlot(1).getCount() >= 32 && tile.fuel >= tile.fuelPerOperation) {
-                tile.fuel -= tile.fuelPerOperation;
-                tile.inventory.insertItem(2,new ItemStack(RECIPES.get(tile.inventory.getStackInSlot(0).getItem()), 1), false);
-                tile.inventory.decrStackSize(0,1);
-                tile.inventory.decrStackSize(1,32);
+            if (RECIPES.get(this.inventory.getStackInSlot(0).getItem()) != null && this.inventory.getStackInSlot(1).getItem() == OBSIDIAN_PLATE.get() && this.inventory.getStackInSlot(1).getCount() >= 32 && this.fuel >= this.fuelPerOperation) {
+                this.fuel -= this.fuelPerOperation;
+                this.inventory.insertItem(2,new ItemStack(RECIPES.get(this.inventory.getStackInSlot(0).getItem()), 1), false);
+                this.inventory.decrStackSize(0,1);
+                this.inventory.decrStackSize(1,32);
                 dirty = true;
             }
         }
-        if(dirty) tile.setChanged();
+        if(dirty) this.update();
+    }
+
+    public void update() {
+        requestModelDataUpdate();
+        setChanged();
+        if (this.level != null) {
+            this.level.setBlockAndUpdate(this.worldPosition, getBlockState());
+        }
     }
 
     public Component getName() {

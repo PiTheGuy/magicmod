@@ -31,19 +31,19 @@ public class MagicPress extends BaseEntityBlock implements EntityBlock {
     }
 
     @Override
+    public RenderShape getRenderShape(BlockState p_49232_) {
+        return RenderShape.MODEL;
+    }
+
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return ModTileEntityTypes.MAGIC_PRESS.get().create(pos, state);
+        return new MagicPressBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createPressTicker(level, type, ModTileEntityTypes.MAGIC_PRESS.get());
-    }
-
-    @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> createPressTicker(Level p_151988_, BlockEntityType<T> p_151989_, BlockEntityType<? extends MagicPressBlockEntity> p_151990_) {
-        return p_151988_.isClientSide ? null : createTickerHelper(p_151989_, p_151990_, MagicPressBlockEntity::serverTick);
+        return level.isClientSide ? null : createTickerHelper(type, (BlockEntityType<? extends MagicPressBlockEntity>) ModTileEntityTypes.MAGIC_PRESS.get(), (level1, pos, state1, tile) -> tile.serverTick());
     }
 
     @Override

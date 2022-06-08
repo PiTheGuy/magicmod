@@ -39,7 +39,7 @@ public class MagicMod {
 
         RegistryHandler.init();
 
-        ModTileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
+        ModTileEntityTypes.BLOCK_ENTITY_TYPES.register(modEventBus);
         ModContainerTypes.CONTAINER_TYPES.register(modEventBus);
         ModEntityTypes.ENTITY_TYPES.register(modEventBus);
 

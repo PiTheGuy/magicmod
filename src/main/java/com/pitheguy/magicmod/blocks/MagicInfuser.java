@@ -31,19 +31,19 @@ public class MagicInfuser extends BaseEntityBlock implements EntityBlock {
     }
 
     @Override
+    public RenderShape getRenderShape(BlockState p_49232_) {
+        return RenderShape.MODEL;
+    }
+
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return ModTileEntityTypes.MAGIC_INFUSER.get().create(pos, state);
+        return new MagicInfuserBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createInfuserTicker(level, type, ModTileEntityTypes.MAGIC_INFUSER.get());
-    }
-
-    @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> createInfuserTicker(Level p_151988_, BlockEntityType<T> p_151989_, BlockEntityType<? extends MagicInfuserBlockEntity> p_151990_) {
-        return p_151988_.isClientSide ? null : createTickerHelper(p_151989_, p_151990_, MagicInfuserBlockEntity::serverTick);
+        return level.isClientSide ? null : createTickerHelper(type, (BlockEntityType<? extends MagicInfuserBlockEntity>) ModTileEntityTypes.MAGIC_INFUSER.get(), (level1, pos, state1, tile) -> tile.serverTick());
     }
 
     @Override

@@ -32,14 +32,19 @@ public class MagicLogger extends BaseEntityBlock implements EntityBlock {
     }
 
     @Override
+    public RenderShape getRenderShape(BlockState p_49232_) {
+        return RenderShape.MODEL;
+    }
+
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return ModTileEntityTypes.MAGIC_LOGGER.get().create(pos, state);
+        return new MagicLoggerBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, (BlockEntityType<? extends MagicLoggerBlockEntity>) ModTileEntityTypes.MAGIC_LOGGER.get(), (level1, pos, state1, tile) -> tile.serverTick(level1, pos, state1, tile));
+        return level.isClientSide ? null : createTickerHelper(type, (BlockEntityType<? extends MagicLoggerBlockEntity>) ModTileEntityTypes.MAGIC_LOGGER.get(), (level1, pos, state1, tile) -> tile.serverTick(level1, pos, state1, tile));
     }
 
     @Override

@@ -5,9 +5,7 @@ import com.google.common.collect.Maps;
 import com.pitheguy.magicmod.container.MagicEnergizerContainer;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.ModItemHandler;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
+import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -20,7 +18,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -88,9 +85,13 @@ public class MagicEnergizerBlockEntity extends BlockEntity implements MenuProvid
 
     @Override
     public CompoundTag getUpdateTag() {
-        CompoundTag nbt = new CompoundTag();
-        this.saveAdditional(nbt);
-        return nbt;
+        return this.serializeNBT();
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag) {
+        super.handleUpdateTag(tag);
+        this.load(tag);
     }
 
     @Override
@@ -104,18 +105,26 @@ public class MagicEnergizerBlockEntity extends BlockEntity implements MenuProvid
         return new MagicEnergizerContainer(windowId, playerInv, this);
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, MagicEnergizerBlockEntity tile) {
+    public void tick() {
         boolean dirty = false;
-        tile.fuelConsumptionPerTick = tile.fuelConsumers.size();
+        this.fuelConsumptionPerTick = this.fuelConsumers.size();
         if (level != null && !level.isClientSide()) {
-            while(ITEM_FUEL_AMOUNT.get(tile.inventory.getStackInSlot(0).getItem()) != null && tile.fuel <= MAX_FUEL - ITEM_FUEL_AMOUNT.get(tile.inventory.getStackInSlot(0).getItem())) {
-                tile.fuel += ITEM_FUEL_AMOUNT.get(tile.inventory.getStackInSlot(0).getItem());
-                tile.inventory.decrStackSize(0, 1);
+            while(ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(0).getItem()) != null && this.fuel <= MAX_FUEL - ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(0).getItem())) {
+                this.fuel += ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(0).getItem());
+                this.inventory.decrStackSize(0, 1);
                 dirty = true;
             }
         }
-        tile.fuel -= tile.fuelConsumptionPerTick;
-        if(dirty) tile.setChanged();
+        this.fuel -= this.fuelConsumptionPerTick;
+        if (dirty) this.update();
+    }
+
+    public void update() {
+        requestModelDataUpdate();
+        setChanged();
+        if (this.level != null) {
+            this.level.setBlockAndUpdate(this.worldPosition, getBlockState());
+        }
     }
 
     public Component getName() {
