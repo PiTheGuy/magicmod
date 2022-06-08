@@ -1,5 +1,6 @@
 package com.pitheguy.magicmod.blockentity;
 
+import com.pitheguy.magicmod.blocks.state.ModBlockStateProperties;
 import com.pitheguy.magicmod.container.MagicMinerContainer;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import net.minecraft.core.BlockPos;
@@ -10,6 +11,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -23,6 +25,20 @@ public class MagicMinerBlockEntity extends AutoActionBlockEntity implements Menu
 
     public MagicMinerBlockEntity(BlockPos pos, BlockState state) {
         this(ModTileEntityTypes.MAGIC_MINER.get(), pos, state);
+    }
+
+    @Override
+    public void serverTick(Level level, BlockPos pos, BlockState state, AutoActionBlockEntity tile) {
+        super.serverTick(level, pos, state, tile);
+        this.updateBlockState();
+    }
+
+    private void updateBlockState() {
+        BlockState oldBlockState = this.level.getBlockState(this.worldPosition);
+        BlockState newBlockState = oldBlockState.setValue(ModBlockStateProperties.RUNNING, this.status.isRunning());
+        if (oldBlockState != newBlockState) {
+            this.level.setBlock(this.worldPosition, newBlockState, 3);
+        }
     }
 
     @Nullable
