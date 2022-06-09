@@ -9,7 +9,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "weight": 2,
+          "weight": 4,
           "name": "magicmod:magic_powder",
           "functions": [
             {
@@ -23,7 +23,7 @@
         },
         {
           "type": "minecraft:item",
-          "weight": 2,
+          "weight": 4,
           "name": "magicmod:magic_crystal",
           "functions": [
             {
@@ -37,7 +37,7 @@
         },
         {
           "type": "minecraft:item",
-          "weight": 1,
+          "weight": 2,
           "name": "magicmod:magic_nugget",
           "functions": [
             {
@@ -51,7 +51,7 @@
         },
         {
           "type": "minecraft:item",
-          "weight": 1,
+          "weight": 2,
           "name": "magicmod:magic_core",
           "functions": [
             {
@@ -70,8 +70,17 @@
         },
         {
           "type": "minecraft:item",
-          "weight": 1,
-          "name": "magicmod:magic_gear"
+          "weight": 3,
+          "name": "magicmod:magic_gear",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 2,
+                "max": 3
+              }
+            }
+          ]
         }
       ]
     },
