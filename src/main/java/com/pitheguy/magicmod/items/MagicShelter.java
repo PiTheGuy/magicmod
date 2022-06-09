@@ -22,9 +22,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.chunk.LevelChunk;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static com.pitheguy.magicmod.util.RegistryHandler.*;
@@ -77,7 +75,7 @@ public class MagicShelter extends Item {
                     if (key.equals("M")) rerollRandomBlocks();
                     BlockState blockState = BLOCK_KEY.get(key);
                     BlockPos placePos = pos.offset(x, y + 1, z);
-                    if (blockState != null && context.getLevel().getBlockState(placePos).isAir()) {
+                    if (blockState != null && context.getLevel().getBlockState(placePos).getMaterial().isReplaceable()) {
                         context.getLevel().setBlock(placePos, blockState, 0);
                         if (key.equals("C")) {
                             LevelChunk chunk = context.getLevel().getChunkAt(placePos);
@@ -106,7 +104,7 @@ public class MagicShelter extends Item {
         for (int x = -2; x <= 2; x++) {
             for (int y = 0; y < STRUCTURE_1.length; y++) {
                 for (int z = -2; z <= 2; z++) {
-                    if (!world.getBlockState(new BlockPos(player.getPosition(0).add(x, y, z))).isAir()) {
+                    if (!world.getBlockState(new BlockPos(player.getPosition(0).add(x, y, z))).getMaterial().isReplaceable()) {
                         return false;
                     }
                 }
