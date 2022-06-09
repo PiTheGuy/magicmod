@@ -198,7 +198,7 @@ public abstract class AutoActionBlockEntity extends BlockEntity implements MenuP
 
     @Nullable private BlockPos findMineableBlock() {
         if (this.level == null) return null;
-        for (int y = invertedDirection ? 0 : this.level.getMinBuildHeight(); y <= (invertedDirection ? this.level.getMaxBuildHeight() - this.worldPosition.getY() : this.worldPosition.getY()); y++) {
+        for (int y = invertedDirection ? 0 : 1; y <= (invertedDirection ? this.level.getMaxBuildHeight() - this.worldPosition.getY() : this.worldPosition.getY() - this.level.getMinBuildHeight()); y++) {
             for (int x = -range; x <= range; x++) {
                 for (int z = -range; z <= range; z++) {
                     BlockPos pos = this.worldPosition.offset(x, y * direction, z);
