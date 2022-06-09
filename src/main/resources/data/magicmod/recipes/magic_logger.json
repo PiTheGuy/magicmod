@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        " G ",
+        "GAG",
+        " G "
+    ],
+    
+    "key":
+    {
+        "G":
+        {
+            "item": "magicmod:magic_gear"
+        },
+		"A":
+        {
+            "item": "magicmod:magic_axe"
+        }
+    },
+    
+    "result":
+    {
+        "item": "magicmod:magic_logger",
+        "count": 1
+    }
+}

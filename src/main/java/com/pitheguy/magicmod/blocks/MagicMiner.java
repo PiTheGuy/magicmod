@@ -1,6 +1,6 @@
 package com.pitheguy.magicmod.blocks;
 
-import com.pitheguy.magicmod.blockentity.*;
+import com.pitheguy.magicmod.blockentity.MagicMinerBlockEntity;
 import com.pitheguy.magicmod.blocks.state.ModBlockStateProperties;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.ModItemHandler;
@@ -72,17 +72,17 @@ public class MagicMiner extends BaseEntityBlock implements EntityBlock {
     @Override
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         BlockEntity tile = worldIn.getBlockEntity(pos);
-        if(tile instanceof MagicMinerBlockEntity) {
-            MagicMinerBlockEntity miner = (MagicMinerBlockEntity) tile;
-            ((ModItemHandler)miner.getInventory()).toNonNullList().forEach(item -> {
-                ItemEntity itemEntity = new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), item);
-                worldIn.addFreshEntity(itemEntity);
-            });
-            if (miner.fuelSourceTileEntity != null) {
-                miner.fuelSourceTileEntity.unregisterFuelConsumer(miner);
-            }
-        }
         if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
+            if(tile instanceof MagicMinerBlockEntity) {
+                MagicMinerBlockEntity miner = (MagicMinerBlockEntity) tile;
+                ((ModItemHandler)miner.getInventory()).toNonNullList().forEach(item -> {
+                    ItemEntity itemEntity = new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), item);
+                    worldIn.addFreshEntity(itemEntity);
+                });
+                if (miner.fuelSourceTileEntity != null) {
+                    miner.fuelSourceTileEntity.unregisterFuelConsumer(miner);
+                }
+            }
             worldIn.removeBlockEntity(pos);
         }
     }

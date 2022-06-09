@@ -46,6 +46,7 @@ public class RegistryHandler {
     public static final RegistryObject<Item> MAGIC_CARROT = ITEMS.register("magic_carrot", () -> new Item(new Item.Properties().tab(MagicMod.TAB).food(new FoodProperties.Builder().nutrition(12).saturationMod(1.8F).effect(() -> new MobEffectInstance(MobEffects.REGENERATION, 100, 2), 1).effect(() -> new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 2400, 2), 1).alwaysEat().build())));
     public static final RegistryObject<Item> MAGIC_SHELTER = ITEMS.register("magic_shelter", MagicShelter::new);
     public static final RegistryObject<Item> MAGIC_FUEL = ITEMS.register("magic_fuel", ItemBase::new);
+    public static final RegistryObject<Item> MAGIC_GEAR = ITEMS.register("magic_gear", ItemBase::new);
 
     //Upgrades
     public static final RegistryObject<Item> SPEED_UPGRADE = ITEMS.register("speed_upgrade", UpgradeItem::new);

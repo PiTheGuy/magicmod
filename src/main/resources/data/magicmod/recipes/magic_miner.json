@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        " G ",
+        "GPG",
+        " G "
+    ],
+    
+    "key":
+    {
+        "G":
+        {
+            "item": "magicmod:magic_gear"
+        },
+		"P":
+        {
+            "item": "magicmod:magic_pickaxe"
+        }
+    },
+    
+    "result":
+    {
+        "item": "magicmod:magic_miner",
+        "count": 1
+    }
+}

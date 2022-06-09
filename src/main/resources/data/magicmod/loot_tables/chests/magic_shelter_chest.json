@@ -67,6 +67,11 @@
           "type": "minecraft:item",
           "weight": 1,
           "name": "magicmod:magic_gem"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "name": "magicmod:magic_gear"
         }
       ]
     },
