@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "NCN",
+        "C C",
+        "NCN"
+    ],
+    
+    "key":
+    {
+        "N":
+        {
+            "item": "magicmod:magic_nugget"
+        },
+        "C":
+        {
+            "item": "minecraft:coal"
+        }
+    },
+	
+    "result":
+    {
+        "item": "magicmod:magic_fuel",
+        "count": 16
+    }
+}

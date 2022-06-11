@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        " G ",
+        "GFG",
+        " G "
+    ],
+    
+    "key":
+    {
+        "G":
+        {
+            "item": "magicmod:magic_gear"
+        },
+		"F":
+        {
+            "item": "magicmod:magic_fuel"
+        }
+    },
+    
+    "result":
+    {
+        "item": "magicmod:magic_energizer",
+        "count": 1
+    }
+}

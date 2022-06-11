@@ -16,7 +16,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 
 
-version = '2.10-dev'
+version = '2.10'
 group = 'com.pitheguy.magicmod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'magicmod'
 
