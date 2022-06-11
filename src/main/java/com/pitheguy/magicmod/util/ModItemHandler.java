@@ -1,8 +1,8 @@
 package com.pitheguy.magicmod.util;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class ModItemHandler extends ItemStackHandler {
@@ -20,12 +20,7 @@ public class ModItemHandler extends ItemStackHandler {
         }
     }
     public boolean isEmpty() {
-        for (ItemStack stack : this.stacks) {
-            if (stack.isEmpty() || stack.getItem() == Items.AIR) {
-                return true;
-            }
-        }
-        return false;
+        return this.stacks.stream().anyMatch(stack -> stack.isEmpty() || stack.getItem() == Items.AIR);
     }
 
     public void decrStackSize(int index, int count) {

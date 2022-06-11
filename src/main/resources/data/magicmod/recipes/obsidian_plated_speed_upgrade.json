@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "PPP",
+        "PSP",
+        "PPP"
+    ],
+    
+    "key":
+    {
+        "P":
+        {
+            "item": "magicmod:obsidian_plate"
+        },
+		"S":
+        {
+            "item": "magicmod:speed_upgrade"
+        }
+    },
+    
+    "result":
+    {
+        "item": "magicmod:obsidian_plated_speed_upgrade",
+        "count": 1
+    }
+}

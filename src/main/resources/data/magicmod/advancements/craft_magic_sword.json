@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "item": "magicmod:magic_sword"
+            "items": [
+              "magicmod:magic_sword"
+            ]
           }
         ]
       }

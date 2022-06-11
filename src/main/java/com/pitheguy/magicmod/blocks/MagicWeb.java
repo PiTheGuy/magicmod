@@ -1,24 +1,24 @@
 package com.pitheguy.magicmod.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.Vec3;
 
 public class MagicWeb extends Block {
 
     public MagicWeb() {
-        super(Properties.create(Material.WEB)
-                .hardnessAndResistance(4.0f)
-                .doesNotBlockMovement()
+        super(Properties.of(Material.WEB)
+                .strength(4.0f)
+                .noCollission()
         );
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        entityIn.setMotionMultiplier(state, new Vec3d(0.05D, 0.01D, 0.05D));
+    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
+        entityIn.makeStuckInBlock(state, new Vec3(0.05D, 0.01D, 0.05D));
     }
 }

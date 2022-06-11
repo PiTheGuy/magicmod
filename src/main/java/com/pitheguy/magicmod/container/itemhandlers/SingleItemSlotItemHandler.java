@@ -1,10 +1,11 @@
 package com.pitheguy.magicmod.container.itemhandlers;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 public class SingleItemSlotItemHandler extends SlotItemHandler {
     final Item validItem;
@@ -14,11 +15,7 @@ public class SingleItemSlotItemHandler extends SlotItemHandler {
     }
 
     @Override
-    public boolean isItemValid(@NotNull ItemStack stack) {
-        if (stack.getItem() == validItem) {
-            return super.isItemValid(stack);
-        } else {
-            return false;
-        }
+    public boolean mayPlace(@Nonnull ItemStack stack) {
+        return stack.getItem() == validItem && super.mayPlace(stack);
     }
 }

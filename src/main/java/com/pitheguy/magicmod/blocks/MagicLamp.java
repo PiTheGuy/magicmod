@@ -1,16 +1,15 @@
 package com.pitheguy.magicmod.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
 
 public class MagicLamp extends Block {
     public MagicLamp() {
-        super(Properties.create(Material.IRON)
-                .hardnessAndResistance(2.0f, 2.0f)
+        super(Properties.of(Material.METAL)
+                .strength(2.0f, 2.0f)
                 .sound(SoundType.GLASS)
-                .lightValue(15)
+                .lightLevel(state -> 15)
         );
     }
-
 }

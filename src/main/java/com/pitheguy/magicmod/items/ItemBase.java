@@ -1,10 +1,10 @@
 package com.pitheguy.magicmod.items;
 
 import com.pitheguy.magicmod.MagicMod;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 
 public class ItemBase extends Item {
     public ItemBase() {
-        super(new Item.Properties().group(MagicMod.TAB));
+        super(new Item.Properties().tab(MagicMod.TAB));
     }
 }

@@ -1,0 +1,27 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "magicmod:magic_miner",
+      "magicmod:magic_logger",
+      "magicmod:magic_energizer"
+    ]
+  },
+  "criteria": {
+    "has_magic_gear": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_gear"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_magic_gear"
+    ]
+  ]
+}

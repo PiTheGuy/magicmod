@@ -1,32 +1,29 @@
-## Magic Shelter
-- Using this item on a block spawns a mostly obsidian structure around the player to protect them
-- The second floor has a chest with loot containing magic powder, crystals, nuggets, cores, and gems, as well as a chance to get one of 2 new enchantments _(see below for more details)_
-- Only places if there's ground directly beneath the player, and there's enough space
+## Magic Miner
+- Automatically mines blocks
+- Requires fuel from a nearby Magic Energizer _(see below)_
+- Can be upgraded with the new upgrades _(see below)_
+- Only mines blocks best mined with a pickaxe or shovel
+- Automatically stops when inventory fills up
 - Crafted as follows:
-- ![Magic Shelter Recipe](https://user-images.githubusercontent.com/55959311/166120665-a00db5b7-b3d7-4e55-b10d-91f33d196d9f.png)
-## Magic Finder Enchantment
-- New treasure enchantment
-- Can be applied to tools (pickaxe, axe, and shovel)
-- Max level of 3
-- Found in Magic Shelter loot chests
-- Grants a 10% chance per level to drop a magic powder when a block is mined (2% on insta-mineable blocks)
-- **WARNING: Doesn't work on vanilla tools!**
-## Veinminer Enchantment
-- New treasure enchantment
-- Can be applied to pickaxes
-- Max level of 3
-- Found in Magic Shelter loot chests
-- Automatically breaks block of the same type in an area around any block broken, similar to the Veinminer mod
-- Affected area grows with enchantment level (3x3 for level 1, 5x5 for level 2, etc.)
-- Only works if you're using the right tool
-- **WARNING: Doesn't work on vanilla tools!**
-## Magic Spike
-- New spike-shaped block that deals 10x fall damage when fallen on
-- Useful for mob farms and traps
+![Magic Miner Recipe](https://user-images.githubusercontent.com/55959311/173133628-b3f1781d-6e90-49d6-81e5-3f84761622f0.png)
+## Magic Logger
+- Works the same as the Magic Miner except mines logs and leaves instead
+- Also mines blocks above the logger instead of below
 - Crafted as follows:
-- ![Magic Spike Recipe](https://user-images.githubusercontent.com/55959311/166122283-da78b9cc-5f50-437b-af34-4444bca5d73a.png)
+![Magic Logger Recipe](https://user-images.githubusercontent.com/55959311/173133439-5413f25c-c309-4f6d-ae58-f5af78d9ba8c.png)
+## Magic Energizer
+- Powers Magic Miners and Magic Loggers within 4 blocks
+- Requires Magic Fuel _(see below)_ to operate
+- Crafted as follows:
+![Magic Energizer Recipe](https://user-images.githubusercontent.com/55959311/173197590-180a986c-c4ff-412d-92f5-2ae64016f887.png)
+## Magic Fuel
+- Used to power Magic Energizers
+- Crafted as follows:
+![Magic Fuel Recipe](https://user-images.githubusercontent.com/55959311/173133307-903e84f9-265a-42fe-9692-687b7fde4de0.png)
+## Magic Gear
+- Used to craft Magic Loggers, Miners, and Energizers
+- Found in Magic Shelter chests
 ## Other Changes and Bug Fixes
-- Added a close sound for the magic crate
-- Magic Pearls now deal a lot less damage
-- Reduced cooldown for Magic Pearls
-- Fortune now affects magic ore drops
+- Updated mod to 1.18 (1.19 coming soon)
+- Added Deepslate Magic Ore as a deepslate counterpart to Magic Ore
+- Tall grass no longer prevents the Magic Shelter from placing

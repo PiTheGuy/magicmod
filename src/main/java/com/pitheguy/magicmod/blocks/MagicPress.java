@@ -1,80 +1,79 @@
 package com.pitheguy.magicmod.blocks;
 
+import com.pitheguy.magicmod.blockentity.MagicPressBlockEntity;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
-import com.pitheguy.magicmod.tileentity.MagicPressTileEntity;
 import com.pitheguy.magicmod.util.ModItemHandler;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ToolType;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.*;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.*;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class MagicPress extends Block {
+public class MagicPress extends BaseEntityBlock implements EntityBlock {
 
     public MagicPress() {
-        super(Properties.create(Material.IRON)
-                .hardnessAndResistance(6.5f, 8.0f)
+        super(Properties.of(Material.METAL)
+                .strength(6.5f, 8.0f)
                 .sound(SoundType.METAL)
-                .harvestLevel(4)
-                .harvestTool(ToolType.PICKAXE)
+                .requiresCorrectToolForDrops()
         );
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
+    public RenderShape getRenderShape(BlockState p_49232_) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return ModTileEntityTypes.MAGIC_PRESS.get().create();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new MagicPressBlockEntity(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return level.isClientSide ? null : createTickerHelper(type, (BlockEntityType<? extends MagicPressBlockEntity>) ModTileEntityTypes.MAGIC_PRESS.get(), (level1, pos, state1, tile) -> tile.serverTick());
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (worldIn != null && !worldIn.isRemote()) {
-            TileEntity tile = worldIn.getTileEntity(pos);
-            if(tile instanceof MagicPressTileEntity) {
-                NetworkHooks.openGui((ServerPlayerEntity) player,(INamedContainerProvider) tile,pos);
-                return ActionResultType.SUCCESS;
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (worldIn != null && !worldIn.isClientSide) {
+            BlockEntity tile = worldIn.getBlockEntity(pos);
+            if(tile instanceof MagicPressBlockEntity) {
+                NetworkHooks.openGui((ServerPlayer) player,(MenuProvider) tile,pos);
+                return InteractionResult.SUCCESS;
             }
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        TileEntity tile = worldIn.getTileEntity(pos);
-        if(tile instanceof MagicPressTileEntity) {
-            MagicPressTileEntity infuser = (MagicPressTileEntity) tile;
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        BlockEntity tile = worldIn.getBlockEntity(pos);
+        if(tile instanceof MagicPressBlockEntity infuser) {
             ((ModItemHandler)infuser.getInventory()).toNonNullList().forEach(item -> {
                 ItemEntity itemEntity = new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), item);
-                worldIn.addEntity(itemEntity);
+                worldIn.addFreshEntity(itemEntity);
             });
         }
-        if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
-            worldIn.removeTileEntity(pos);
+        if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
+            worldIn.removeBlockEntity(pos);
         }
     }
 }

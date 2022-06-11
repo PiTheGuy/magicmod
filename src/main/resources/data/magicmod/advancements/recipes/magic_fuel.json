@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "magicmod:magic_fuel"
+    ]
+  },
+  "criteria": {
+    "has_magic_nugget": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "magicmod:magic_nugget"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_magic_nugget"
+    ]
+  ]
+}

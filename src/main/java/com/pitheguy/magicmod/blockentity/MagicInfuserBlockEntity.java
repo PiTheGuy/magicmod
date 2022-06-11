@@ -1,25 +1,24 @@
-package com.pitheguy.magicmod.tileentity;
+package com.pitheguy.magicmod.blockentity;
 
 import com.pitheguy.magicmod.container.MagicInfuserContainer;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.ModItemHandler;
 import com.pitheguy.magicmod.util.RegistryHandler;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -27,31 +26,30 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
 
-public class MagicInfuserTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
+public class MagicInfuserBlockEntity extends BlockEntity implements MenuProvider {
     private final ModItemHandler inventory;
 
-    public MagicInfuserTileEntity(TileEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
+    public MagicInfuserBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+        super(tileEntityTypeIn, pos, state);
         this.inventory = new ModItemHandler(10);
     }
 
-    public MagicInfuserTileEntity() {
-        this(ModTileEntityTypes.MAGIC_INFUSER.get());
+    public MagicInfuserBlockEntity(BlockPos pos, BlockState state) {
+        this(ModTileEntityTypes.MAGIC_INFUSER.get(), pos, state);
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         NonNullList<ItemStack> inv = NonNullList.withSize(this.inventory.getSlots(), ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(compound, inv);
+        ContainerHelper.loadAllItems(compound, inv);
         this.inventory.setNonNullList(inv);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
-        ItemStackHelper.saveAllItems(compound, this.inventory.toNonNullList());
-        return compound;
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
+        ContainerHelper.saveAllItems(compound, this.inventory.toNonNullList());
     }
 
     public final IItemHandlerModifiable getInventory() {
@@ -60,27 +58,26 @@ public class MagicInfuserTileEntity extends TileEntity implements ITickableTileE
 
     @Nullable
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        CompoundNBT nbt = new CompoundNBT();
-        this.write(nbt);
-        return new SUpdateTileEntityPacket(this.pos, 0, nbt);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        CompoundTag nbt = new CompoundTag();
+        this.saveAdditional(nbt);
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(pkt.getNbtCompound());
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        this.load(pkt.getTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT nbt = new CompoundNBT();
-        this.write(nbt);
-        return nbt;
+    public CompoundTag getUpdateTag() {
+        return this.serializeNBT();
     }
 
     @Override
-    public void handleUpdateTag(CompoundNBT nbt) {
-        this.read(nbt);
+    public void handleUpdateTag(CompoundTag tag) {
+        super.handleUpdateTag(tag);
+        this.load(tag);
     }
 
     @Override
@@ -90,14 +87,13 @@ public class MagicInfuserTileEntity extends TileEntity implements ITickableTileE
 
     @Nullable
     @Override
-    public Container createMenu(final int windowId, final PlayerInventory playerInv, final PlayerEntity playerIn) {
+    public AbstractContainerMenu createMenu(final int windowId, final Inventory playerInv, final Player playerIn) {
         return new MagicInfuserContainer(windowId, playerInv, this);
     }
 
-    @Override
-    public void tick() {
+    public void serverTick() {
         boolean dirty = false;
-        if (world != null && !world.isRemote()) {
+        if (level != null && !level.isClientSide) {
             while(this.inventory.getStackInSlot(0).getItem() == RegistryHandler.MAGIC_ORB_RED.get() &&
                     this.inventory.getStackInSlot(1).getItem() == RegistryHandler.MAGIC_ORB_ORANGE.get() &&
                     this.inventory.getStackInSlot(2).getItem() == RegistryHandler.MAGIC_ORB_YELLOW.get() &&
@@ -115,19 +111,27 @@ public class MagicInfuserTileEntity extends TileEntity implements ITickableTileE
                 }
             }
         }
-        if(dirty) this.markDirty();
+        if(dirty) this.update();
     }
 
-    public ITextComponent getName() {
+    public void update() {
+        requestModelDataUpdate();
+        setChanged();
+        if (this.level != null) {
+            this.level.setBlockAndUpdate(this.worldPosition, getBlockState());
+        }
+    }
+
+    public Component getName() {
         return this.getDefaultName();
     }
 
-    private ITextComponent getDefaultName() {
-        return new TranslationTextComponent("container.magicmod.magic_infuser");
+    private Component getDefaultName() {
+        return new TranslatableComponent("container.magicmod.magic_infuser");
     }
 
     @Override
-    public ITextComponent getDisplayName() {
+    public Component getDisplayName() {
         return this.getName();
     }
 

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "magicmod:magic_crate",
+    "magicmod:magic_infused_stone",
+    "magicmod:magic_logger",
+    "magicmod:magic_miner",
+    "magicmod:magic_vein"
+  ]
+}

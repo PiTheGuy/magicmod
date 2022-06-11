@@ -2,51 +2,53 @@ package com.pitheguy.magicmod.entities;
 
 import com.pitheguy.magicmod.init.ModEntityTypes;
 import com.pitheguy.magicmod.util.RegistryHandler;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.TemptGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
-public class MagicFriend extends AnimalEntity {
+import javax.annotation.Nullable;
 
-    public MagicFriend(EntityType<? extends AnimalEntity> type, World worldIn) {
+public class MagicFriend extends Animal {
+
+    public MagicFriend(EntityType<? extends Animal> type, Level worldIn) {
         super(type, worldIn);
     }
 
     @Nullable
     @Override
-    public AgeableEntity createChild(AgeableEntity ageable) {
-        MagicFriend entity = new MagicFriend(ModEntityTypes.MAGIC_FRIEND.get(), this.world);
-        entity.onInitialSpawn(this.world, this.world.getDifficultyForLocation(new BlockPos(entity)), SpawnReason.BREEDING, null, null);
+    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob ageable) {
+        MagicFriend entity = new MagicFriend(ModEntityTypes.MAGIC_FRIEND.get(), this.level);
+        entity.finalizeSpawn(world, this.level.getCurrentDifficultyAt(new BlockPos(entity.getPosition(0))), MobSpawnType.BREEDING, null, null);
         return entity;
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(1, new TemptGoal(this, 1.2, Ingredient.fromItems(RegistryHandler.MAGIC_CARROT.get()), false));
-        this.goalSelector.addGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new TemptGoal(this, 1.2, Ingredient.of(RegistryHandler.MAGIC_CARROT.get()), false));
+        this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23);
+    public static AttributeSupplier createAttributes() {
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20).add(Attributes.MOVEMENT_SPEED, 0.23).build();
     }
 
     @Nullable
@@ -54,96 +56,89 @@ public class MagicFriend extends AnimalEntity {
         return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
     }
 
-    public void travel(Vec3d vector) {
+    public void travel(Vec3 vector) {
         if (this.isAlive()) {
             Entity entity = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
-            if (this.isBeingRidden() && this.canBeSteered()) {
-                this.rotationYaw = entity.rotationYaw;
-                this.prevRotationYaw = this.rotationYaw;
-                this.rotationPitch = entity.rotationPitch * 0.5F;
-                this.setRotation(this.rotationYaw, this.rotationPitch);
-                this.renderYawOffset = this.rotationYaw;
-                this.rotationYawHead = this.rotationYaw;
-                this.stepHeight = 1.0F;
-                this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
+            if (this.isVehicle() && this.canBeControlledByRider()) {
+                this.setYRot(entity.getYRot());
+                this.yRotO = this.getYRot();
+                this.setXRot(entity.getXRot() * 0.5F);
+                this.setRot(this.getYRot(), this.getXRot());
+                this.yBodyRot = this.getYRot();
+                this.yHeadRot = this.getYRot();
+                this.maxUpStep = 1.0F;
+                this.flyingSpeed = this.getSpeed() * 0.1F;
 
-                if (this.canPassengerSteer()) {
-                    this.setAIMoveSpeed((float) this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getValue() * 1.5f);
-                    super.travel(new Vec3d(0.0D, 0.0D, 1.0D));
-                    this.newPosRotationIncrements = 0;
+                if (this.isControlledByLocalInstance()) {
+                    this.setSpeed((float) this.getAttribute(Attributes.MOVEMENT_SPEED).getValue() * 1.5f);
+                    super.travel(new Vec3(0.0D, 0.0D, 1.0D));
+                    this.lerpSteps = 0;
                 } else {
-                    this.setMotion(Vec3d.ZERO);
+                    this.setDeltaMovement(Vec3.ZERO);
                 }
 
-                this.prevLimbSwingAmount = this.limbSwingAmount;
-                double d1 = this.getPosX() - this.prevPosX;
-                double d0 = this.getPosZ() - this.prevPosZ;
-                float f1 = MathHelper.sqrt(d1 * d1 + d0 * d0) * 4.0F;
-                if (f1 > 1.0F) {
-                    f1 = 1.0F;
-                }
+                this.animationSpeedOld = this.animationSpeed;
+                double d1 = this.getX() - this.xo;
+                double d0 = this.getZ() - this.zo;
+                float f1 = Mth.sqrt((float) (d1 * d1 + d0 * d0)) * 4.0F;
+                f1 = Math.min(f1, 1.0F);
 
-                this.limbSwingAmount += (f1 - this.limbSwingAmount) * 0.4F;
-                this.limbSwing += this.limbSwingAmount;
+                this.animationSpeed += (f1 - this.animationSpeed) * 0.4F;
+                this.animationPosition += this.animationSpeed;
             } else {
-                this.stepHeight = 0.5F;
-                this.jumpMovementFactor = 0.02F;
+                this.maxUpStep = 0.5F;
+                this.flyingSpeed = 0.02F;
                 super.travel(vector);
             }
         }
     }
 
-    public boolean processInteract(PlayerEntity player, Hand hand) {
-        if (super.processInteract(player, hand)) {
-            return true;
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (super.mobInteract(player, hand) == InteractionResult.SUCCESS) {
+            return InteractionResult.SUCCESS;
         } else {
-            ItemStack itemstack = player.getHeldItem(hand);
+            ItemStack itemstack = player.getItemInHand(hand);
             if (itemstack.getItem() == Items.NAME_TAG) {
-                itemstack.interactWithEntity(player, this, hand);
-                return true;
-            } else if (!this.isBeingRidden()) {
-                if (!this.world.isRemote) {
+                itemstack.interactLivingEntity(player, this, hand);
+                return InteractionResult.SUCCESS;
+            } else if (!this.isVehicle()) {
+                if (!this.level.isClientSide) {
                     player.startRiding(this);
                 }
-
-                return true;
+                return InteractionResult.SUCCESS;
             } else {
-                return false;
+                return InteractionResult.PASS;
             }
         }
     }
 
-    @Override
-    public boolean canBeSteered() {
+    public boolean canBeControlledByRider() {
         Entity entity = this.getControllingPassenger();
-        if (entity instanceof PlayerEntity) {
-            PlayerEntity playerentity = (PlayerEntity)entity;
-            return playerentity.getHeldItemMainhand().getItem() == RegistryHandler.MAGIC_CARROT.get() || playerentity.getHeldItemOffhand().getItem() == RegistryHandler.MAGIC_CARROT.get();
-        } else return false;
+        return entity instanceof Player player && (player.getMainHandItem().getItem() == RegistryHandler.MAGIC_CARROT.get() || player.getOffhandItem().getItem() == RegistryHandler.MAGIC_CARROT.get());
     }
 
-    public boolean onLivingFall(float distance, float damageMultiplier) {
+    public boolean causeFallDamage(float distance, float damageMultiplier) {
         if (distance > 1.0F) {
-            this.playSound(SoundEvents.ENTITY_HORSE_LAND, 0.4F, 1.0F);
+            this.playSound(SoundEvents.HORSE_LAND, 0.4F, 1.0F);
         }
 
         int i = this.calculateFallDamage(distance, damageMultiplier);
         if (i <= 0) {
             return false;
         } else {
-            this.attackEntityFrom(DamageSource.FALL, i);
-            if (this.isBeingRidden()) {
-                for(Entity entity : this.getRecursivePassengers()) {
-                    entity.attackEntityFrom(DamageSource.FALL, i);
+            this.hurt(DamageSource.FALL, i);
+            if (this.isVehicle()) {
+                for(Entity entity : this.getIndirectPassengers()) {
+                    entity.hurt(DamageSource.FALL, i);
                 }
             }
 
-            this.playFallSound();
+            this.playBlockFallSound();
             return true;
         }
     }
 
     protected int calculateFallDamage(float distance, float damageMultiplier) {
-        return MathHelper.ceil((distance * 0.15F - 7.0F) * damageMultiplier);
+        return Mth.ceil((distance * 0.15F - 7.0F) * damageMultiplier);
     }
 }

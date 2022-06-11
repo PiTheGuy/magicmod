@@ -1,60 +1,59 @@
 package com.pitheguy.magicmod.tools;
 
 import com.pitheguy.magicmod.util.RegistryHandler;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.crafting.Ingredient;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.crafting.Ingredient;
 
+import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
-public enum ModItemTiers implements IItemTier {
-    MAGIC(() -> Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get()), 5, 75000, 42, 0, 40),
-    REINFORCED_MAGIC(() -> Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get()), 6, 200000, 75, 0, 60),
-    OBSIDIAN_PLATED_REINFORCED_MAGIC(() -> Ingredient.fromItems(RegistryHandler.MAGIC_GEM.get()), 7, 550000, 135, 0, 80);
+public enum ModItemTiers implements Tier {
+    MAGIC(() -> Ingredient.of(RegistryHandler.MAGIC_GEM.get()), 5, 75000, 42, 0, 40),
+    REINFORCED_MAGIC(() -> Ingredient.of(RegistryHandler.MAGIC_GEM.get()), 6, 200000, 75, 0, 60),
+    OBSIDIAN_PLATED_REINFORCED_MAGIC(() -> Ingredient.of(RegistryHandler.MAGIC_GEM.get()), 7, 550000, 135, 0, 80);
 
-    private final int harvestLevel;
-    private final int maxUses;
-    private final float efficiency;
-    private final float attackDamage;
-    private final int enchantability;
-    private final Supplier<Ingredient> repairMaterial;
+    private final int level;
+    private final int uses;
+    private final float speed;
+    private final float attackDamageBonus;
+    private final int enchantmentValue;
+    private final Supplier<Ingredient> repairIngredient;
 
-    ModItemTiers(Supplier<Ingredient> repairMaterial, int harvestLevel, int maxUses, float efficiency, float attackDamage, int enchantability) {
-        this.harvestLevel = harvestLevel;
-        this.maxUses = maxUses;
-        this.efficiency = efficiency;
-        this.attackDamage = attackDamage;
-        this.enchantability = enchantability;
-        this.repairMaterial = repairMaterial;
+    ModItemTiers(Supplier<Ingredient> repairIngredient, int level, int uses, float speed, float attackDamageBonus, int enchantmentValue) {
+        this.level = level;
+        this.uses = uses;
+        this.speed = speed;
+        this.attackDamageBonus = attackDamageBonus;
+        this.enchantmentValue = enchantmentValue;
+        this.repairIngredient = repairIngredient;
     }
 
     @Override
-    public int getMaxUses() {
-        return maxUses;
+    public int getUses() {
+        return uses;
     }
 
     @Override
-    public float getEfficiency() {
-        return efficiency;
+    public float getSpeed() {
+        return speed;
     }
 
     @Override
-    public float getAttackDamage() {
-        return attackDamage;
+    public float getAttackDamageBonus() {
+        return attackDamageBonus;
     }
 
     @Override
-    public int getHarvestLevel() {
-        return harvestLevel;
+    public int getLevel() {
+        return level;
     }
 
     @Override
-    public int getEnchantability() {
-        return enchantability;
+    public int getEnchantmentValue() {
+        return enchantmentValue;
     }
 
-    @Override
-    public @NotNull Ingredient getRepairMaterial() {
-        return repairMaterial.get();
+    public @Nonnull Ingredient getRepairIngredient() {
+        return repairIngredient.get();
     }
 }

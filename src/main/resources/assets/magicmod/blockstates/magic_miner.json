@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "running=false": {
+      "model": "magicmod:block/magic_miner"
+    },
+    "running=true": {
+      "model": "magicmod:block/magic_miner_running"
+    }
+  }
+}

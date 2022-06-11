@@ -1,33 +1,33 @@
 package com.pitheguy.magicmod.armor;
 
 import com.pitheguy.magicmod.util.ArmorHandler;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.world.World;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class CustomArmorMagic extends ArmorItem {
-    public CustomArmorMagic(IArmorMaterial materialIn, EquipmentSlotType slot, Properties builder) {
+    public CustomArmorMagic(ArmorMaterial materialIn, EquipmentSlot slot, Properties builder) {
         super(materialIn, slot, builder);
     }
 
     @Override
-    public void onArmorTick(ItemStack itemstack, World world, PlayerEntity player) {
+    public void onArmorTick(ItemStack itemstack, Level world, Player player) {
         if (ArmorHandler.isWearingObsidianPlatedReinforcedMagicArmor(player)) {
-            player.addPotionEffect(new EffectInstance(Effects.REGENERATION, 2, 3, true, false));
-            player.addPotionEffect(new EffectInstance(Effects.SATURATION, 1, 0, true, false));
-            player.addPotionEffect(new EffectInstance(Effects.SPEED, 1, 1, true, false));
-            player.abilities.allowFlying = true;
+            player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 2, 3, true, false));
+            player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 1, 0, true, false));
+            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 1, 1, true, false));
+            player.getAbilities().mayfly = true;
         } else {
             if (ArmorHandler.isWearingReinforcedMagicArmor(player))
-                player.addPotionEffect(new EffectInstance(Effects.REGENERATION, 2, 1, true, false));
-            if (!player.abilities.isCreativeMode && player.abilities.allowFlying) {
-                player.abilities.allowFlying = false;
-                player.abilities.isFlying = false;
+                player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 2, 1, true, false));
+            if (!player.getAbilities().instabuild && player.getAbilities().mayfly) {
+                player.getAbilities().mayfly = false;
+                player.getAbilities().flying = false;
             }
         }
     }

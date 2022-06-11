@@ -4,15 +4,15 @@ import com.pitheguy.magicmod.tools.MagicAxe;
 import com.pitheguy.magicmod.tools.MagicPickaxe;
 import com.pitheguy.magicmod.tools.MagicShovel;
 import com.pitheguy.magicmod.util.RegistryHandler;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentType;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.item.enchantment.Enchantments;
 
 public class VeinminerEnchantment extends Enchantment {
-    public VeinminerEnchantment(Rarity rarityIn, EnchantmentType typeIn, EquipmentSlotType[] slots) {
+    public VeinminerEnchantment(Rarity rarityIn, EnchantmentCategory typeIn, EquipmentSlot[] slots) {
         super(rarityIn, typeIn, slots);
     }
 
@@ -22,18 +22,18 @@ public class VeinminerEnchantment extends Enchantment {
     }
 
     @Override
-    public boolean isTreasureEnchantment() {
+    public boolean isTreasureOnly() {
         return true;
     }
 
     @Override
-    protected boolean canApplyTogether(Enchantment ench) {
-        return super.canApplyTogether(ench) && ench != Enchantments.EFFICIENCY && ench != RegistryHandler.MAGIC_FINDER.get();
+    protected boolean checkCompatibility(Enchantment ench) {
+        return super.checkCompatibility(ench) && ench != Enchantments.BLOCK_EFFICIENCY && ench != RegistryHandler.MAGIC_FINDER.get();
     }
 
     @Override
-    public boolean canApply(ItemStack stack) {
+    public boolean canEnchant(ItemStack stack) {
         Item item = stack.getItem();
-        return super.canApply(stack) && (item instanceof MagicShovel || item instanceof MagicPickaxe || item instanceof MagicAxe);
+        return super.canEnchant(stack) && (item instanceof MagicShovel || item instanceof MagicPickaxe || item instanceof MagicAxe);
     }
 }

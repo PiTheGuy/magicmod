@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "PPP",
+        "PRP",
+        "PPP"
+    ],
+    
+    "key":
+    {
+        "P":
+        {
+            "item": "magicmod:obsidian_plate"
+        },
+		"R":
+        {
+            "item": "magicmod:range_upgrade"
+        }
+    },
+    
+    "result":
+    {
+        "item": "magicmod:obsidian_plated_range_upgrade",
+        "count": 1
+    }
+}

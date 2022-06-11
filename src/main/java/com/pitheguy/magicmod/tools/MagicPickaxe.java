@@ -1,41 +1,41 @@
 package com.pitheguy.magicmod.tools;
 
 import com.pitheguy.magicmod.util.RegistryHandler;
-import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.PickaxeItem;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class MagicPickaxe extends PickaxeItem {
-    public MagicPickaxe(IItemTier tier, int attackDamageIn, float attackSpeedIn, Properties builder) {
+    public MagicPickaxe(Tier tier, int attackDamageIn, float attackSpeedIn, Properties builder) {
         super(tier, attackDamageIn, attackSpeedIn, builder);
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
+    public boolean mineBlock(ItemStack stack, Level worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
         int blocksBroken = 1;
-        if (entityLiving instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) entityLiving;
-            IBlockReader reader = player.world.getBlockReader(player.world.getChunkAt(pos).getPos().x, player.world.getChunkAt(pos).getPos().z);
-            double d = state.getPlayerRelativeBlockHardness(player, reader, pos) >= 1 ? 0.02 : 0.1;
-            if (Math.random() < EnchantmentHelper.getEnchantmentLevel(RegistryHandler.MAGIC_FINDER.get(), player.getHeldItemMainhand()) * d) {
-                player.world.addEntity(new ItemEntity(player.world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(RegistryHandler.MAGIC_POWDER.get())));
+        if (entityLiving instanceof Player player) {
+            BlockGetter reader = player.level.getChunkForCollisions(player.level.getChunkAt(pos).getPos().x, player.level.getChunkAt(pos).getPos().z);
+            double d = player.getDigSpeed(state, pos) >= 1 ? 0.02 : 0.1;
+            if (Math.random() < EnchantmentHelper.getEnchantmentLevel(RegistryHandler.MAGIC_FINDER.get(), player) * d) {
+                player.level.addFreshEntity(new ItemEntity(player.level, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(RegistryHandler.MAGIC_POWDER.get())));
             }
-            int veinminerLevel = EnchantmentHelper.getEnchantmentLevel(RegistryHandler.VEINMINER.get(), player.getHeldItemMainhand());
+            int veinminerLevel = EnchantmentHelper.getEnchantmentLevel(RegistryHandler.VEINMINER.get(), player);
             if (veinminerLevel > 0 && state.canHarvestBlock(reader, pos, player)) {
                 for (int x = -veinminerLevel; x <= veinminerLevel; x++) {
                     for (int y = -veinminerLevel; y <= veinminerLevel; y++) {
                         for (int z = -veinminerLevel; z <= veinminerLevel; z++) {
-                            if (worldIn.getBlockState(pos.add(x, y, z)).getBlock() == state.getBlock()) {
-                                worldIn.destroyBlock(pos.add(x,y,z), true, player);
+                            BlockPos currBlock = pos.offset(x, y, z);
+                            if (worldIn.getBlockState(currBlock).getBlock() == state.getBlock()) {
+                                worldIn.destroyBlock(currBlock, true, player);
                                 blocksBroken++;
                             }
                         }
@@ -43,8 +43,8 @@ public class MagicPickaxe extends PickaxeItem {
                 }
             }
         }
-        if (!worldIn.isRemote && state.getBlockHardness(worldIn, pos) != 0.0F) {
-           stack.damageItem(blocksBroken, entityLiving, entity -> entity.sendBreakAnimation(EquipmentSlotType.MAINHAND));
+        if (!worldIn.isClientSide && state.getDestroySpeed(worldIn, pos) != 0.0F) {
+           stack.hurtAndBreak(blocksBroken, entityLiving, entity -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         }
 
         return true;
