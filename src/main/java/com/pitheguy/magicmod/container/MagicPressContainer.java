@@ -45,14 +45,14 @@ public class MagicPressContainer extends AbstractContainerMenu {
         int startY = 81;
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
-                this.addSlot(new Slot(playerInv, 9+(row*9)+col, startX + (col * slotSizePlus2), startY + (row * slotSizePlus2)));
+                this.addSlot(new Slot(playerInv, 9 + (row * 9) + col, startX + (col * slotSizePlus2), startY + (row * slotSizePlus2)));
             }
         }
         //Magic Press Inventory
-        this.addSlot(new MultiItemSlotItemHandler(tile.getInventory(), 0, 27, 19, Arrays.asList(REINFORCED_MAGIC_HELMET.get(),REINFORCED_MAGIC_CHESTPLATE.get(),REINFORCED_MAGIC_LEGGINGS.get(),REINFORCED_MAGIC_BOOTS.get(),REINFORCED_MAGIC_PICKAXE.get(),REINFORCED_MAGIC_AXE.get(),REINFORCED_MAGIC_SHOVEL.get(),REINFORCED_MAGIC_SWORD.get(),REINFORCED_MAGIC_HOE.get())));
+        this.addSlot(new MultiItemSlotItemHandler(tile.getInventory(), 0, 27, 19, MagicPressBlockEntity.RECIPES.keySet().stream().toList()));
         this.addSlot(new SingleItemSlotItemHandler(tile.getInventory(), 1, 76, 19, OBSIDIAN_PLATE.get()));
-        this.addSlot(new MultiItemSlotItemHandler(tile.getInventory(), 2, 134,19, Arrays.asList(OBSIDIAN_PLATED_REINFORCED_MAGIC_HELMET.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_CHESTPLATE.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_LEGGINGS.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_BOOTS.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_PICKAXE.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_AXE.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_SHOVEL.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_SWORD.get(), OBSIDIAN_PLATED_REINFORCED_MAGIC_HOE.get())));
-        this.addSlot(new MultiItemSlotItemHandler(tile.getInventory(), 3,15,53, Arrays.asList(MAGIC_GEM.get(), MAGIC_BLOCK_ITEM.get())));
+        this.addSlot(new MultiItemSlotItemHandler(tile.getInventory(), 2, 134,19, MagicPressBlockEntity.RECIPES.values().stream().toList()));
+        this.addSlot(new MultiItemSlotItemHandler(tile.getInventory(), 3,15,53, Arrays.asList(MAGIC_NUGGET.get(), MAGIC_GEM.get(), MAGIC_BLOCK_ITEM.get())));
 
         this.addDataSlot(fuel = new FunctionalIntDataSlot(() -> this.tileEntity.fuel,
                 value -> this.tileEntity.fuel = value));

@@ -9,14 +9,14 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class MultiItemSlotItemHandler extends SlotItemHandler {
-    final List<Item> validItem;
-    public MultiItemSlotItemHandler(IItemHandler itemHandler, int index, int xPosition, int yPosition, List<Item> validItem) {
+    final List<Item> validItems;
+    public MultiItemSlotItemHandler(IItemHandler itemHandler, int index, int xPosition, int yPosition, List<Item> validItems) {
         super(itemHandler, index, xPosition, yPosition);
-        this.validItem = validItem;
+        this.validItems = validItems;
     }
 
     @Override
     public boolean mayPlace(@Nonnull ItemStack stack) {
-        return validItem.contains(stack.getItem()) && super.mayPlace(stack);
+        return validItems.contains(stack.getItem()) && super.mayPlace(stack);
     }
 }
