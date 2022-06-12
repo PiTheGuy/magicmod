@@ -3,7 +3,7 @@ package com.pitheguy.magicmod.container;
 import com.pitheguy.magicmod.container.itemhandlers.MultiItemSlotItemHandler;
 import com.pitheguy.magicmod.container.itemhandlers.SingleItemSlotItemHandler;
 import com.pitheguy.magicmod.init.ModContainerTypes;
-import com.pitheguy.magicmod.blockentity.MagicPressBlockEntity;
+import com.pitheguy.magicmod.blocks.entity.MagicPressBlockEntity;
 import com.pitheguy.magicmod.util.FunctionalIntDataSlot;
 import com.pitheguy.magicmod.util.RegistryHandler;
 import net.minecraft.network.FriendlyByteBuf;

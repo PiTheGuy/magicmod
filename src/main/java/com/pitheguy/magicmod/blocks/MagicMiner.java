@@ -1,6 +1,6 @@
 package com.pitheguy.magicmod.blocks;
 
-import com.pitheguy.magicmod.blockentity.MagicMinerBlockEntity;
+import com.pitheguy.magicmod.blocks.entity.MagicMinerBlockEntity;
 import com.pitheguy.magicmod.blocks.state.ModBlockStateProperties;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.ModItemHandler;

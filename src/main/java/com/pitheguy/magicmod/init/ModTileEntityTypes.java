@@ -1,6 +1,6 @@
 package com.pitheguy.magicmod.init;
 
-import com.pitheguy.magicmod.blockentity.*;
+import com.pitheguy.magicmod.blocks.entity.*;
 import com.pitheguy.magicmod.util.RegistryHandler;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.*;

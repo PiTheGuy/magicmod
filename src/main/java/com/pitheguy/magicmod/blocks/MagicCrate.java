@@ -1,6 +1,6 @@
 package com.pitheguy.magicmod.blocks;
 
-import com.pitheguy.magicmod.blockentity.MagicCrateBlockEntity;
+import com.pitheguy.magicmod.blocks.entity.MagicCrateBlockEntity;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;

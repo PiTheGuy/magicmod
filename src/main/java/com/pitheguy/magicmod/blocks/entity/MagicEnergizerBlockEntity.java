@@ -1,9 +1,10 @@
-package com.pitheguy.magicmod.blockentity;
+package com.pitheguy.magicmod.blocks.entity;
 
-import com.pitheguy.magicmod.container.MagicInfuserContainer;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import com.pitheguy.magicmod.container.MagicEnergizerContainer;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.ModItemHandler;
-import com.pitheguy.magicmod.util.RegistryHandler;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -15,6 +16,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -25,17 +27,25 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Map;
 
-public class MagicInfuserBlockEntity extends BlockEntity implements MenuProvider {
+import static com.pitheguy.magicmod.util.RegistryHandler.MAGIC_FUEL;
+
+public class MagicEnergizerBlockEntity extends BlockEntity implements MenuProvider {
     private final ModItemHandler inventory;
-
-    public MagicInfuserBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+    public int fuel = 0;
+    public int fuelConsumptionPerTick = 0;
+    public ArrayList<BlockEntity> fuelConsumers = new ArrayList<>();
+    public static final int MAX_FUEL = 6000;
+    public static final Map<Item,Integer> ITEM_FUEL_AMOUNT = Maps.newHashMap(ImmutableMap.of(MAGIC_FUEL.get(), 300));
+    public MagicEnergizerBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
-        this.inventory = new ModItemHandler(10);
+        this.inventory = new ModItemHandler(1);
     }
 
-    public MagicInfuserBlockEntity(BlockPos pos, BlockState state) {
-        this(ModTileEntityTypes.MAGIC_INFUSER.get(), pos, state);
+    public MagicEnergizerBlockEntity(BlockPos pos, BlockState state) {
+        this(ModTileEntityTypes.MAGIC_ENERGIZER.get(), pos, state);
     }
 
     @Override
@@ -44,12 +54,16 @@ public class MagicInfuserBlockEntity extends BlockEntity implements MenuProvider
         NonNullList<ItemStack> inv = NonNullList.withSize(this.inventory.getSlots(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(compound, inv);
         this.inventory.setNonNullList(inv);
+        this.fuel = compound.getInt("Fuel");
+        this.fuelConsumptionPerTick = compound.getInt("FuelConsumption");
     }
 
     @Override
     public void saveAdditional(CompoundTag compound) {
         super.saveAdditional(compound);
         ContainerHelper.saveAllItems(compound, this.inventory.toNonNullList());
+        compound.putInt("Fuel", this.fuel);
+        compound.putInt("FuelConsumption", this.fuelConsumptionPerTick);
     }
 
     public final IItemHandlerModifiable getInventory() {
@@ -88,30 +102,21 @@ public class MagicInfuserBlockEntity extends BlockEntity implements MenuProvider
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(final int windowId, final Inventory playerInv, final Player playerIn) {
-        return new MagicInfuserContainer(windowId, playerInv, this);
+        return new MagicEnergizerContainer(windowId, playerInv, this);
     }
 
-    public void serverTick() {
+    public void tick() {
         boolean dirty = false;
-        if (level != null && !level.isClientSide) {
-            while(this.inventory.getStackInSlot(0).getItem() == RegistryHandler.MAGIC_ORB_RED.get() &&
-                    this.inventory.getStackInSlot(1).getItem() == RegistryHandler.MAGIC_ORB_ORANGE.get() &&
-                    this.inventory.getStackInSlot(2).getItem() == RegistryHandler.MAGIC_ORB_YELLOW.get() &&
-                    this.inventory.getStackInSlot(3).getItem() == RegistryHandler.MAGIC_ORB_GREEN.get() &&
-                    this.inventory.getStackInSlot(4).getItem() == RegistryHandler.MAGIC_ORB_BLUE.get() &&
-                    this.inventory.getStackInSlot(5).getItem() == RegistryHandler.MAGIC_ORB_PURPLE.get() &&
-                    this.inventory.getStackInSlot(6).getItem() == RegistryHandler.MAGIC_ORB_MAGENTA.get() &&
-                    this.inventory.getStackInSlot(7).getItem() == RegistryHandler.MAGIC_ORB_BLACK.get() &&
-                    this.inventory.getStackInSlot(8).getItem() == RegistryHandler.MAGIC_ORB_WHITE.get() &&
-                    this.inventory.getStackInSlot(9).getCount() < 63) {
-                this.inventory.insertItem(9, new ItemStack(RegistryHandler.MAGIC_CORE.get(), 2), false);
-                for (int i = 0; i < 9; i++) {
-                    this.inventory.decrStackSize(i, 1);
-                    dirty = true;
-                }
+        this.fuelConsumptionPerTick = this.fuelConsumers.size();
+        if (level != null && !level.isClientSide()) {
+            while(ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(0).getItem()) != null && this.fuel <= MAX_FUEL - ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(0).getItem())) {
+                this.fuel += ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(0).getItem());
+                this.inventory.decrStackSize(0, 1);
+                dirty = true;
             }
         }
-        if(dirty) this.update();
+        this.fuel -= this.fuelConsumptionPerTick;
+        if (dirty) this.update();
     }
 
     public void update() {
@@ -127,7 +132,7 @@ public class MagicInfuserBlockEntity extends BlockEntity implements MenuProvider
     }
 
     private Component getDefaultName() {
-        return new TranslatableComponent("container.magicmod.magic_infuser");
+        return new TranslatableComponent("container.magicmod.magic_energizer");
     }
 
     @Override
@@ -135,4 +140,13 @@ public class MagicInfuserBlockEntity extends BlockEntity implements MenuProvider
         return this.getName();
     }
 
+    public void registerFuelConsumer(BlockEntity consumer) {
+        if (!this.fuelConsumers.contains(consumer)) {
+            this.fuelConsumers.add(consumer);
+        }
+    }
+
+    public void unregisterFuelConsumer(BlockEntity consumer) {
+        this.fuelConsumers.remove(consumer);
+    }
 }

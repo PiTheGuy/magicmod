@@ -1,4 +1,4 @@
-package com.pitheguy.magicmod.blockentity;
+package com.pitheguy.magicmod.blocks.entity;
 
 import com.pitheguy.magicmod.blocks.state.ModBlockStateProperties;
 import com.pitheguy.magicmod.container.MagicMinerContainer;

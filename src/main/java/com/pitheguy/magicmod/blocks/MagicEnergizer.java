@@ -1,6 +1,6 @@
 package com.pitheguy.magicmod.blocks;
 
-import com.pitheguy.magicmod.blockentity.MagicEnergizerBlockEntity;
+import com.pitheguy.magicmod.blocks.entity.MagicEnergizerBlockEntity;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.ModItemHandler;
 import net.minecraft.core.BlockPos;

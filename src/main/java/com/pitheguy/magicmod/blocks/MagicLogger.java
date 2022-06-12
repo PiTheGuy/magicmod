@@ -1,6 +1,6 @@
 package com.pitheguy.magicmod.blocks;
 
-import com.pitheguy.magicmod.blockentity.MagicLoggerBlockEntity;
+import com.pitheguy.magicmod.blocks.entity.MagicLoggerBlockEntity;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.ModItemHandler;
 import net.minecraft.core.BlockPos;

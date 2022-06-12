@@ -1,7 +1,7 @@
 package com.pitheguy.magicmod.container.itemhandlers;
 
 import com.pitheguy.magicmod.items.UpgradeItem;
-import com.pitheguy.magicmod.blockentity.AutoActionBlockEntity;
+import com.pitheguy.magicmod.blocks.entity.AutoActionBlockEntity;
 import com.pitheguy.magicmod.util.RegistryHandler;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;

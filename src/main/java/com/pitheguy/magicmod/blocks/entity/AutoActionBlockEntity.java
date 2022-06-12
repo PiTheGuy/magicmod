@@ -1,4 +1,4 @@
-package com.pitheguy.magicmod.blockentity;
+package com.pitheguy.magicmod.blocks.entity;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.pitheguy.magicmod.MagicMod;

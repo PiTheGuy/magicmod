@@ -2,7 +2,7 @@ package com.pitheguy.magicmod.container;
 
 import com.pitheguy.magicmod.container.itemhandlers.ExcludeUpgradesSlotItemHandler;
 import com.pitheguy.magicmod.container.itemhandlers.UpgradeSlotItemHandler;
-import com.pitheguy.magicmod.blockentity.AutoActionBlockEntity;
+import com.pitheguy.magicmod.blocks.entity.AutoActionBlockEntity;
 import com.pitheguy.magicmod.util.FunctionalIntDataSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

@@ -2,7 +2,7 @@ package com.pitheguy.magicmod.container;
 
 import com.pitheguy.magicmod.container.itemhandlers.SingleItemSlotItemHandler;
 import com.pitheguy.magicmod.init.ModContainerTypes;
-import com.pitheguy.magicmod.blockentity.MagicInfuserBlockEntity;
+import com.pitheguy.magicmod.blocks.entity.MagicInfuserBlockEntity;
 import com.pitheguy.magicmod.util.RegistryHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;

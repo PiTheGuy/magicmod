@@ -1,13 +1,10 @@
-package com.pitheguy.magicmod.blockentity;
+package com.pitheguy.magicmod.blocks.entity;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.pitheguy.magicmod.container.MagicPressContainer;
+import com.pitheguy.magicmod.container.MagicInfuserContainer;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.ModItemHandler;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
+import com.pitheguy.magicmod.util.RegistryHandler;
+import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -18,7 +15,6 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -29,34 +25,17 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
-import java.util.Map;
 
-import static com.pitheguy.magicmod.util.RegistryHandler.*;
-
-public class MagicPressBlockEntity extends BlockEntity implements MenuProvider {
+public class MagicInfuserBlockEntity extends BlockEntity implements MenuProvider {
     private final ModItemHandler inventory;
-    public int fuel = 0;
-    public final int maxFuel = 900;
-    public final int fuelPerOperation = 27;
-    public static final Map<Item,Integer> ITEM_FUEL_AMOUNT = Maps.newHashMap(ImmutableMap.of(MAGIC_NUGGET.get(), 1, MAGIC_GEM.get(), 9, MAGIC_BLOCK_ITEM.get(), 36));
-    public static final Map<Item, Item> RECIPES = Maps.newHashMap(new ImmutableMap.Builder<Item, Item>()
-            .put(REINFORCED_MAGIC_HELMET.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_HELMET.get())
-            .put(REINFORCED_MAGIC_CHESTPLATE.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_CHESTPLATE.get())
-            .put(REINFORCED_MAGIC_LEGGINGS.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_LEGGINGS.get())
-            .put(REINFORCED_MAGIC_BOOTS.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_BOOTS.get())
-            .put(REINFORCED_MAGIC_PICKAXE.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_PICKAXE.get())
-            .put(REINFORCED_MAGIC_AXE.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_AXE.get())
-            .put(REINFORCED_MAGIC_SHOVEL.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_SHOVEL.get())
-            .put(REINFORCED_MAGIC_SWORD.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_SWORD.get())
-            .put(REINFORCED_MAGIC_HOE.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_HOE.get())
-            .build());
-    public MagicPressBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+
+    public MagicInfuserBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
         this.inventory = new ModItemHandler(10);
     }
 
-    public MagicPressBlockEntity(BlockPos pos, BlockState state) {
-        this(ModTileEntityTypes.MAGIC_PRESS.get(), pos, state);
+    public MagicInfuserBlockEntity(BlockPos pos, BlockState state) {
+        this(ModTileEntityTypes.MAGIC_INFUSER.get(), pos, state);
     }
 
     @Override
@@ -65,14 +44,12 @@ public class MagicPressBlockEntity extends BlockEntity implements MenuProvider {
         NonNullList<ItemStack> inv = NonNullList.withSize(this.inventory.getSlots(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(compound, inv);
         this.inventory.setNonNullList(inv);
-        this.fuel = compound.getInt("Fuel");
     }
 
     @Override
     public void saveAdditional(CompoundTag compound) {
         super.saveAdditional(compound);
         ContainerHelper.saveAllItems(compound, this.inventory.toNonNullList());
-        compound.putInt("Fuel", this.fuel);
     }
 
     public final IItemHandlerModifiable getInventory() {
@@ -111,23 +88,27 @@ public class MagicPressBlockEntity extends BlockEntity implements MenuProvider {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(final int windowId, final Inventory playerInv, final Player playerIn) {
-        return new MagicPressContainer(windowId, playerInv, this);
+        return new MagicInfuserContainer(windowId, playerInv, this);
     }
 
     public void serverTick() {
         boolean dirty = false;
         if (level != null && !level.isClientSide) {
-            while(ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(3).getItem()) != null && this.fuel <= this.maxFuel - ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(3).getItem())) {
-                this.fuel += ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(3).getItem());
-                this.inventory.decrStackSize(3, 1);
-                dirty = true;
-            }
-            if (RECIPES.get(this.inventory.getStackInSlot(0).getItem()) != null && this.inventory.getStackInSlot(1).getItem() == OBSIDIAN_PLATE.get() && this.inventory.getStackInSlot(1).getCount() >= 32 && this.fuel >= this.fuelPerOperation) {
-                this.fuel -= this.fuelPerOperation;
-                this.inventory.insertItem(2,new ItemStack(RECIPES.get(this.inventory.getStackInSlot(0).getItem()), 1), false);
-                this.inventory.decrStackSize(0,1);
-                this.inventory.decrStackSize(1,32);
-                dirty = true;
+            while(this.inventory.getStackInSlot(0).getItem() == RegistryHandler.MAGIC_ORB_RED.get() &&
+                    this.inventory.getStackInSlot(1).getItem() == RegistryHandler.MAGIC_ORB_ORANGE.get() &&
+                    this.inventory.getStackInSlot(2).getItem() == RegistryHandler.MAGIC_ORB_YELLOW.get() &&
+                    this.inventory.getStackInSlot(3).getItem() == RegistryHandler.MAGIC_ORB_GREEN.get() &&
+                    this.inventory.getStackInSlot(4).getItem() == RegistryHandler.MAGIC_ORB_BLUE.get() &&
+                    this.inventory.getStackInSlot(5).getItem() == RegistryHandler.MAGIC_ORB_PURPLE.get() &&
+                    this.inventory.getStackInSlot(6).getItem() == RegistryHandler.MAGIC_ORB_MAGENTA.get() &&
+                    this.inventory.getStackInSlot(7).getItem() == RegistryHandler.MAGIC_ORB_BLACK.get() &&
+                    this.inventory.getStackInSlot(8).getItem() == RegistryHandler.MAGIC_ORB_WHITE.get() &&
+                    this.inventory.getStackInSlot(9).getCount() < 63) {
+                this.inventory.insertItem(9, new ItemStack(RegistryHandler.MAGIC_CORE.get(), 2), false);
+                for (int i = 0; i < 9; i++) {
+                    this.inventory.decrStackSize(i, 1);
+                    dirty = true;
+                }
             }
         }
         if(dirty) this.update();
@@ -146,7 +127,7 @@ public class MagicPressBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     private Component getDefaultName() {
-        return new TranslatableComponent("container.magicmod.magic_press");
+        return new TranslatableComponent("container.magicmod.magic_infuser");
     }
 
     @Override

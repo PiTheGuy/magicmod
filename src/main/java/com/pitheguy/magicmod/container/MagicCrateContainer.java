@@ -1,7 +1,7 @@
 package com.pitheguy.magicmod.container;
 
 import com.pitheguy.magicmod.init.ModContainerTypes;
-import com.pitheguy.magicmod.blockentity.MagicCrateBlockEntity;
+import com.pitheguy.magicmod.blocks.entity.MagicCrateBlockEntity;
 import com.pitheguy.magicmod.util.RegistryHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;

@@ -1,11 +1,13 @@
-package com.pitheguy.magicmod.blockentity;
+package com.pitheguy.magicmod.blocks.entity;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import com.pitheguy.magicmod.container.MagicEnergizerContainer;
+import com.pitheguy.magicmod.container.MagicPressContainer;
 import com.pitheguy.magicmod.init.ModTileEntityTypes;
 import com.pitheguy.magicmod.util.ModItemHandler;
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -27,25 +29,34 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Map;
 
-import static com.pitheguy.magicmod.util.RegistryHandler.MAGIC_FUEL;
+import static com.pitheguy.magicmod.util.RegistryHandler.*;
 
-public class MagicEnergizerBlockEntity extends BlockEntity implements MenuProvider {
+public class MagicPressBlockEntity extends BlockEntity implements MenuProvider {
     private final ModItemHandler inventory;
     public int fuel = 0;
-    public int fuelConsumptionPerTick = 0;
-    public ArrayList<BlockEntity> fuelConsumers = new ArrayList<>();
-    public static final int MAX_FUEL = 6000;
-    public static final Map<Item,Integer> ITEM_FUEL_AMOUNT = Maps.newHashMap(ImmutableMap.of(MAGIC_FUEL.get(), 300));
-    public MagicEnergizerBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+    public final int maxFuel = 900;
+    public final int fuelPerOperation = 27;
+    public static final Map<Item,Integer> ITEM_FUEL_AMOUNT = Maps.newHashMap(ImmutableMap.of(MAGIC_NUGGET.get(), 1, MAGIC_GEM.get(), 9, MAGIC_BLOCK_ITEM.get(), 36));
+    public static final Map<Item, Item> RECIPES = Maps.newHashMap(new ImmutableMap.Builder<Item, Item>()
+            .put(REINFORCED_MAGIC_HELMET.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_HELMET.get())
+            .put(REINFORCED_MAGIC_CHESTPLATE.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_CHESTPLATE.get())
+            .put(REINFORCED_MAGIC_LEGGINGS.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_LEGGINGS.get())
+            .put(REINFORCED_MAGIC_BOOTS.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_BOOTS.get())
+            .put(REINFORCED_MAGIC_PICKAXE.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_PICKAXE.get())
+            .put(REINFORCED_MAGIC_AXE.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_AXE.get())
+            .put(REINFORCED_MAGIC_SHOVEL.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_SHOVEL.get())
+            .put(REINFORCED_MAGIC_SWORD.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_SWORD.get())
+            .put(REINFORCED_MAGIC_HOE.get(),OBSIDIAN_PLATED_REINFORCED_MAGIC_HOE.get())
+            .build());
+    public MagicPressBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
-        this.inventory = new ModItemHandler(1);
+        this.inventory = new ModItemHandler(10);
     }
 
-    public MagicEnergizerBlockEntity(BlockPos pos, BlockState state) {
-        this(ModTileEntityTypes.MAGIC_ENERGIZER.get(), pos, state);
+    public MagicPressBlockEntity(BlockPos pos, BlockState state) {
+        this(ModTileEntityTypes.MAGIC_PRESS.get(), pos, state);
     }
 
     @Override
@@ -55,7 +66,6 @@ public class MagicEnergizerBlockEntity extends BlockEntity implements MenuProvid
         ContainerHelper.loadAllItems(compound, inv);
         this.inventory.setNonNullList(inv);
         this.fuel = compound.getInt("Fuel");
-        this.fuelConsumptionPerTick = compound.getInt("FuelConsumption");
     }
 
     @Override
@@ -63,7 +73,6 @@ public class MagicEnergizerBlockEntity extends BlockEntity implements MenuProvid
         super.saveAdditional(compound);
         ContainerHelper.saveAllItems(compound, this.inventory.toNonNullList());
         compound.putInt("Fuel", this.fuel);
-        compound.putInt("FuelConsumption", this.fuelConsumptionPerTick);
     }
 
     public final IItemHandlerModifiable getInventory() {
@@ -102,21 +111,26 @@ public class MagicEnergizerBlockEntity extends BlockEntity implements MenuProvid
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(final int windowId, final Inventory playerInv, final Player playerIn) {
-        return new MagicEnergizerContainer(windowId, playerInv, this);
+        return new MagicPressContainer(windowId, playerInv, this);
     }
 
-    public void tick() {
+    public void serverTick() {
         boolean dirty = false;
-        this.fuelConsumptionPerTick = this.fuelConsumers.size();
-        if (level != null && !level.isClientSide()) {
-            while(ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(0).getItem()) != null && this.fuel <= MAX_FUEL - ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(0).getItem())) {
-                this.fuel += ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(0).getItem());
-                this.inventory.decrStackSize(0, 1);
+        if (level != null && !level.isClientSide) {
+            while(ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(3).getItem()) != null && this.fuel <= this.maxFuel - ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(3).getItem())) {
+                this.fuel += ITEM_FUEL_AMOUNT.get(this.inventory.getStackInSlot(3).getItem());
+                this.inventory.decrStackSize(3, 1);
+                dirty = true;
+            }
+            if (RECIPES.get(this.inventory.getStackInSlot(0).getItem()) != null && this.inventory.getStackInSlot(1).getItem() == OBSIDIAN_PLATE.get() && this.inventory.getStackInSlot(1).getCount() >= 32 && this.fuel >= this.fuelPerOperation) {
+                this.fuel -= this.fuelPerOperation;
+                this.inventory.insertItem(2,new ItemStack(RECIPES.get(this.inventory.getStackInSlot(0).getItem()), 1), false);
+                this.inventory.decrStackSize(0,1);
+                this.inventory.decrStackSize(1,32);
                 dirty = true;
             }
         }
-        this.fuel -= this.fuelConsumptionPerTick;
-        if (dirty) this.update();
+        if(dirty) this.update();
     }
 
     public void update() {
@@ -132,7 +146,7 @@ public class MagicEnergizerBlockEntity extends BlockEntity implements MenuProvid
     }
 
     private Component getDefaultName() {
-        return new TranslatableComponent("container.magicmod.magic_energizer");
+        return new TranslatableComponent("container.magicmod.magic_press");
     }
 
     @Override
@@ -140,13 +154,4 @@ public class MagicEnergizerBlockEntity extends BlockEntity implements MenuProvid
         return this.getName();
     }
 
-    public void registerFuelConsumer(BlockEntity consumer) {
-        if (!this.fuelConsumers.contains(consumer)) {
-            this.fuelConsumers.add(consumer);
-        }
-    }
-
-    public void unregisterFuelConsumer(BlockEntity consumer) {
-        this.fuelConsumers.remove(consumer);
-    }
 }
